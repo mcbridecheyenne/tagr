@@ -18,7 +18,9 @@ GitHub switches off the timer of a public repository after 60 days without a com
 
 ## How the ranking works
 
-The site's **How TAGR Works** page explains it. Its weights and bonuses are printed from the same numbers the code uses, so the page and the ranking cannot drift apart.
+The site's **How TAGR Works** page explains it. Its weights and national records are printed from the same numbers the code uses, so the page and the ranking cannot drift apart.
+
+TFAA rounds are scored against the NFAA national record for each style (`NATIONAL_RECORDS` in `tagr/engine.js`), not against the perfect score. When NFAA publishes new records, update them there, with the date of the list they come from, and run `UPDATE_GOLDEN=1 npm test`.
 
 ## Working on it
 

@@ -100,8 +100,34 @@ const difficultyWeights = { 'TX ASA': 1.05, 'TFAA Outdoor': 1.08, 'TFAA Indoor':
 const KNOWN_DISTANCE_FACTOR = 0.95;
 // State Championship rounds count for more than a regular SYWAT round
 const STATE_ROUND_BONUS = 1.15;
+// TFAA rounds are scored against the NFAA national record for the archer's style, not
+// against the perfect score: tying the national record is worth 1000 (before weights and
+// bonuses) whatever the bow. These are the best adult records of men and women, amateur
+// or pro, from NFAA's national records (indoor list updated August 2025, field list July
+// 2025): https://nfaausa.com/files/indoor-national-records-120825152848.pdf and
+// https://nfaausa.com/files/field-national-records-080725200516.pdf
+// indoor: the two-day 300 round total (out of 600); field and hunter: one 28-target round
+// (out of 560). BBC is NFAA's "Barebow" style. A style that is not listed here (MBH,
+// Genesis) is scored against the perfect score with its equipment bonus, like Texas ASA.
+const NATIONAL_RECORDS = {
+  FS: { indoor: 600, field: 560, hunter: 560 },
+  BHFS: { indoor: 600, field: 554, hunter: 554 },
+  FSL: { indoor: 600, field: 546, hunter: 535 },
+  BBC: { indoor: 597, field: 518, hunter: 523 },
+  FSLR: { indoor: 599, field: 521, hunter: 535 },
+  BBR: { indoor: 583, field: 481, hunter: 496 },
+  TRAD: { indoor: 577, field: 476, hunter: 486 },
+  LB: { indoor: 542, field: 376, hunter: 391 }
+};
+const NATIONAL_RECORDS_STYLES = {
+  FS: 'Freestyle', BHFS: 'Bowhunter Freestyle', FSL: 'Freestyle Limited', BBC: 'Barebow Compound',
+  FSLR: 'Freestyle Limited Recurve, Olympic', BBR: 'Barebow Recurve', TRAD: 'Traditional', LB: 'Longbow'
+};
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
-const rules = { weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS };
+const rules = {
+  weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
+  nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES
+};
 
 // ---------------------------------------------------------------------------
 // Parsing
@@ -290,6 +316,7 @@ function parseTfaaPage(html, seasonLabel, kind) {
     const isState = [];
     const roundMax = [];
     const xMax = [];
+    const roundKinds = [];
     let n = 0;
     for (const { kind: column, score, x } of entry.scores) {
       if (score <= 0) continue;
@@ -301,11 +328,13 @@ function parseTfaaPage(html, seasonLabel, kind) {
           const half = Math.round(score / 2);
           eventScores.push(half, score - half);
           eventNames.push(stateName + ' (Field)', stateName + ' (Hunter)');
+          roundKinds.push('field', 'hunter');
         } else {
           if (isAboveMax(entry, score, TFAA_OUTDOOR_ROUND_MAX)) continue;
           n++;
           eventScores.push(score);
           eventNames.push(roundName + ' #' + n);
+          roundKinds.push('sywat');
         }
       } else if (column === 'round') {
         if (isAboveMax(entry, score, TFAA_INDOOR_ROUND_MAX)) continue;
@@ -332,7 +361,7 @@ function parseTfaaPage(html, seasonLabel, kind) {
     if (!entry.name || eventScores.length === 0) continue;
     const who = { name: entry.name, org: outdoor ? 'TFAA Outdoor' : 'TFAA Indoor', orgClass: entry.age + ' - ' + entry.style, age: entry.adult ? 'adult' : 'youth' };
     shooters.push(outdoor
-      ? { ...who, eventScores, eventNames, maxPerRound: TFAA_OUTDOOR_ROUND_MAX }
+      ? { ...who, eventScores, eventNames, roundKinds, maxPerRound: TFAA_OUTDOOR_ROUND_MAX }
       : { ...who, eventScores, xCounts, isState, eventNames, roundMax, xMax, maxPerRound: TFAA_INDOOR_ROUND_MAX });
   }
   return { shooters, repeatedState, unreadRows, aboveMax };
@@ -423,6 +452,20 @@ function parseTfaaRecordsHtml(html, type) {
   return records;
 }
 
+// The national record a TFAA round is scored against, on the round's own scale, or
+// null when there is none (Texas ASA, and TFAA styles without a national record).
+// A SYWAT round can be a field or a hunter round, so it meets the average of the two.
+function nationalRecordFor(s, i, roundMax) {
+  if (s.org !== 'TFAA Indoor' && s.org !== 'TFAA Outdoor') return null;
+  const style = ((s.orgClass || '').match(/\(([A-Z]+)\)\s*$/) || [])[1];
+  const record = style && NATIONAL_RECORDS[style];
+  if (!record) return null;
+  if (s.org === 'TFAA Indoor') return record.indoor * roundMax / (2 * TFAA_INDOOR_ROUND_MAX);
+  const kind = s.roundKinds && s.roundKinds[i];
+  const bar = kind === 'field' ? record.field : kind === 'hunter' ? record.hunter : (record.field + record.hunter) / 2;
+  return bar * roundMax / TFAA_OUTDOOR_ROUND_MAX;
+}
+
 // ---- EQUIPMENT CLASS MAPPING ----
 function mapEquipmentClass(orgClass, org) {
   const cl = orgClass.toLowerCase();
@@ -501,7 +544,8 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     const npsScores = s.eventScores.map((score, i) => {
       const rmax = (s.roundMax && s.roundMax[i]) ? s.roundMax[i] : s.maxPerRound;
       const xcap = (s.xMax && s.xMax[i]) ? s.xMax[i] : 60;
-      let nps = (score / rmax) * 1000 * w;
+      const record = nationalRecordFor(s, i, rmax);
+      let nps = (score / (record || rmax)) * 1000 * w;
       if (s.xCounts && s.xCounts[i] !== undefined) {
         const xBonus = (s.xCounts[i] / xcap) * 0.05;
         nps = nps * (1 + xBonus);
@@ -509,14 +553,15 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       if (s.isState && s.isState[i]) {
         nps = nps * STATE_ROUND_BONUS;
       }
-      // Equipment-specific bonuses based on restrictions
+      // Equipment-specific bonuses based on restrictions, for rounds without a national
+      // record (the record already shows how hard the style is)
       // Fingers + NO sight = 8%: BBC, Genesis, Traditional, Longbow, Barebow Recurve
       // Fingers + sight = 3%: FSL, Olympic/FSLR
       // Fixed pins + 12" stabilizer = 5%: BHFS
       // Fixed pins + 18" stabilizer = 3%: MBH
       // No arrow rest (off the shelf) = additional 3%: Longbow always, Traditional ASA only
       // FS (Freestyle): scope/lens + release + unlimited stabilizer = baseline (0%)
-      if (s.orgClass) {
+      if (s.orgClass && !record) {
         const ocl = s.orgClass.toLowerCase();
         if (ocl.includes('barebow compound') || ocl.includes('(bbc)')) {
           nps = nps * 1.08;

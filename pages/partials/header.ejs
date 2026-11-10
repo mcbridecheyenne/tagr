@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title><%= title %></title>
+  <meta name="description" content="TAGR ranks Texas archers across Texas ASA and TFAA results. Updated every Tuesday morning.">
+  <link rel="stylesheet" href="<%= links.css %>">
+  <style>
+    .tagr-bar { max-width: 1200px; margin: 0 auto; padding: 0.8rem 1rem; display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 0.4rem 1.5rem; }
+    .tagr-bar a { color: var(--text-light); text-decoration: none; }
+    .tagr-bar a:hover { color: var(--accent-green); }
+    .tagr-bar .tagr-brand { color: var(--accent-gold); font-weight: bold; font-size: 1.2rem; }
+    .tagr-bar nav { display: flex; gap: 1.5rem; }
+    <%- styles %>
+  </style>
+</head>
+<body>
+  <header class="navbar">
+    <div class="tagr-bar">
+      <a class="tagr-brand" href="<%= links.rankings %>">🏹 TAGR</a>
+      <nav>
+        <a href="<%= links.rankings %>">Rankings</a>
+        <a href="<%= links.how %>">How it works</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="main-content">

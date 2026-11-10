@@ -1,0 +1,178 @@
+<%- include('partials/header', { links, title: 'TAGR — How It Works', styles: `
+.tgr-exp { max-width: 750px; margin: 0 auto; padding: 1.5rem; color: var(--text-light); }
+.tgr-exp h1 { color: var(--accent-gold); font-size: 1.8rem; margin-bottom: 0.3rem; }
+.tgr-exp .sub { color: #8b949e; font-size: 0.85rem; margin-bottom: 2rem; }
+.tgr-exp h2 { color: var(--accent-green); font-size: 1.2rem; margin: 2rem 0 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 0.4rem; }
+.tgr-exp p, .tgr-exp li { font-size: 0.9rem; line-height: 1.7; color: #c9d1d9; }
+.tgr-exp strong { color: var(--accent-gold); }
+.tgr-exp ul { padding-left: 1.5rem; margin: 0.5rem 0; }
+.tgr-exp li { margin-bottom: 0.3rem; }
+.tgr-exp .formula-box { background: #1a1a1a; border: 1px solid var(--border-color); border-radius: 8px; padding: 1rem 1.2rem; margin: 1rem 0; font-family: monospace; font-size: 0.95rem; color: var(--accent-gold); }
+.tgr-exp .weight-table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+.tgr-exp .weight-table th { background: #2d2d2d; color: var(--accent-gold); padding: 0.6rem; text-align: left; font-size: 0.8rem; border-bottom: 2px solid var(--border-color); }
+.tgr-exp .weight-table td { padding: 0.5rem 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 0.85rem; }
+.tgr-exp .weight-table tr:hover { background: rgba(226,183,20,0.06); }
+.tgr-exp .example { background: rgba(46,204,113,0.06); border: 1px solid rgba(46,204,113,0.15); border-radius: 8px; padding: 0.8rem 1rem; margin: 1rem 0; font-size: 0.85rem; }
+.tgr-exp .example strong { color: #2ecc71; }
+.tgr-exp .back-link { display: inline-block; margin-top: 2rem; color: var(--accent-gold); text-decoration: none; font-weight: bold; font-size: 0.9rem; }
+.tgr-exp .back-link:hover { text-decoration: underline; }
+.tgr-exp .badge { display: inline-block; padding: 0.15rem 0.5rem; border-radius: 4px; font-size: 0.7rem; font-weight: bold; }
+.tgr-exp .badge.asa { background: rgba(46,204,113,0.15); color: #2ecc71; }
+.tgr-exp .badge.tfaa { background: rgba(52,152,219,0.15); color: #3498db; }
+.tgr-exp .badge.indoor { background: rgba(155,89,182,0.15); color: #9b59b6; }
+` }) %>
+
+<%
+  // The weights come from the ranking code (tagr/engine.js), so this page always shows what is used.
+  const times = n => n.toFixed(2) + '×';
+  const asaUnknown = rules.weights['TX ASA'];
+  const asaKnown = asaUnknown * rules.knownDistanceFactor;
+  const knownCut = Math.round((1 - rules.knownDistanceFactor) * 100);
+  const stateBonus = Math.round((rules.stateRoundBonus - 1) * 100);
+%>
+<section>
+  <div class="tgr-exp">
+    <h1>🏹 How TAGR Works</h1>
+    <div class="sub">Texas Archery Global Ranking — Cross-Organization Normalized Performance Rankings (<%= new Date().getFullYear() - 2 %>–<%= new Date().getFullYear() %>)</div>
+
+    <h2>📊 The NPS Formula</h2>
+    <p>Every score from every organization is converted to a <strong>Normalized Performance Score (NPS)</strong>:</p>
+    <div class="formula-box">NPS = (Your Score ÷ Max Possible) × 1000 × Org Weight × Bonuses</div>
+    <p>NPS is <strong>uncapped</strong> — equipment bonuses, yardage bonuses, and format multipliers stack naturally. Top archers in difficult equipment classes and long-distance formats will earn NPS well above 1000, which properly differentiates elite performers.</p>
+
+    <h2>⚖️ Organization Difficulty Weights</h2>
+    <p>Different formats have different difficulty levels. Harder formats earn more NPS per point scored.</p>
+    <table class="weight-table">
+      <thead><tr><th>Format</th><th>Weight</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge tfaa">TFAA Outdoor</span> Field Archery</td><td><strong><%= times(rules.weights['TFAA Outdoor']) %></strong></td><td>Hardest — varying terrain, elevation, longer distances</td></tr>
+        <tr><td><span class="badge asa">TX ASA</span> 3D Unknown Distance</td><td><strong><%= times(asaUnknown) %></strong></td><td>Must judge yardage by eye on 3D animal targets</td></tr>
+        <tr><td><span class="badge asa">TX ASA</span> 3D Known Distance</td><td><strong><%= times(asaKnown) %></strong></td><td>Rangefinders allowed — removes yardage estimation (<%= knownCut %>% less than unknown distance)</td></tr>
+        <tr><td><span class="badge indoor">TFAA Indoor</span> 300 Round</td><td><strong><%= times(rules.weights['TFAA Indoor']) %></strong></td><td>Controlled environment, 20 yards, flat — most forgiving</td></tr>
+      </tbody>
+    </table>
+
+    <h2>🎯 ASA Known vs Unknown Distance</h2>
+    <p>ASA classes are split into <strong>known distance</strong> (rangefinders allowed) and <strong>unknown distance</strong> (judge yardage by eye). Unknown distance classes get the full <%= times(asaUnknown) %> weight; known distance classes get <%= knownCut %>% less (<%= times(asaKnown) %>).</p>
+    <p><strong>Known distance classes:</strong> Known Pro, Known 40/45/50, W. Known Pro/40/45, Senior Known Pro/45/50, Senior Women's Known, Senior Master Known, Super Senior Known, Traditional, Barebow Recurve, Olympic Recurve, Crossbow, all Young Adult classes, all Youth classes, all Eagle classes, Junior Eagle, Youth Barebow</p>
+    <p><strong>Unknown distance classes:</strong> Open Pro, Semi Pro, all Men's Open/Hunter/Pins classes, W. Open 45, W. Pins 30/40, Senior Hunter 45, Senior Open, Senior Master, Senior Pins, Senior Legends, Super Senior, Super Senior Pins</p>
+
+    <h2>📏 ASA Max Yardage Bonus</h2>
+    <p>Classes with longer max yardage are harder — you get a bonus for shooting farther:</p>
+    <table class="weight-table">
+      <thead><tr><th>Max Yardage</th><th>Bonus</th><th>Example Classes</th></tr></thead>
+      <tbody>
+        <tr><td>50 yards</td><td><strong>1.07×</strong></td><td>Open Pro, Semi Pro, Known 50, Known Pro, Senior Known 50</td></tr>
+        <tr><td>45 yards</td><td><strong>1.05×</strong></td><td>Men's Open 45, Hunter 45, Known 45, W. Known 45, Senior Known 45</td></tr>
+        <tr><td>40 yards</td><td><strong>1.03×</strong></td><td>Men's Open 40, Pins 40, Known 40, W. Known 40, Barebow Recurve, Olympic Recurve, Crossbow</td></tr>
+        <tr><td>30 yards &amp; below</td><td>1.0× (baseline)</td><td>Pins 30, Senior Pins, Traditional, Eagle, Junior Eagle</td></tr>
+      </tbody>
+    </table>
+
+    <h2>🏅 Equipment Bonuses</h2>
+    <p>Classes with equipment restrictions get bonuses to reflect added difficulty:</p>
+    <table class="weight-table">
+      <thead><tr><th>Class</th><th>Bonus</th><th>Why</th></tr></thead>
+      <tbody>
+        <tr><td><strong>BBC</strong> (Barebow Compound)</td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
+        <tr><td><strong>Genesis</strong></td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
+        <tr><td><strong>Traditional</strong></td><td><strong>+8%</strong> (+11% in ASA)</td><td>Fingers + no sight. ASA requires no arrow rest (off the shelf) for additional +3%</td></tr>
+        <tr><td><strong>Longbow</strong></td><td><strong>+11%</strong></td><td>Fingers + no sight + always off the shelf (no arrow rest)</td></tr>
+        <tr><td><strong>Barebow Recurve</strong></td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
+        <tr><td><strong>BHFS</strong> (Bowhunter Freestyle)</td><td><strong>+5%</strong></td><td>Fixed pins + 12" stabilizer limit</td></tr>
+        <tr><td><strong>MBH</strong> (Modern Bowhunter)</td><td><strong>+3%</strong></td><td>Fixed pins + 18" stabilizer limit</td></tr>
+        <tr><td><strong>FSL</strong> (Freestyle Limited)</td><td><strong>+3%</strong></td><td>Finger release + fixed pin sight</td></tr>
+        <tr><td><strong>Olympic / FSLR</strong></td><td><strong>+3%</strong></td><td>Finger release + sight</td></tr>
+        <tr><td><strong>FS</strong> (Freestyle)</td><td>Baseline</td><td>Scope/lens, mechanical release, unlimited stabilizer</td></tr>
+      </tbody>
+    </table>
+
+    <h2>🏅 Other Bonuses</h2>
+    <ul>
+      <li><strong>X-Count Bonus (Indoor only)</strong> — Up to 5% extra for hitting more X rings. A 300-60X ranks higher than 300-0X. Formula: <code>NPS × (1 + xCount/60 × 0.05)</code></li>
+      <li><strong>State Championship (Indoor)</strong> — <%= stateBonus %>% bonus for State Championship rounds, reflecting higher level of competition</li>
+      <li><strong>How State Championships count</strong> — The TFAA Indoor State total is one round scored out of 600. The TFAA Outdoor State total is the field and hunter rounds together, so it counts as two rounds. A State result counts once per season in each class.</li>
+      <li><strong>Scores above the maximum</strong> — A TFAA Outdoor round is scored out of 560, and the two State rounds together out of 1120. A few listed scores are higher than that. They are left out of the rankings for now, until it is clear how they were scored.</li>
+    </ul>
+
+    <h2>📈 Your TAGR Score</h2>
+    <div class="formula-box">TAGR = (Sum of Top 5 NPS ÷ 5) × Event Count Bonus × Org Diversity Bonus</div>
+    <p>Your TAGR score is <strong>always divided by 5</strong> — even if you have fewer than 5 events. Empty slots count as zero. This prevents someone with one lucky tournament from outranking consistent archers.</p>
+
+    <h2>📅 Minimum Events</h2>
+    <p>You need at least <strong>3 events</strong> to get a full ranking. Archers with fewer than 3 events are shown as <strong style="color:#e74c3c;">PROVISIONAL</strong> — visible in the rankings but without a rank number.</p>
+
+    <h2>🔄 Event Count Bonus</h2>
+    <p>Shooting more events earns a small bonus that rewards consistency and commitment:</p>
+    <table class="weight-table">
+      <thead><tr><th>Events</th><th>Bonus</th></tr></thead>
+      <tbody>
+        <tr><td>3 events</td><td>1.0× (baseline)</td></tr>
+        <tr><td>4 events</td><td>1.02×</td></tr>
+        <tr><td>5 events</td><td>1.04×</td></tr>
+        <tr><td>6–7 events</td><td>1.05×</td></tr>
+        <tr><td>8+ events</td><td>1.06× (cap)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>🌐 Organization Diversity Bonus</h2>
+    <p>Archers who prove themselves across <strong>multiple organizations</strong> in their top 5 scoring rounds earn a bonus. Scoring well in different formats (3D, field, indoor) is harder than repeating one.</p>
+    <table class="weight-table">
+      <thead><tr><th>Unique Orgs in Top 5</th><th>Bonus</th></tr></thead>
+      <tbody>
+        <tr><td>1 organization</td><td>1.0× (baseline)</td></tr>
+        <tr><td>2 organizations</td><td>1.03×</td></tr>
+        <tr><td>3 organizations</td><td>1.05×</td></tr>
+      </tbody>
+    </table>
+    <p>This counts the unique organizations among your actual top 5 NPS rounds — not just orgs you've shot with overall.</p>
+
+    <h2>👑 TFAA State Record Holders</h2>
+    <p>Archers who hold a current TFAA state record (Indoor, Outdoor, or 900 Round) are identified with a 👑 crown badge next to their name. Hover the crown to see which record(s) they hold.</p>
+    <p>Records are scraped from <a href="https://texasfieldarchery.org/records/indoor" style="color:var(--accent-gold);">texasfieldarchery.org</a> and matched by name. Only the <strong>current</strong> record holder matters — if scores are tied, the most recent year wins.</p>
+
+    <h2>💡 Example</h2>
+    <div class="example">
+      <strong>Archer A</strong> shoots 6 ASA unknown distance events at 45 yards, scoring NPS: 850, 840, 830, 820, 810, 800<br>
+      Top 5 average = (850 + 840 + 830 + 820 + 810) ÷ 5 = 830<br>
+      Event bonus (6 events) = 1.05×<br>
+      1 org = 1.0× diversity bonus<br>
+      <strong>TAGR = 830 × 1.05 × 1.0 = 872</strong><br><br>
+      
+      <strong>Archer B</strong> shoots 8 events across TX ASA + TFAA Outdoor + TFAA Indoor<br>
+      Top 5 NPS: 920, 910, 890, 880, 870 (from all 3 orgs)<br>
+      Top 5 average = 894<br>
+      Event bonus (8 events) = 1.06×<br>
+      3 orgs in top 5 = 1.05× diversity bonus<br>
+      <strong>TAGR = 894 × 1.06 × 1.05 = 995</strong><br><br>
+
+      <strong>Archer C</strong> shoots 1 indoor event, scoring NPS: 900<br>
+      Top 5 sum = 900 + 0 + 0 + 0 + 0 = 900 ÷ 5 = 180<br>
+      <strong>TAGR = 180 (PROVISIONAL — needs 2 more events)</strong>
+    </div>
+
+    <h2>🏹 Equipment Classes</h2>
+    <p>Archers are ranked within their equipment class. If you shoot multiple classes, you get a separate ranking for each.</p>
+    <ul>
+      <li><strong style="color:#e74c3c;">Compound</strong> — FS, FSL, BHFS, MBH, BBC, Genesis + ASA Known/Open/Hunter/Pins/Pro classes</li>
+      <li><strong style="color:#2ecc71;">Barebow</strong> — BBR, Barebow Recurve, Youth Barebow</li>
+      <li><strong style="color:#e67e22;">Traditional</strong> — TRAD, Traditional</li>
+      <li><strong style="color:#3498db;">Olympic</strong> — FSLR, Olympic Recurve</li>
+      <li><strong style="color:#f1c40f;">Longbow</strong> — LB</li>
+    </ul>
+
+    <h2>📡 Data Sources (3-Year Window)</h2>
+    <p>TAGR pulls the last 3 years of competition data to build comprehensive rankings:</p>
+    <ul>
+      <li><span class="badge asa">TX ASA</span> — <strong>2024, 2025, 2026</strong> individual tournament results from Texas ASA Google Sheets (SOY + Tournament Results Archive)</li>
+      <li><span class="badge tfaa">TFAA Outdoor</span> — the <strong>3 most recent seasons</strong> with scores, read from texasfieldarchery.org</li>
+      <li><span class="badge indoor">TFAA Indoor</span> — the <strong>3 most recent seasons</strong> with scores, read from texasfieldarchery.org</li>
+      <li><em>TSAA — Coming soon</em></li>
+    </ul>
+    <p>Rankings are rebuilt every Tuesday morning (Central time). Cross-organization names are automatically matched and merged (e.g., "SMITH, JOHN" from TFAA + "JOHN SMITH" from ASA = same archer).</p>
+
+    <a href="<%= links.rankings %>" class="back-link">← Back to Rankings</a>
+  </div>
+</section>
+
+<%- include('partials/footer', { links }) %>

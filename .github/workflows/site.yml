@@ -1,0 +1,119 @@
+name: Site
+
+# Publishes the TAGR site on GitHub Pages: the rankings page, "How TAGR
+# Works", and api/tgr.json, which the page and the phone app read.
+#
+# The standings are rebuilt every Tuesday morning (Central time) and go on the
+# site only when they are good enough to publish. Otherwise the site keeps the
+# standings it has, the run turns red, and a later run tries again.
+#
+# One-time setup: Settings > Pages > Source: "GitHub Actions".
+on:
+  schedule:
+    # 6:07 AM Central is 11:07 UTC in summer and 12:07 UTC in winter. A run
+    # that finds this week's standings already published stops straight away,
+    # so the other times only matter after a rebuild that could not be published.
+    - cron: '7 11,14,17,21 * * 2'
+    - cron: '7 12 * * *'
+  push:
+    branches: [main]
+    paths:
+      - 'tagr/**'
+      - 'pages/**'
+      - 'scripts/build-site.js'
+      - 'package-lock.json'
+      - '.github/workflows/site.yml'
+  # On a pull request the site is built from the live sources but not published.
+  pull_request:
+    paths:
+      - 'tagr/**'
+      - 'pages/**'
+      - 'scripts/build-site.js'
+      - 'package-lock.json'
+      - '.github/workflows/site.yml'
+  workflow_dispatch:
+    inputs:
+      rebuild:
+        description: Rebuild the standings now, even if they are this week's
+        type: boolean
+        default: true
+
+permissions:
+  contents: read
+
+# One publish at a time. A pull request's trial build does not wait for it.
+concurrency:
+  group: site-${{ github.event_name == 'pull_request' && github.ref || 'publish' }}
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    outputs:
+      deploy: ${{ steps.site.outputs.deploy }}
+      behind: ${{ steps.site.outputs.behind }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - id: site
+        env:
+          SCHEDULED: ${{ github.event_name == 'schedule' && '--scheduled' || '' }}
+          FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.rebuild && '--force' || '' }}
+        run: node scripts/build-site.js --out site --published "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}" $SCHEDULED $FORCE
+      - if: steps.site.outputs.deploy == 'true' && github.event_name != 'pull_request'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+  deploy:
+    needs: build
+    if: needs.build.outputs.deploy == 'true' && github.event_name != 'pull_request'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      # Stops with a clear message if Pages is not switched on for this repository.
+      - uses: actions/configure-pages@v5
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+  # Turns the run red when a rebuild was due and could not be published, so it is seen.
+  verdict:
+    needs: build
+    if: needs.build.outputs.behind == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - run: |
+          echo "::error::The TAGR standings could not be rebuilt, so the site keeps the standings it had. The build job says why."
+          exit 1
+
+  # GitHub switches off the timer of a public repository that has had no
+  # commit for 60 days. When this one has gone 50 days without a commit, this
+  # adds an empty one, so the Tuesday rebuild keeps running.
+  keep-timer-on:
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - run: |
+          days=$(( ($(date +%s) - $(git log -1 --format=%ct)) / 86400 ))
+          echo "The last commit was $days days ago."
+          if [ "$days" -lt 50 ]; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit --allow-empty -m 'Keep the weekly rebuild switched on' -m 'GitHub turns off the timer of a public repository after 60 days without a commit.'
+          git push origin HEAD:"$GITHUB_REF_NAME"

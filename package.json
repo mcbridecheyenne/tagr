@@ -1,0 +1,17 @@
+{
+  "name": "tagr",
+  "version": "1.0.0",
+  "private": true,
+  "description": "TAGR, the Texas Archery Global Ranking: ranks Texas archers across Texas ASA and TFAA results, rebuilt every Tuesday morning",
+  "scripts": {
+    "test": "node --test test/*.test.js",
+    "check": "node scripts/check.js",
+    "build": "node scripts/build-site.js --out site"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "ejs": "^3.1.10"
+  }
+}

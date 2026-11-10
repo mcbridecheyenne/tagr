@@ -1,0 +1,4 @@
+node_modules/
+# What "npm run build" and "scripts/check.js --save" write
+site/
+tagr-pages/

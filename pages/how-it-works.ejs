@@ -29,6 +29,12 @@
   const asaKnown = asaUnknown * rules.knownDistanceFactor;
   const knownCut = Math.round((1 - rules.knownDistanceFactor) * 100);
   const stateBonus = Math.round((rules.stateRoundBonus - 1) * 100);
+  const records = rules.nationalRecords;
+  const outdoorWeight = rules.weights['TFAA Outdoor'];
+  // The worked example: a barebow recurve SYWAT round against the average of the two records.
+  const barebowBar = (records.BBR.field + records.BBR.hunter) / 2;
+  const barebowNps = Math.round(470 / barebowBar * 1000 * outdoorWeight);
+  const freestyleNps = Math.round(540 / records.FS.field * 1000 * outdoorWeight);
 %>
 <section>
   <div class="tgr-exp">
@@ -37,7 +43,8 @@
 
     <h2>📊 The NPS Formula</h2>
     <p>Every score from every organization is converted to a <strong>Normalized Performance Score (NPS)</strong>:</p>
-    <div class="formula-box">NPS = (Your Score ÷ Max Possible) × 1000 × Org Weight × Bonuses</div>
+    <div class="formula-box">NPS = (Your Score ÷ The Bar) × 1000 × Org Weight × Bonuses</div>
+    <p><strong>The bar for a TFAA round is the national record for your style</strong>, from the NFAA (see <a href="#national-records" style="color:var(--accent-gold);">National Records</a> below). A round that ties the national record is worth 1000 before weights and bonuses, whatever bow you shoot, so great barebow, traditional and longbow shooting counts as much as great compound shooting. Texas ASA has no national records like that, so for a 3D round the bar is the perfect score, and <a href="#equipment-bonuses" style="color:var(--accent-gold);">equipment bonuses</a> make up for harder equipment.</p>
     <p>NPS is <strong>uncapped</strong> — equipment bonuses, yardage bonuses, and format multipliers stack naturally. Top archers in difficult equipment classes and long-distance formats will earn NPS well above 1000, which properly differentiates elite performers.</p>
 
     <h2>⚖️ Organization Difficulty Weights</h2>
@@ -69,21 +76,34 @@
       </tbody>
     </table>
 
-    <h2>🏅 Equipment Bonuses</h2>
-    <p>Classes with equipment restrictions get bonuses to reflect added difficulty:</p>
+    <h2 id="national-records">🇺🇸 National Records: the Bar for TFAA Rounds</h2>
+    <p>Every TFAA round is scored against the NFAA national record for its style: the best adult record, men's or women's, from NFAA's national records (<a href="https://nfaausa.com/files/indoor-national-records-120825152848.pdf" style="color:var(--accent-gold);">indoor</a>, updated August 2025, and <a href="https://nfaausa.com/files/field-national-records-080725200516.pdf" style="color:var(--accent-gold);">field and hunter</a>, updated July 2025). The record already shows how hard each style is, so these rounds get no equipment bonus.</p>
+    <table class="weight-table">
+      <thead><tr><th>Style</th><th>Indoor (two days, of 600)</th><th>Field (of 560)</th><th>Hunter (of 560)</th></tr></thead>
+      <tbody>
+<% Object.keys(records).forEach(function (code) { %>        <tr><td><strong><%= code %></strong> (<%= rules.nationalRecordStyles[code] %>)</td><td><%= records[code].indoor %></td><td><%= records[code].field %></td><td><%= records[code].hunter %></td></tr>
+<% }) %>      </tbody>
+    </table>
+    <ul>
+      <li>An ordinary indoor round is out of 300, so its bar is half the two-day record. A State Indoor total meets the whole record.</li>
+      <li>A SYWAT round can be a field or a hunter round, so its bar is the average of the two records. A State Outdoor total counts as one field and one hunter round, each against its own record.</li>
+      <li>BBC is NFAA's Barebow style. MBH and Genesis have no NFAA national record, so their rounds are scored against the perfect score with an equipment bonus, like Texas ASA rounds.</li>
+    </ul>
+    <div class="example">
+      <strong>Example:</strong> a barebow recurve archer shoots 470 on a SYWAT round. The bar is (<%= records.BBR.field %> + <%= records.BBR.hunter %>) ÷ 2 = <%= barebowBar %>, so NPS = 470 ÷ <%= barebowBar %> × 1000 × <%= outdoorWeight.toFixed(2) %> = <strong><%= barebowNps %></strong>. A freestyle archer needs about 540 of <%= records.FS.field %> to match it: 540 ÷ <%= records.FS.field %> × 1000 × <%= outdoorWeight.toFixed(2) %> = <strong><%= freestyleNps %></strong>.
+    </div>
+
+    <h2 id="equipment-bonuses">🏅 Equipment Bonuses</h2>
+    <p>Rounds without a national record (every Texas ASA round, and TFAA's MBH and Genesis) are scored against the perfect score, so harder equipment gets a bonus:</p>
     <table class="weight-table">
       <thead><tr><th>Class</th><th>Bonus</th><th>Why</th></tr></thead>
       <tbody>
-        <tr><td><strong>BBC</strong> (Barebow Compound)</td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
-        <tr><td><strong>Genesis</strong></td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
-        <tr><td><strong>Traditional</strong></td><td><strong>+8%</strong> (+11% in ASA)</td><td>Fingers + no sight. ASA requires no arrow rest (off the shelf) for additional +3%</td></tr>
-        <tr><td><strong>Longbow</strong></td><td><strong>+11%</strong></td><td>Fingers + no sight + always off the shelf (no arrow rest)</td></tr>
-        <tr><td><strong>Barebow Recurve</strong></td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
-        <tr><td><strong>BHFS</strong> (Bowhunter Freestyle)</td><td><strong>+5%</strong></td><td>Fixed pins + 12" stabilizer limit</td></tr>
-        <tr><td><strong>MBH</strong> (Modern Bowhunter)</td><td><strong>+3%</strong></td><td>Fixed pins + 18" stabilizer limit</td></tr>
-        <tr><td><strong>FSL</strong> (Freestyle Limited)</td><td><strong>+3%</strong></td><td>Finger release + fixed pin sight</td></tr>
-        <tr><td><strong>Olympic / FSLR</strong></td><td><strong>+3%</strong></td><td>Finger release + sight</td></tr>
-        <tr><td><strong>FS</strong> (Freestyle)</td><td>Baseline</td><td>Scope/lens, mechanical release, unlimited stabilizer</td></tr>
+        <tr><td><strong>Barebow Recurve</strong>, Youth Barebow (ASA)</td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
+        <tr><td><strong>Traditional</strong> (ASA)</td><td><strong>+11%</strong></td><td>Fingers + no sight, and no arrow rest (off the shelf) for an additional +3%</td></tr>
+        <tr><td><strong>Olympic Recurve</strong> (ASA)</td><td><strong>+3%</strong></td><td>Finger release + sight</td></tr>
+        <tr><td><strong>Genesis</strong> (TFAA)</td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
+        <tr><td><strong>MBH</strong> (Modern Bowhunter, TFAA)</td><td><strong>+3%</strong></td><td>Fixed pins + 18" stabilizer limit</td></tr>
+        <tr><td>Every other ASA class</td><td>Baseline</td><td>Compound with sight and release</td></tr>
       </tbody>
     </table>
 

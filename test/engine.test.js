@@ -269,6 +269,7 @@ test('an outdoor row gives its ordinary rounds, and the State total as two halve
     name: 'Greybeard, Lee', org: 'TFAA Outdoor', orgClass: 'Senior Female - Freestyle (FS)', age: 'adult',
     eventScores: [510, 509, 508, 507],
     eventNames: ['2026 SYWAT #1', '2026 SYWAT #2', '2026 State Outdoor (Field)', '2026 State Outdoor (Hunter)'],
+    roundKinds: ['sywat', 'sywat', 'field', 'hunter'],
     maxPerRound: 560
   });
 });
@@ -421,6 +422,50 @@ test('the same archer in two organizations is merged and earns the cross-organiz
   assert.strictEqual(ranked[0].multiOrg, true);
   // Best five: 1080, 1080, 1050, 1050, 1050. Five events is 1.04, two organizations 1.03.
   assert.strictEqual(ranked[0].avgNPS, Math.round(1062 * 1.04 * 1.03));
+});
+
+function tfaaOutdoor(name, style, scores, roundKinds) {
+  return { name, org: 'TFAA Outdoor', orgClass: 'Adult Male - ' + style, age: 'adult', eventScores: scores, eventNames: scores.map((_, i) => 'Round ' + (i + 1)), roundKinds, maxPerRound: 560 };
+}
+
+function tfaaIndoorState(name, style, scores) {
+  const n = scores.length;
+  return {
+    name, org: 'TFAA Indoor', orgClass: 'Adult Male - ' + style, age: 'adult', eventScores: scores, eventNames: scores.map((_, i) => 'State ' + (i + 1)),
+    xCounts: scores.map(() => 0), isState: scores.map(() => true), roundMax: scores.map(() => 600), xMax: scores.map(() => 120), maxPerRound: 300
+  };
+}
+
+test('a TFAA round is scored against the national record for its style, with no equipment bonus', () => {
+  const { nationalRecords } = engine.rules;
+  assert.deepStrictEqual(nationalRecords.BBR, { indoor: 583, field: 481, hunter: 496 });
+  assert.deepStrictEqual(nationalRecords.LB, { indoor: 542, field: 376, hunter: 391 });
+
+  // Tying the national field or hunter record is worth what a perfect Freestyle round is.
+  const [barebow] = rank([tfaaOutdoor('A B', 'Barebow Recurve (BBR)', [481, 496, 400], ['field', 'hunter', 'sywat'])]);
+  const [freestyle] = rank([tfaaOutdoor('C D', 'Freestyle (FS)', [560, 560, 560], ['field', 'hunter', 'sywat'])]);
+  assert.deepStrictEqual(freestyle.rounds.map(r => r.nps), [1080, 1080, 1080]);
+  // A SYWAT round can be either, so it meets the average of the two records.
+  assert.deepStrictEqual(barebow.rounds.map(r => r.nps), [1080, 1080, Math.round(400 / ((481 + 496) / 2) * 1080)]);
+
+  // Bowhunter Freestyle's 5% goes: its record is the bar now.
+  const [bowhunter] = rank([tfaaOutdoor('E F', 'Bowhunter Freestyle (BHFS)', [554, 554, 554], ['field', 'hunter', 'sywat'])]);
+  assert.deepStrictEqual(bowhunter.rounds.map(r => r.nps), [1080, 1080, 1080]);
+
+  // Indoors the record is the two-day total: a 583 State in barebow recurve counts as a 600 in Freestyle.
+  const [indoorBarebow] = rank([tfaaIndoorState('G H', 'Barebow Recurve (BBR)', [583, 583, 583])]);
+  const [indoorFreestyle] = rank([tfaaIndoorState('I J', 'Freestyle (FS)', [600, 600, 600])]);
+  assert.strictEqual(indoorBarebow.bestNPS, indoorFreestyle.bestNPS);
+  assert.strictEqual(indoorFreestyle.bestNPS, Math.round(1000 * 0.95 * 1.15));
+});
+
+test('a style without a national record, and every Texas ASA round, keeps the perfect score and the equipment bonus', () => {
+  const [mbh] = rank([tfaaOutdoor('A B', 'Modern Bowhunter Freestyle (MBH)', [560, 560, 560], ['field', 'hunter', 'sywat'])]);
+  assert.strictEqual(mbh.bestNPS, Math.round(1000 * 1.08 * 1.03));
+  const [asaBarebow] = rank([asa('C D', [360, 360, 360], { orgClass: 'Barebow Recurve' })]);
+  assert.strictEqual(asaBarebow.bestNPS, Math.round(1000 * 1.05 * 1.08));
+  const [asaTraditional] = rank([asa('E F', [360, 360, 360], { orgClass: 'Traditional' })]);
+  assert.strictEqual(asaTraditional.bestNPS, Math.round(1000 * 1.05 * 1.08 * 1.03));
 });
 
 test('names are matched across "FIRST LAST" and "Last, First" spellings', () => {

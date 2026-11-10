@@ -1,0 +1,34 @@
+name: Live check
+
+# Reads the real Texas ASA and TFAA pages and checks that TAGR can still rank
+# from them, with a page by page summary. Run it by hand from the Actions tab;
+# it also runs on pull requests that touch the ranking code.
+on:
+  workflow_dispatch:
+  pull_request:
+    paths:
+      - 'tagr/**'
+      - 'scripts/check.js'
+      - '.github/workflows/live-check.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node scripts/check.js --peek --save tagr-pages
+      # What the sources sent, kept for three days so a failure can be looked into.
+      - if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: tagr-source-pages
+          path: tagr-pages
+          retention-days: 3
+          if-no-files-found: ignore

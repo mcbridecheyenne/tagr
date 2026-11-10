@@ -1,0 +1,388 @@
+<%- include('partials/header', { links, title: 'TAGR - Texas Archery Global Ranking', styles: `
+.tgr-container { max-width: 950px; margin: 0 auto; padding: 1rem; }
+.tgr-header { text-align: center; margin-bottom: 1.5rem; }
+.tgr-header h1 { color: var(--accent-gold); margin-bottom: 0.2rem; font-size: 2rem; letter-spacing: 0.05em; }
+.tgr-header h1 span { color: var(--accent-green); }
+.tgr-subtitle { color: var(--text-light); opacity: 0.7; font-size: 0.85rem; margin-bottom: 0.5rem; }
+.tgr-badges { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
+.tgr-src-badge { padding: 0.25rem 0.6rem; border-radius: 5px; font-size: 0.7rem; font-weight: bold; }
+.tgr-src-badge.asa { background: rgba(46,204,113,0.15); color: #2ecc71; border: 1px solid rgba(46,204,113,0.3); }
+.tgr-src-badge.tfaa { background: rgba(52,152,219,0.15); color: #3498db; border: 1px solid rgba(52,152,219,0.3); }
+.tgr-src-badge.indoor { background: rgba(155,89,182,0.15); color: #9b59b6; border: 1px solid rgba(155,89,182,0.3); }
+.tgr-src-badge.tsaa { background: rgba(155,89,182,0.15); color: #9b59b6; border: 1px solid rgba(155,89,182,0.3); opacity: 0.5; }
+.tgr-info { background: rgba(226,183,20,0.06); border: 1px solid rgba(226,183,20,0.15); border-radius: 8px; padding: 0.8rem; margin-bottom: 1.2rem; font-size: 0.8rem; color: var(--text-light); }
+.tgr-info strong { color: var(--accent-gold); }
+.tgr-tabs { display: flex; gap: 0.5rem; margin-bottom: 0.8rem; justify-content: center; flex-wrap: wrap; }
+.tgr-tab { padding: 0.5rem 1.5rem; background: #1a1a1a; border: 2px solid var(--border-color); border-radius: 8px; color: var(--text-light); cursor: pointer; font-weight: bold; font-size: 1rem; transition: all 0.2s; }
+.tgr-tab:hover { border-color: var(--accent-gold); }
+.tgr-tab.active { background: var(--accent-gold); color: #000; border-color: var(--accent-gold); }
+.tgr-class-tabs { display: flex; gap: 0.4rem; margin-bottom: 1rem; justify-content: center; flex-wrap: wrap; }
+.tgr-class-tab { padding: 0.35rem 0.8rem; background: #222; border: 1px solid var(--border-color); border-radius: 6px; color: var(--text-light); cursor: pointer; font-weight: 600; font-size: 0.8rem; transition: all 0.2s; }
+.tgr-class-tab:hover { border-color: var(--accent-green); color: var(--accent-green); }
+.tgr-class-tab.active { background: var(--accent-green); color: #000; border-color: var(--accent-green); }
+.tgr-search { width: 100%; padding: 0.6rem; background: #2d2d2d; border: 1px solid var(--border-color); color: var(--text-light); border-radius: 6px; font-size: 0.9rem; margin-bottom: 1rem; box-sizing: border-box; }
+.tgr-tw { overflow-x: auto; background: #1a1a1a; border: 1px solid var(--border-color); border-radius: 10px; }
+.tgr-table { width: 100%; border-collapse: collapse; }
+.tgr-table th { background: #2d2d2d; color: var(--accent-gold); padding: 0.7rem 0.6rem; text-align: left; font-size: 0.75rem; font-weight: bold; border-bottom: 2px solid var(--border-color); white-space: nowrap; }
+.tgr-table td { padding: 0.6rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-light); font-size: 0.85rem; }
+.tgr-table tr:hover { background: rgba(226,183,20,0.06); }
+.tgr-table tr.top1 { background: rgba(241,196,15,0.1); }
+.tgr-table tr.top2 { background: rgba(189,195,199,0.06); }
+.tgr-table tr.top3 { background: rgba(205,127,50,0.06); }
+.tgr-rank { font-weight: 900; min-width: 40px; }
+.tgr-rank-1 { color: #f1c40f; }
+.tgr-rank-2 { color: #bdc3c7; }
+.tgr-rank-3 { color: #cd7f32; }
+.tgr-name { font-weight: bold; white-space: nowrap; }
+.tgr-name-link { color: var(--accent-gold); cursor: pointer; text-decoration: none; border-bottom: 1px dotted rgba(226,183,20,0.5); }
+.tgr-name-link:hover { color: #fff; border-bottom-color: #fff; }
+.tgr-modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 1000; align-items: flex-start; justify-content: center; overflow-y: auto; padding: 2rem 1rem; }
+.tgr-modal-overlay.open { display: flex; }
+.tgr-modal { background: #1a1a1a; border: 1px solid var(--border-color); border-radius: 12px; max-width: 640px; width: 100%; padding: 1.5rem; box-shadow: 0 10px 40px rgba(0,0,0,0.6); }
+.tgr-modal-head { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 0.3rem; }
+.tgr-modal-head h2 { color: var(--accent-gold); font-size: 1.4rem; margin: 0; }
+.tgr-modal-close { background: none; border: none; color: var(--text-light); font-size: 1.6rem; cursor: pointer; line-height: 1; padding: 0 0.3rem; }
+.tgr-modal-close:hover { color: #e74c3c; }
+.tgr-modal-sub { color: var(--text-light); opacity: 0.7; font-size: 0.8rem; margin-bottom: 1rem; }
+.tgr-modal-summary { display: flex; gap: 0.8rem; flex-wrap: wrap; margin-bottom: 1.2rem; }
+.tgr-modal-summary .box { background: #222; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.5rem 0.9rem; text-align: center; }
+.tgr-modal-summary .box .n { font-size: 1.2rem; font-weight: 900; color: var(--accent-gold); }
+.tgr-modal-summary .box .l { font-size: 0.6rem; text-transform: uppercase; opacity: 0.6; }
+.tgr-rounds-table { width: 100%; border-collapse: collapse; }
+.tgr-rounds-table th { text-align: left; font-size: 0.7rem; color: var(--accent-gold); padding: 0.4rem; border-bottom: 1px solid var(--border-color); }
+.tgr-rounds-table td { padding: 0.4rem; font-size: 0.8rem; border-bottom: 1px solid rgba(255,255,255,0.04); color: var(--text-light); }
+.tgr-round-counted { color: #2ecc71; font-weight: bold; }
+.tgr-round-dropped { opacity: 0.45; }
+.tgr-round-note { font-size: 0.7rem; color: #8b949e; margin-top: 0.8rem; }
+.tgr-nps { font-weight: 900; font-size: 1rem; }
+.tgr-nps-high { color: #2ecc71; }
+.tgr-nps-mid { color: var(--accent-gold); }
+.tgr-nps-low { color: var(--text-light); }
+.tgr-org { font-size: 0.7rem; padding: 0.15rem 0.4rem; border-radius: 4px; font-weight: bold; white-space: nowrap; }
+.tgr-org.asa { background: rgba(46,204,113,0.15); color: #2ecc71; }
+.tgr-org.tfaa { background: rgba(52,152,219,0.15); color: #3498db; }
+.tgr-org.indoor { background: rgba(155,89,182,0.15); color: #9b59b6; }
+.tgr-eq { font-size: 0.7rem; padding: 0.15rem 0.5rem; border-radius: 4px; font-weight: bold; white-space: nowrap; }
+.tgr-eq.compound { background: rgba(231,76,60,0.15); color: #e74c3c; }
+.tgr-eq.barebow { background: rgba(46,204,113,0.15); color: #2ecc71; }
+.tgr-eq.traditional { background: rgba(230,126,34,0.15); color: #e67e22; }
+.tgr-eq.olympic { background: rgba(52,152,219,0.15); color: #3498db; }
+.tgr-eq.longbow { background: rgba(241,196,15,0.15); color: #f1c40f; }
+.tgr-provisional { opacity: 0.5; }
+.tgr-prov-badge { font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; background: rgba(231,76,60,0.15); color: #e74c3c; font-weight: bold; margin-left: 0.3rem; }
+.tgr-record-badge { font-size: 0.85rem; margin-left: 0.25rem; cursor: help; }
+.tgr-bar { height: 4px; border-radius: 2px; margin-top: 0.3rem; }
+.tgr-loading { text-align: center; padding: 3rem; color: var(--text-light); }
+.tgr-count { text-align: center; color: #8b949e; font-size: 0.75rem; margin-top: 0.8rem; }
+.tgr-stats { display: flex; gap: 1rem; justify-content: center; margin-bottom: 1.5rem; flex-wrap: wrap; }
+.tgr-stat { background: #1a1a1a; border: 1px solid var(--border-color); border-radius: 8px; padding: 0.6rem 1rem; text-align: center; min-width: 80px; }
+.tgr-stat .num { font-size: 1.4rem; font-weight: 900; color: var(--accent-gold); }
+.tgr-stat .lbl { font-size: 0.65rem; color: var(--text-light); opacity: 0.6; text-transform: uppercase; }
+@media (max-width: 600px) {
+  .tgr-header h1 { font-size: 1.4rem; }
+  .tgr-tab { padding: 0.4rem 1rem; font-size: 0.85rem; }
+  .tgr-class-tab { padding: 0.3rem 0.6rem; font-size: 0.7rem; }
+  .tgr-table th, .tgr-table td { padding: 0.4rem; font-size: 0.75rem; }
+}
+` }) %>
+
+<section>
+  <div class="tgr-container">
+    <div class="tgr-header">
+      <h1>🏹 <span>TAGR</span> Texas Archery Global Ranking</h1>
+      <div class="tgr-subtitle">Cross-Organization Normalized Performance Rankings — <%= new Date().getFullYear() - 2 %>–<%= new Date().getFullYear() %></div>
+      <div class="tgr-subtitle" id="updatedLine" style="min-height:1.3em;"></div>
+      <div class="tgr-badges">
+        <span class="tgr-src-badge asa">TX ASA</span>
+        <span class="tgr-src-badge tfaa">TFAA Outdoor</span>
+        <span class="tgr-src-badge indoor">TFAA Indoor</span>
+        <span class="tgr-src-badge tsaa">TSAA (coming soon)</span>
+      </div>
+    </div>
+
+    <div class="tgr-info" style="text-align:center;">
+      <a href="<%= links.how %>" style="color:var(--accent-gold);font-weight:bold;text-decoration:none;font-size:0.9rem;">📖 How TAGR Works — Scoring, Weights & Rules →</a>
+    </div>
+
+    <div class="tgr-stats" id="statsBar">
+      <div class="tgr-stat"><div class="num" id="statTotal">—</div><div class="lbl">Unique Archers</div></div>
+      <div class="tgr-stat"><div class="num" id="statAsa">—</div><div class="lbl">TX ASA</div></div>
+      <div class="tgr-stat"><div class="num" id="statTfaa">—</div><div class="lbl">TFAA Outdoor</div></div>
+      <div class="tgr-stat"><div class="num" id="statIndoor">—</div><div class="lbl">TFAA Indoor</div></div>
+      <div class="tgr-stat" id="mergedStat" style="display:none;"><div class="num" id="statMerged" style="color:#2ecc71;">—</div><div class="lbl">Cross-Org Merged</div></div>
+      <div class="tgr-stat" id="recordStat" style="display:none;"><div class="num" id="statRecords" style="color:#f1c40f;">—</div><div class="lbl">👑 Record Holders</div></div>
+    </div>
+
+    <div class="tgr-tabs">
+      <button class="tgr-tab active" onclick="switchAge('adult', this)">🏹 Adult (18+)</button>
+      <button class="tgr-tab" onclick="switchAge('youth', this)">🎯 Youth (Under 18)</button>
+    </div>
+
+    <div class="tgr-class-tabs" id="classTabs">
+      <button class="tgr-class-tab active" onclick="switchClass('all', this)">All Classes</button>
+      <button class="tgr-class-tab" onclick="switchClass('Compound', this)">🎯 Compound</button>
+      <button class="tgr-class-tab" onclick="switchClass('Barebow', this)">🏹 Barebow</button>
+      <button class="tgr-class-tab" onclick="switchClass('Traditional', this)">🪶 Traditional</button>
+      <button class="tgr-class-tab" onclick="switchClass('Olympic', this)">🥇 Olympic</button>
+      <button class="tgr-class-tab" onclick="switchClass('Longbow', this)">🏹 Longbow</button>
+    </div>
+
+    <input type="text" class="tgr-search" id="searchInput" placeholder="Search by name or organization class..." oninput="renderTable()">
+
+    <div id="rankingsContent">
+      <div class="tgr-loading">Loading TAGR rankings...</div>
+    </div>
+
+    <div class="tgr-count" id="countLine"></div>
+  </div>
+</section>
+
+<div class="tgr-modal-overlay" id="archerModal" onclick="if(event.target===this)closeArcher()">
+  <div class="tgr-modal">
+    <div class="tgr-modal-head">
+      <h2 id="amName"></h2>
+      <button class="tgr-modal-close" onclick="closeArcher()">&times;</button>
+    </div>
+    <div class="tgr-modal-sub" id="amSub"></div>
+    <div class="tgr-modal-summary" id="amSummary"></div>
+    <div id="amRounds"></div>
+    <div class="tgr-round-note">Rounds marked <span class="tgr-round-counted">✓</span> counted toward the TAGR score (best 5 by NPS). NPS = normalized performance score after difficulty, distance, equipment and X-count adjustments.</div>
+  </div>
+</div>
+
+<script>
+var tagrData = null;
+var currentAge = 'adult';
+var currentClass = 'all';
+var currentList = [];
+
+var retriesLeft = 10;
+
+// Names, classes and event labels come from other sites, so they are text, never HTML.
+function esc(value) {
+  return String(value == null ? '' : value)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+}
+
+async function loadTAGR() {
+  try {
+    var resp = await fetch(<%- JSON.stringify(links.api) %>);
+    if (resp.status === 503 && retriesLeft > 0) {
+      // Nothing stored yet (a fresh start): the first build is still running.
+      retriesLeft--;
+      document.getElementById('rankingsContent').innerHTML = '<div class="tgr-loading">The rankings are being rebuilt. This page will load them as soon as they are ready.</div>';
+      setTimeout(loadTAGR, 20000);
+      return;
+    }
+    if (!resp.ok) throw new Error('Failed');
+    tagrData = await resp.json();
+
+    if (tagrData.updatedAt) {
+      var updated = new Date(tagrData.updatedAt).toLocaleDateString(undefined, { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' });
+      document.getElementById('updatedLine').textContent = 'Updated ' + updated + '. Standings are refreshed every Tuesday morning.';
+    }
+
+    document.getElementById('statTotal').textContent = tagrData.sources.total;
+    document.getElementById('statAsa').textContent = tagrData.sources.txAsa;
+    document.getElementById('statTfaa').textContent = tagrData.sources.tfaa;
+    document.getElementById('statIndoor').textContent = tagrData.sources.tfaaIndoor || 0;
+    if (tagrData.sources.merged > 0) {
+      document.getElementById('statMerged').textContent = tagrData.sources.merged;
+      document.getElementById('mergedStat').style.display = '';
+    }
+    if (tagrData.sources.stateRecordHolders > 0) {
+      document.getElementById('statRecords').textContent = tagrData.sources.stateRecordHolders;
+      document.getElementById('recordStat').style.display = '';
+    }
+    
+    renderTable();
+  } catch(err) {
+    console.error(err);
+    document.getElementById('rankingsContent').innerHTML = '<div style="text-align:center;padding:2rem;color:#e74c3c;">Failed to load rankings. Try refreshing.</div>';
+  }
+}
+
+function switchAge(age, btn) {
+  currentAge = age;
+  document.querySelectorAll('.tgr-tab').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderTable();
+}
+
+function switchClass(cls, btn) {
+  currentClass = cls;
+  document.querySelectorAll('.tgr-class-tab').forEach(function(b) { b.classList.remove('active'); });
+  btn.classList.add('active');
+  renderTable();
+}
+
+function npsColorClass(nps, max) {
+  if (nps >= max * 0.8) return 'tgr-nps-high';
+  if (nps >= max * 0.6) return 'tgr-nps-mid';
+  return 'tgr-nps-low';
+}
+
+function renderTable() {
+  if (!tagrData) return;
+  var fullList = currentAge === 'adult' ? tagrData.adult : tagrData.youth;
+  var search = (document.getElementById('searchInput').value || '').toLowerCase();
+  
+  // Filter by equipment class FIRST (ranks are per-class)
+  if (currentClass !== 'all') {
+    fullList = fullList.filter(function(r) { return r.equipmentClass === currentClass; });
+  }
+
+  // Assign ranks on the FULL list (before search filter)
+  var rankedCount = 0;
+  fullList.forEach(function(r) {
+    if (r.provisional) {
+      r._rank = '—';
+      r._rankNum = 0;
+    } else {
+      rankedCount++;
+      r._rank = rankedCount;
+      r._rankNum = rankedCount;
+    }
+  });
+
+  // NOW apply search filter (ranks are preserved from full list)
+  var list = fullList;
+  if (search) {
+    list = list.filter(function(r) {
+      if (r.name.toLowerCase().indexOf(search) !== -1) return true;
+      if (r.orgClass.toLowerCase().indexOf(search) !== -1) return true;
+      if (r.org.toLowerCase().indexOf(search) !== -1) return true;
+      if ((search === 'record' || search === 'record holder') && r.stateRecord) return true;
+      return false;
+    });
+  }
+
+  var html = '<div class="tgr-tw"><table class="tgr-table"><thead><tr>';
+  html += '<th>#</th><th>Archer</th><th>TAGR Score</th><th>Best NPS</th><th>Events</th><th>X Count</th><th>Class</th><th>Organization</th><th>Org Class</th>';
+  html += '</tr></thead><tbody>';
+
+  if (list.length === 0) {
+    html += '<tr><td colspan="9" style="text-align:center;padding:2rem;color:#8b949e;">No archers found</td></tr>';
+  }
+
+  // Compute max NPS for dynamic bar scaling
+  var maxNPS = 1;
+  fullList.forEach(function(r) { if (r.avgNPS > maxNPS) maxNPS = r.avgNPS; });
+
+  list.forEach(function(r, idx) {
+    var isProvisional = r.provisional;
+    var rank = r._rank;
+    var rowClass = !isProvisional && r._rankNum === 1 ? 'top1' : !isProvisional && r._rankNum === 2 ? 'top2' : !isProvisional && r._rankNum === 3 ? 'top3' : '';
+    if (isProvisional) rowClass += ' tgr-provisional';
+    var rankClass = !isProvisional && r._rankNum <= 3 ? ' tgr-rank-' + r._rankNum : '';
+    var medal = !isProvisional && r._rankNum === 1 ? '🥇 ' : !isProvisional && r._rankNum === 2 ? '🥈 ' : !isProvisional && r._rankNum === 3 ? '🥉 ' : '';
+    var orgClass = r.org === 'TX ASA' ? 'asa' : r.org === 'TFAA Indoor' ? 'indoor' : r.org === 'TFAA Outdoor' ? 'tfaa' : '';
+    // Multi-org: show individual badges
+    var orgHtml = '';
+    if (r.multiOrg) {
+      var orgs = r.org.split(' + ');
+      orgs.forEach(function(o) {
+        var oc = o.trim() === 'TX ASA' ? 'asa' : o.trim() === 'TFAA Indoor' ? 'indoor' : 'tfaa';
+        orgHtml += '<span class="tgr-org ' + oc + '" style="margin-right:3px;">' + esc(o.trim()) + '</span>';
+      });
+    } else {
+      orgHtml = '<span class="tgr-org ' + orgClass + '">' + esc(r.org) + '</span>';
+    }
+    var npsClass = npsColorClass(r.avgNPS, maxNPS);
+    var barWidth = Math.min(100, Math.round(r.avgNPS / maxNPS * 100));
+    var barColor = r.avgNPS >= maxNPS * 0.8 ? '#2ecc71' : r.avgNPS >= maxNPS * 0.6 ? '#e2b714' : '#555';
+    var eqClass = (r.equipmentClass || 'Compound').toLowerCase().replace(/[^a-z]/g, '');
+
+    // Build state record tooltip if applicable
+    var recordBadge = '';
+    if (r.stateRecord && tagrData.stateRecords) {
+      var recs = tagrData.stateRecords[r.name.toLowerCase()] || [];
+      var tipLines = recs.map(function(rc) {
+        var typeLabel = rc.type === 'indoor' ? 'Indoor' : rc.type === 'outdoor' ? 'Outdoor' : '900 Round';
+        return typeLabel + ' — ' + rc.ageGroup + ' ' + rc.style + ' (' + rc.year + ', ' + rc.score + ')';
+      });
+      var tip = 'TFAA Record Holder:\n' + tipLines.join('\n');
+      recordBadge = '<span class="tgr-record-badge" title="' + esc(tip) + '">👑</span>';
+    }
+
+    html += '<tr class="' + rowClass + '">';
+    html += '<td class="tgr-rank' + rankClass + '">' + medal + rank + '</td>';
+    html += '<td class="tgr-name"><span class="tgr-name-link" onclick="showArcher(' + idx + ')">' + esc(r.name) + '</span>' + recordBadge + (isProvisional ? '<span class="tgr-prov-badge">PROVISIONAL</span>' : '') + '</td>';
+    html += '<td><span class="tgr-nps ' + npsClass + '">' + esc(r.avgNPS) + '</span><div class="tgr-bar" style="width:' + barWidth + '%;background:' + barColor + ';"></div></td>';
+    html += '<td>' + esc(r.bestNPS) + '</td>';
+    html += '<td>' + esc(r.events) + '</td>';
+    html += '<td style="font-size:0.8rem;color:#9b59b6;font-weight:bold;">' + (r.totalX > 0 ? esc(r.totalX) + 'X' : '—') + '</td>';
+    html += '<td><span class="tgr-eq ' + eqClass + '">' + esc(r.equipmentClass || 'Compound') + '</span></td>';
+    html += '<td>' + orgHtml + '</td>';
+    html += '<td style="font-size:0.7rem;color:#8b949e;">' + esc(r.orgClass) + '</td>';
+    html += '</tr>';
+  });
+
+  html += '</tbody></table></div>';
+  document.getElementById('rankingsContent').innerHTML = html;
+  currentList = list;
+  
+  var classLabel = currentClass === 'all' ? '' : ' — ' + currentClass;
+  document.getElementById('countLine').textContent = list.length + ' archer' + (list.length !== 1 ? 's' : '') + ' ranked — ' + (currentAge === 'adult' ? 'Adult 18+' : 'Youth Under 18') + classLabel;
+}
+
+function showArcher(idx) {
+  var r = currentList[idx];
+  if (!r) return;
+
+  document.getElementById('amName').textContent = r.name;
+
+  var subParts = [];
+  subParts.push(r.equipmentClass || 'Compound');
+  subParts.push(r.age === 'youth' ? 'Youth (Under 18)' : 'Adult (18+)');
+  if (r.multiOrg) subParts.push(r.org);
+  document.getElementById('amSub').textContent = subParts.join('  \u2022  ');
+
+  var rankTxt = r.provisional ? 'Provisional' : ('#' + r._rank);
+  document.getElementById('amSummary').innerHTML =
+    '<div class="box"><div class="n">' + esc(r.avgNPS) + '</div><div class="l">TAGR Score</div></div>' +
+    '<div class="box"><div class="n">' + esc(rankTxt) + '</div><div class="l">Rank</div></div>' +
+    '<div class="box"><div class="n">' + esc(r.events) + '</div><div class="l">Events</div></div>' +
+    '<div class="box"><div class="n">' + esc(r.bestNPS) + '</div><div class="l">Best NPS</div></div>' +
+    '<div class="box"><div class="n">' + (r.totalX > 0 ? esc(r.totalX) + 'X' : '\u2014') + '</div><div class="l">X Count</div></div>';
+
+  var rounds = r.rounds || [];
+  var rhtml;
+  if (rounds.length === 0) {
+    rhtml = '<div style="color:#8b949e;font-size:0.85rem;">No individual round data available.</div>';
+  } else {
+    rhtml = '<table class="tgr-rounds-table"><thead><tr>' +
+      '<th>#</th><th>Event</th><th>Organization</th><th>Org Class</th><th>Score</th><th>NPS</th><th>Counted</th>' +
+      '</tr></thead><tbody>';
+    rounds.forEach(function(rd, i) {
+      var oc = rd.org === 'TX ASA' ? 'asa' : rd.org === 'TFAA Indoor' ? 'indoor' : 'tfaa';
+      rhtml += '<tr class="' + (rd.counted ? '' : 'tgr-round-dropped') + '">' +
+        '<td>' + (i + 1) + '</td>' +
+        '<td>' + (rd.event ? esc(rd.event) : '\u2014') + '</td>' +
+        '<td><span class="tgr-org ' + oc + '">' + esc(rd.org) + '</span></td>' +
+        '<td style="font-size:0.72rem;color:#8b949e;">' + (rd.orgClass ? esc(rd.orgClass) : '\u2014') + '</td>' +
+        '<td>' + esc(rd.raw) + '</td>' +
+        '<td style="font-weight:bold;">' + esc(rd.nps) + '</td>' +
+        '<td>' + (rd.counted ? '<span class="tgr-round-counted">\u2713</span>' : '\u2014') + '</td>' +
+        '</tr>';
+    });
+    rhtml += '</tbody></table>';
+  }
+  document.getElementById('amRounds').innerHTML = rhtml;
+
+  document.getElementById('archerModal').classList.add('open');
+}
+
+function closeArcher() {
+  document.getElementById('archerModal').classList.remove('open');
+}
+
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeArcher();
+});
+
+loadTAGR();
+</script>
+
+<%- include('partials/footer', { links }) %>

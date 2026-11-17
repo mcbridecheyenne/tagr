@@ -53,10 +53,8 @@ test('the ranking worked out from the made-up pages is exactly the recorded one'
   const { result, problems, requests } = await engine.buildRankings({ fetchText: fakeFetch() });
   assert.deepStrictEqual(problems, []);
   // 46 tabs of the 2026 sheet and 45 of each older sheet, the TFAA season
-  // list, 4 outdoor seasons (one not started), 3 indoor seasons, 3 records pages,
-  // and for each of the 6 seasons read its list of shoots, with 1 shoot in one
-  // of them and 2 in another (the State Championship on a list is not asked for).
-  assert.strictEqual(requests, 46 + 45 + 45 + 1 + 4 + 3 + 3 + 6 + 1 + 2);
+  // list, 4 outdoor seasons (one not started), 3 indoor seasons, 3 records pages.
+  assert.strictEqual(requests, 46 + 45 + 45 + 1 + 4 + 3 + 3);
   if (process.env.UPDATE_GOLDEN) {
     fs.writeFileSync(goldenFile, JSON.stringify(withoutTimestamp(result), null, 1) + '\n');
     return;
@@ -174,7 +172,7 @@ test('the class table is consistent', () => {
 test('the three newest outdoor and indoor seasons with scores are read, from the season list', async () => {
   const { pages, asked, problems } = await build();
   assert.deepStrictEqual(problems, []);
-  const seasons = pages.filter(p => /^TFAA \d{4}/.test(p.what) && !/ shoots$/.test(p.what)).map(p => p.what + (p.note ? ' (' + p.note + ')' : ''));
+  const seasons = pages.filter(p => /^TFAA \d{4}/.test(p.what)).map(p => p.what + (p.note ? ' (' + p.note + ')' : ''));
   assert.deepStrictEqual(seasons, [
     'TFAA 2027 Outdoor (no scores yet)',
     'TFAA 2026 Outdoor (1 State score listed twice, counted once; 1 score above the round maximum left out)',
@@ -802,13 +800,13 @@ test('a title says how many archers were in the running for it', () => {
   assert.deepStrictEqual(fields, [['soy', 'Quillfeather, Avery', 1], ['state', 'Fletcher, Jordan', 2]]);
 });
 
-// ---- Who an archer beat ----
+// ---- Who an archer beat at State ----
 
 test('a round earns more for beating highly ranked archers than low ranked ones, up to 5%', () => {
   const { fieldBonusMax, fieldBeatTop, fieldStandingPower } = engine.rules;
   assert.deepStrictEqual([fieldBonusMax, fieldBeatTop, fieldStandingPower], [0.05, 0.025, 3]);
 
-  // Four archers in one class at one shoot ("e1"), and each with two more rounds elsewhere.
+  // Four archers in one class at one State Championship ("e1"), and each with two more rounds elsewhere.
   const at = (name, shoot, elsewhere) => ({
     ...asa(name, [shoot, elsewhere, elsewhere]),
     eventKeys: ['e1', null, null], fieldScores: [shoot, elsewhere, elsewhere]
@@ -859,65 +857,27 @@ test('a shoot nobody else shot in the class earns no bonus', () => {
   assert.strictEqual(alone.avgNPS, Math.round(Math.round(300 / 300 * 950) * 3 / 5));
 });
 
-test('the list of a season\'s shoots leaves out the State Championships', () => {
-  const list = sources.tfaaShootList(50, [[9002, '06/27/2026 - 06/28/2026', 'TFAA State Field Championship - 2026'], [9001, '04/18/2026 - 04/19/2026', 'Huaco Bowmen - 1'], [9005, '09/19/2026 - 09/20/2026', 'TFAA State 900 Championship 2026']]);
-  assert.deepStrictEqual(engine.parseTfaaShootList(list), [{ id: '9001', name: 'Huaco Bowmen - 1' }]);
-});
+test('only a State Championship round earns the bonus, in Texas ASA and in TFAA', async () => {
+  // A Texas ASA row: its qualifiers name no shoot to be compared at, its State score does.
+  const table = engine.parseGvizTable(sources.gviz(
+    ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE', 'A', 'B', 'STATE'],
+    [[1, 'KOREY', 'TWELVES', '71695', 'Tyler', 310, 302, { v: 298.0004, f: '298.0004' }]]
+  ));
+  const [archer] = engine.parseAsaRows(table, engine.ASA_TABS[0], 2026);
+  assert.deepStrictEqual(archer.eventKeys, [null, null, 'asa-state:2026:Open Pro:7']);
+  assert.deepStrictEqual(archer.fieldScores, [310, 302, 298.0004]);
 
-test('a SYWAT score is traced to the shoot it was shot at, and to everybody in the division there', () => {
-  const shoot = engine.parseTfaaShoot(sources.responseFor(TFAA + '/results/9001'));
-  assert.deepStrictEqual(shoot.find(e => e.name === 'Stabilizer, Riley'), { name: 'Stabilizer, Riley', orgClass: 'Adult Male - Freestyle (FS)', days: [{ score: 530, x: 0 }] });
-
-  const page = engine.parseTfaaPage(sources.responseFor(TFAA + '/results/sywat/50'), '2026 Outdoor', 'outdoor');
-  const fields = engine.attachTfaaShoots(page.shooters, [{ id: '9001', entries: shoot }], 'TFAA Outdoor');
-  const avery = page.shooters.find(s => s.name === 'Quillfeather, Avery');
-  // 545 is the score Avery shot at this shoot; the other two were shot somewhere TAGR cannot see.
-  assert.deepStrictEqual(avery.eventKeys.slice(0, 3), [null, 'tfaa:9001:Adult Male - Freestyle (FS)', null]);
-  // The field is everybody in the division at the shoot, Pat included, whose 480 is not in the standings.
-  assert.deepStrictEqual(fields['tfaa:9001:Adult Male - Freestyle (FS)'].map(e => [e.name, e.score]), [
-    ['Quillfeather, Avery', 545], ['Stabilizer, Riley', 530], ['Fletcher, Jordan', 520], ["O'Nock, Pat", 480]
-  ]);
-  // Sam was alone in the division.
-  assert.strictEqual(fields['tfaa:9001:Adult Male - Bowhunter Freestyle (BHFS)'].length, 1);
-});
-
-test('indoors a score is traced by its X count too, and a two-day shoot counts the archer\'s matching day', () => {
-  const page = indoorPage([freestyle('Adult Male', [
-    [1, 'Quillfeather, Avery', 300, 58, 299, 55, 300, 60, 0, 0, 899, 173],
-    [2, 'Mcarrow, Dana', 295, 40, 290, 35, 0, 0, 0, 0, 585, 75]
-  ])]);
-  const { shooters } = engine.parseTfaaPage(page, '2025-2026 Indoor', 'indoor');
-  const shoots = [
-    { id: '1', entries: [{ name: 'Quillfeather, Avery', orgClass: 'Adult Male - Freestyle (FS)', days: [{ score: 300, x: 51 }] }] },
-    { id: '2', entries: [
-      { name: 'Quillfeather, Avery', orgClass: 'Adult Male - Freestyle (FS)', days: [{ score: 298, x: 50 }, { score: 300, x: 60 }] },
-      { name: 'Mcarrow, Dana', orgClass: 'Adult Male - Freestyle (FS)', days: [{ score: 290, x: 35 }, { score: 280, x: 20 }] }
-    ] }
-  ];
-  const fields = engine.attachTfaaShoots(shooters, shoots, 'TFAA Indoor');
-  // Avery's 300 with 60 Xs is day two of shoot 2. The 300 with 51 Xs at shoot 1 is none of the three scores.
-  assert.deepStrictEqual(shooters[0].eventKeys, [null, null, 'tfaa:2:Adult Male - Freestyle (FS)']);
-  assert.deepStrictEqual(shooters[1].eventKeys, [null, 'tfaa:2:Adult Male - Freestyle (FS)']);
-  assert.deepStrictEqual(fields['tfaa:2:Adult Male - Freestyle (FS)'].map(e => e.score), [300.06, 290.035]);
-});
-
-test('the made-up pages give Avery a bonus for the archers beaten at Huaco, at State and in Texas ASA', async () => {
-  const { result, pages, problems } = await build();
+  const { result, problems } = await build();
   assert.deepStrictEqual(problems, []);
-  // A shoot whose page cannot be read is noted, not a problem.
-  assert.strictEqual(pages.find(p => p.what === 'TFAA 2025-2026 Indoor shoots').note, 'not read: The Vegas Shoot');
   const avery = result.adult.find(r => r.name === 'Avery Quillfeather');
   const round = event => avery.rounds.find(x => x.event === event);
-  assert.deepStrictEqual([round('2026 SYWAT #2').field, round('2026 SYWAT #2').beat], [3, 3]);
-  assert.ok(round('2026 SYWAT #2').fieldBonus > 0);
-  // The score the standings do not place at a shoot has no field.
-  assert.strictEqual(round('2026 SYWAT #1').field, 0);
+  // At State Outdoor, Avery beat the one other archer of the division with a State score.
   assert.deepStrictEqual([round('2026 State Outdoor (Field)').field, round('2026 State Outdoor (Field)').beat], [1, 1]);
-});
-
-test('when most of a season\'s shoots cannot be read, that is a problem', async () => {
-  const { problems } = await build({ '/results/9001': new Error('HTTP 500') });
-  assert.deepStrictEqual(problemLines(problems), ['TFAA 2026 Outdoor shoots: 1 of its 1 shoots could not be read']);
-  const list = await build({ '/results/season/50': new Error('HTTP 500') });
-  assert.deepStrictEqual(problemLines(list.problems), ['TFAA 2026 Outdoor shoots: HTTP 500']);
+  assert.ok(round('2026 State Outdoor (Field)').fieldBonus > 0);
+  // A SYWAT round and a Texas ASA qualifier have no field, whoever else shot them.
+  assert.deepStrictEqual([round('2026 SYWAT #2').field, round('2026 SYWAT #2').fieldBonus], [0, 0]);
+  assert.deepStrictEqual([round('2026 PARIS').field, round('2026 PARIS').fieldBonus], [0, 0]);
+  for (const r of result.adult.concat(result.youth)) {
+    for (const x of r.rounds) assert.ok(x.field === 0 || /state/i.test(x.event), r.name + ': ' + x.event);
+  }
 });

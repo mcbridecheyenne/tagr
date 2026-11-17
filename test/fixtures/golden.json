@@ -23,10 +23,10 @@
     1115,
     1113,
     1108,
-    1092,
-    1067
+    1055,
+    1052
    ],
-   "avgNPS": 1261,
+   "avgNPS": 1273,
    "bestNPS": 1115,
    "rounds": [
     {
@@ -63,34 +63,12 @@
      "fieldBonus": 0.0121
     },
     {
-     "raw": 545,
-     "nps": 1092,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2026 SYWAT #2",
-     "counted": true,
-     "field": 3,
-     "beat": 3,
-     "fieldBonus": 0.0394
-    },
-    {
-     "raw": 300,
-     "nps": 1067,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #1",
-     "counted": true,
-     "field": 2,
-     "beat": 2,
-     "fieldBonus": 0.0177
-    },
-    {
      "raw": 348,
      "nps": 1055,
      "org": "TX ASA",
      "orgClass": "Open Pro",
      "event": "2026 STATE",
-     "counted": false,
+     "counted": true,
      "field": 0,
      "beat": 0,
      "fieldBonus": 0
@@ -101,10 +79,21 @@
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2024-2025 State Indoor",
-     "counted": false,
+     "counted": true,
      "field": 1,
      "beat": 1,
      "fieldBonus": 0.0139
+    },
+    {
+     "raw": 545,
+     "nps": 1051,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2026 SYWAT #2",
+     "counted": false,
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 300,
@@ -112,6 +101,17 @@
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #3",
+     "counted": false,
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
+    },
+    {
+     "raw": 300,
+     "nps": 1048,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #1",
      "counted": false,
      "field": 0,
      "beat": 0,
@@ -174,14 +174,14 @@
     },
     {
      "raw": 352,
-     "nps": 1022,
+     "nps": 1017,
      "org": "TX ASA",
      "orgClass": "Open Pro",
      "event": "2026 PARIS",
      "counted": false,
-     "field": 1,
-     "beat": 1,
-     "fieldBonus": 0.0056
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 300,
@@ -262,25 +262,25 @@
     },
     {
      "raw": 350,
-     "nps": 969,
+     "nps": 966,
      "org": "TX ASA",
      "orgClass": "Known 50",
      "event": "2026 STEPHENVILLE",
      "counted": false,
-     "field": 1,
-     "beat": 1,
-     "fieldBonus": 0.0031
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 344,
-     "nps": 952,
+     "nps": 949,
      "org": "TX ASA",
      "orgClass": "Known 50",
      "event": "2026 PARIS",
      "counted": false,
-     "field": 1,
-     "beat": 1,
-     "fieldBonus": 0.0031
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 345,
@@ -400,25 +400,25 @@
    "bestScore": 530,
    "totalX": 0,
    "npsScores": [
-    1040,
+    1022,
     1021,
-    1002,
-    988,
+    997,
+    983,
     966
    ],
-   "avgNPS": 1150,
-   "bestNPS": 1040,
+   "avgNPS": 1145,
+   "bestNPS": 1022,
    "rounds": [
     {
      "raw": 530,
-     "nps": 1040,
+     "nps": 1022,
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2026 SYWAT #2",
      "counted": true,
-     "field": 3,
-     "beat": 2,
-     "fieldBonus": 0.017
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 335,
@@ -433,25 +433,25 @@
     },
     {
      "raw": 345,
-     "nps": 1002,
+     "nps": 997,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 KILGORE",
      "counted": true,
-     "field": 2,
-     "beat": 2,
-     "fieldBonus": 0.005
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 340,
-     "nps": 988,
+     "nps": 983,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 BROWNWOOD",
      "counted": true,
-     "field": 2,
-     "beat": 2,
-     "fieldBonus": 0.005
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 501,
@@ -466,36 +466,36 @@
     },
     {
      "raw": 330,
-     "nps": 959,
+     "nps": 954,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 TEMPLE",
      "counted": false,
-     "field": 2,
-     "beat": 2,
-     "fieldBonus": 0.005
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 325,
-     "nps": 944,
+     "nps": 940,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 STEPHENVILLE",
      "counted": false,
-     "field": 2,
-     "beat": 2,
-     "fieldBonus": 0.005
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 320,
-     "nps": 930,
+     "nps": 925,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 PARIS",
      "counted": false,
-     "field": 2,
-     "beat": 2,
-     "fieldBonus": 0.005
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 315,
@@ -674,8 +674,8 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 TEMPLE",
      "counted": false,
-     "field": 2,
-     "beat": 2,
+     "field": 0,
+     "beat": 0,
      "fieldBonus": 0
     },
     {
@@ -685,8 +685,8 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 PARIS",
      "counted": false,
-     "field": 2,
-     "beat": 2,
+     "field": 0,
+     "beat": 0,
      "fieldBonus": 0
     },
     {
@@ -696,8 +696,8 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 STEPHENVILLE",
      "counted": false,
-     "field": 2,
-     "beat": 2,
+     "field": 0,
+     "beat": 0,
      "fieldBonus": 0
     }
    ],
@@ -1059,10 +1059,10 @@
     1053,
     1053,
     1027,
-    1006,
+    1003,
     986
    ],
-   "avgNPS": 1109,
+   "avgNPS": 1107,
    "bestNPS": 1053,
    "rounds": [
     {
@@ -1100,14 +1100,14 @@
     },
     {
      "raw": 520,
-     "nps": 1006,
+     "nps": 1003,
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2026 SYWAT #1",
      "counted": true,
-     "field": 3,
-     "beat": 1,
-     "fieldBonus": 0.0031
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 299,
@@ -1154,22 +1154,22 @@
      "fieldBonus": 0
     },
     {
-     "raw": 336,
-     "nps": 952,
-     "org": "TX ASA",
-     "orgClass": "Known 45",
-     "event": "2026 PARIS",
-     "counted": false,
-     "field": 1,
-     "beat": 1,
-     "fieldBonus": 0.02
-    },
-    {
      "raw": 341,
      "nps": 948,
      "org": "TX ASA",
      "orgClass": "Known 45",
      "event": "2026 STEPHENVILLE",
+     "counted": false,
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
+    },
+    {
+     "raw": 336,
+     "nps": 934,
+     "org": "TX ASA",
+     "orgClass": "Known 45",
+     "event": "2026 PARIS",
      "counted": false,
      "field": 0,
      "beat": 0,
@@ -1246,7 +1246,7 @@
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #1",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -1938,25 +1938,25 @@
    "bestScore": 330,
    "totalX": 75,
    "npsScores": [
-    1028,
+    1016,
     995,
     953,
     918,
     780
    ],
-   "avgNPS": 982,
-   "bestNPS": 1028,
+   "avgNPS": 979,
+   "bestNPS": 1016,
    "rounds": [
     {
      "raw": 295,
-     "nps": 1028,
+     "nps": 1016,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #1",
      "counted": true,
-     "field": 2,
-     "beat": 1,
-     "fieldBonus": 0.0121
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 290,
@@ -1976,7 +1976,7 @@
      "orgClass": "Open Pro",
      "event": "2026 PARIS",
      "counted": true,
-     "field": 1,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -2119,12 +2119,12 @@
    "totalX": 0,
    "npsScores": [
     956,
-    941,
-    926,
-    897,
-    883
+    940,
+    925,
+    896,
+    882
    ],
-   "avgNPS": 967,
+   "avgNPS": 966,
    "bestNPS": 956,
    "rounds": [
     {
@@ -2140,58 +2140,58 @@
     },
     {
      "raw": 325,
-     "nps": 941,
+     "nps": 940,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 KILGORE",
      "counted": true,
-     "field": 2,
-     "beat": 1,
-     "fieldBonus": 0.0011
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 320,
-     "nps": 926,
+     "nps": 925,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 BROWNWOOD",
      "counted": true,
-     "field": 2,
-     "beat": 1,
-     "fieldBonus": 0.0011
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 310,
-     "nps": 897,
+     "nps": 896,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 TEMPLE",
      "counted": true,
-     "field": 2,
-     "beat": 1,
-     "fieldBonus": 0.0011
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 305,
-     "nps": 883,
+     "nps": 882,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 STEPHENVILLE",
      "counted": true,
-     "field": 2,
-     "beat": 1,
-     "fieldBonus": 0.0011
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     },
     {
      "raw": 300,
-     "nps": 868,
+     "nps": 867,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 PARIS",
      "counted": false,
-     "field": 2,
-     "beat": 1,
-     "fieldBonus": 0.0011
+     "field": 0,
+     "beat": 0,
+     "fieldBonus": 0
     }
    ],
    "multiOrg": false,
@@ -2389,7 +2389,7 @@
      "orgClass": "Known 50",
      "event": "2026 PARIS",
      "counted": false,
-     "field": 1,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -2422,7 +2422,7 @@
      "orgClass": "Known 50",
      "event": "2026 STEPHENVILLE",
      "counted": false,
-     "field": 1,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -2698,7 +2698,7 @@
      "orgClass": "Men's Open 45",
      "event": "2026 KILGORE",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -2709,7 +2709,7 @@
      "orgClass": "Men's Open 45",
      "event": "2026 BROWNWOOD",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -2720,7 +2720,7 @@
      "orgClass": "Men's Open 45",
      "event": "2026 TEMPLE",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -2731,7 +2731,7 @@
      "orgClass": "Men's Open 45",
      "event": "2026 STEPHENVILLE",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     },
@@ -2742,7 +2742,7 @@
      "orgClass": "Men's Open 45",
      "event": "2026 PARIS",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     }
@@ -3198,8 +3198,8 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 TEMPLE",
      "counted": true,
-     "field": 2,
-     "beat": 1,
+     "field": 0,
+     "beat": 0,
      "fieldBonus": 0
     },
     {
@@ -3209,8 +3209,8 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 PARIS",
      "counted": true,
-     "field": 2,
-     "beat": 1,
+     "field": 0,
+     "beat": 0,
      "fieldBonus": 0
     },
     {
@@ -3220,7 +3220,7 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 STEPHENVILLE",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     }
@@ -3261,8 +3261,8 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 STEPHENVILLE",
      "counted": true,
-     "field": 2,
-     "beat": 1,
+     "field": 0,
+     "beat": 0,
      "fieldBonus": 0
     },
     {
@@ -3272,7 +3272,7 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 TEMPLE",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     }
@@ -3313,7 +3313,7 @@
      "orgClass": "Men's Pins 30",
      "event": "2026 PARIS",
      "counted": true,
-     "field": 2,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     }
@@ -3491,7 +3491,7 @@
      "orgClass": "Known 45",
      "event": "2026 PARIS",
      "counted": false,
-     "field": 1,
+     "field": 0,
      "beat": 0,
      "fieldBonus": 0
     }

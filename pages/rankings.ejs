@@ -157,7 +157,7 @@
     <div class="tgr-modal-summary" id="amSummary"></div>
     <ul class="tgr-modal-titles" id="amTitles"></ul>
     <div id="amRounds"></div>
-    <div class="tgr-round-note">Rounds marked <span class="tgr-round-counted">✓</span> counted toward the TAGR score (best 5 by NPS). NPS = normalized performance score after difficulty, distance, equipment, X-count, State Championship and season adjustments. <strong>Beat</strong> is how many archers in the same class at the same shoot the round beat, and the bonus for beating them (more for highly ranked archers).</div>
+    <div class="tgr-round-note">Rounds marked <span class="tgr-round-counted">✓</span> counted toward the TAGR score (best 5 by NPS). NPS = normalized performance score after difficulty, distance, equipment, X-count, State Championship and season adjustments. <strong>Beat</strong> is how many archers in the same class a State Championship round beat, and the bonus for beating them (more for highly ranked archers).</div>
   </div>
 </div>
 
@@ -374,7 +374,7 @@ function renderTable() {
   document.getElementById('countLine').textContent = list.length + ' archer' + (list.length !== 1 ? 's' : '') + ' ranked — ' + (currentAge === 'adult' ? 'Adult 18+' : 'Youth Under 18') + classLabel;
 }
 
-// Who the round beat in its class at the shoot, and the bonus that earned.
+// Who a State Championship round beat in its class, and the bonus that earned.
 function beatText(rd) {
   if (!rd.field) return '<span style="color:#555;">\u2014</span>';
   var text = esc(rd.beat) + ' of ' + esc(rd.field);

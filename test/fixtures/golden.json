@@ -315,7 +315,8 @@
      "season": "2025-2026",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     },
     {
      "kind": "soy",
@@ -323,7 +324,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -331,7 +333,8 @@
      "season": "2025-2026",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     },
     {
      "kind": "state",
@@ -339,7 +342,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     },
     {
      "kind": "state",
@@ -347,7 +351,8 @@
      "season": "2026",
      "orgClass": "Open Pro",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -355,7 +360,8 @@
      "season": "2024-2025",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     },
     {
      "kind": "soy",
@@ -363,7 +369,8 @@
      "season": "2025",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     },
     {
      "kind": "state",
@@ -371,7 +378,8 @@
      "season": "2024-2025",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     },
     {
      "kind": "state",
@@ -379,7 +387,8 @@
      "season": "2025",
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     }
    ],
    "titleBonus": 1.0506
@@ -530,7 +539,8 @@
      "season": "2026",
      "orgClass": "Men's Open 45",
      "field": 3,
-     "bonus": true
+     "bonus": true,
+     "past": false
     },
     {
      "kind": "state",
@@ -538,7 +548,8 @@
      "season": "2026",
      "orgClass": "Men's Open 45",
      "field": 2,
-     "bonus": true
+     "bonus": true,
+     "past": false
     }
    ],
    "titleBonus": 1.0506
@@ -711,7 +722,8 @@
      "season": "2025-2026",
      "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -719,7 +731,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -727,7 +740,8 @@
      "season": "2025-2026",
      "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -735,7 +749,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -987,7 +1002,8 @@
      "season": "2025-2026",
      "orgClass": "Master Senior Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -995,7 +1011,8 @@
      "season": "2026",
      "orgClass": "Senior Female - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1003,7 +1020,8 @@
      "season": "2025-2026",
      "orgClass": "Master Senior Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1011,7 +1029,8 @@
      "season": "2026",
      "orgClass": "Senior Female - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -1019,7 +1038,8 @@
      "season": "2025",
      "orgClass": "Master Senior Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1027,7 +1047,8 @@
      "season": "2025",
      "orgClass": "Master Senior Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1035,7 +1056,8 @@
      "season": "2025",
      "orgClass": "Senior Known 50",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -1469,7 +1491,8 @@
      "season": "2023-2024",
      "orgClass": "Adult Female - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -1477,7 +1500,8 @@
      "season": "2024",
      "orgClass": "Adult Female - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1485,7 +1509,8 @@
      "season": "2023-2024",
      "orgClass": "Adult Female - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1493,7 +1518,8 @@
      "season": "2024",
      "orgClass": "Adult Female - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -1587,7 +1613,8 @@
      "season": "2026",
      "orgClass": "Silver Senior Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1595,7 +1622,8 @@
      "season": "2026",
      "orgClass": "Silver Senior Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -1712,7 +1740,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1720,7 +1749,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -1893,7 +1923,8 @@
      "season": "2025-2026",
      "orgClass": "Adult Male - Barebow Recurve (BBR)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -1901,7 +1932,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Barebow Recurve (BBR)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1909,7 +1941,8 @@
      "season": "2025-2026",
      "orgClass": "Adult Male - Barebow Recurve (BBR)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -1917,7 +1950,17 @@
      "season": "2026",
      "orgClass": "Adult Male - Barebow Recurve (BBR)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
+    },
+    {
+     "kind": "soy",
+     "org": "TFAA Indoor",
+     "season": "2022-2023",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 2,
+     "bonus": false,
+     "past": true
     }
    ],
    "titleBonus": 1
@@ -2099,7 +2142,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Modern Bowhunter (MBH)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -2289,7 +2333,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Freestyle Limited (FSL)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -2297,7 +2342,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Freestyle Limited (FSL)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -2459,7 +2505,8 @@
      "season": "2026",
      "orgClass": "Known 50",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -2553,7 +2600,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Bowhunter Freestyle Limited (BHFSL)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -2561,7 +2609,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Bowhunter Freestyle Limited (BHFSL)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -2655,7 +2704,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Barebow Compound (BBC)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -2663,7 +2713,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Barebow Compound (BBC)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -2888,7 +2939,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Traditional (TRAD)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -2896,7 +2948,17 @@
      "season": "2026",
      "orgClass": "Adult Male - Traditional (TRAD)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
+    },
+    {
+     "kind": "state",
+     "org": "TFAA Indoor",
+     "season": "2022-2023",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 2,
+     "bonus": false,
+     "past": true
     }
    ],
    "titleBonus": 1
@@ -2990,7 +3052,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Barebow (BB)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -2998,7 +3061,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Barebow (BB)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -3092,7 +3156,8 @@
      "season": "2026",
      "orgClass": "Adult Male - Longbow (LB)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -3100,7 +3165,26 @@
      "season": "2026",
      "orgClass": "Adult Male - Longbow (LB)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
+    },
+    {
+     "kind": "soy",
+     "org": "TFAA Indoor",
+     "season": "2022-2023",
+     "orgClass": "Adult Male - Longbow (LB)",
+     "field": 1,
+     "bonus": false,
+     "past": true
+    },
+    {
+     "kind": "state",
+     "org": "TFAA Indoor",
+     "season": "2022-2023",
+     "orgClass": "Adult Male - Longbow (LB)",
+     "field": 1,
+     "bonus": false,
+     "past": true
     }
    ],
    "titleBonus": 1
@@ -3506,7 +3590,8 @@
      "season": "2025-2026",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -3514,7 +3599,8 @@
      "season": "2026",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -3522,7 +3608,8 @@
      "season": "2025-2026",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -3530,7 +3617,8 @@
      "season": "2026",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -3692,7 +3780,8 @@
      "season": "2025-2026",
      "orgClass": "Cub Female - Genesis",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "soy",
@@ -3700,7 +3789,8 @@
      "season": "2026",
      "orgClass": "Youth Female - Genesis",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -3708,7 +3798,8 @@
      "season": "2025-2026",
      "orgClass": "Cub Female - Genesis",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -3716,7 +3807,8 @@
      "season": "2026",
      "orgClass": "Youth Female - Genesis",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -3810,7 +3902,8 @@
      "season": "2026",
      "orgClass": "Cub Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     },
     {
      "kind": "state",
@@ -3818,7 +3911,8 @@
      "season": "2026",
      "orgClass": "Cub Male - Freestyle (FS)",
      "field": 1,
-     "bonus": false
+     "bonus": false,
+     "past": false
     }
    ],
    "titleBonus": 1
@@ -3989,8 +4083,8 @@
    "Youth Olympic Recurve": 300
   },
   "titleHolders": 19,
-  "soyTitles": 27,
-  "stateTitles": 31
+  "soyTitles": 29,
+  "stateTitles": 33
  },
  "stateRecords": {
   "avery quillfeather": [

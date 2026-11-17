@@ -94,6 +94,10 @@ const ASA_BATCH_SIZE = 5;
 const TFAA_BASE = 'https://texasfieldarchery.org';
 const TFAA_SEASON_LIST_URL = TFAA_BASE + '/results/sywat';
 const TFAA_SEASONS_RANKED = 3;
+// Titles are shown for every season back to this one: the oldest whose
+// standings TFAA still publishes. Seasons before the ranked ones are read for
+// their titles only.
+const TFAA_TITLES_FROM = 2015;
 const TFAA_RECORD_PAGES = [
   { type: 'indoor', url: TFAA_BASE + '/records/indoor' },
   { type: 'outdoor', url: TFAA_BASE + '/records/outdoor' },
@@ -502,7 +506,7 @@ function readTfaaEntries(html) {
       if (kind !== 'round' && kind !== 'state') return;
       scores.push({ kind, score: tfaaNumber(cells[i]), x: columns[i + 1] === 'x' ? tfaaNumber(cells[i + 1]) : 0 });
     });
-    entries.push({ name: cells[nameAt], age, adult, style, scores });
+    entries.push({ name: cells[nameAt], age, adult, style, scores, place: cells[0] });
   }
   return { entries, unreadRows };
 }
@@ -627,6 +631,47 @@ function parseTfaaOutdoorHtml(html, seasonLabel) {
 
 function parseTfaaIndoorHtml(html, seasonLabel) {
   return parseTfaaPage(html, seasonLabel, 'indoor').shooters;
+}
+
+// ---- Titles of the seasons before the ranked ones ----
+//
+// In the standings of older seasons the State column holds one day's score,
+// not the State total, so the State Champions of those seasons are taken from
+// the results of the State Championship itself.
+
+// A season's list of shoots (/results/season/<id>) → the ids of its State
+// Championship: the State shoot that is not the 900 round, the 3D shoot or an
+// overflow line.
+function parseTfaaStateShoots(html) {
+  const ids = [];
+  const link = /<a\s+href\s*=\s*["']\/results\/(\d+)["'][^>]*>([^<]*)/gi;
+  let m;
+  while ((m = link.exec(html)) !== null) {
+    const name = tfaaText(m[2]);
+    if (/\bstate\b/i.test(name) && !/900|3d|overflow/i.test(name) && !ids.includes(m[1])) ids.push(m[1]);
+  }
+  return ids;
+}
+
+// The results page of a State Championship → its champions as titles: the
+// archer placed first in each division, and how many shot the division.
+function parseTfaaStateChampions(html, org, season) {
+  // Newer pages write the division's code after the archer's name.
+  const { entries } = readTfaaEntries(html.replace(/<span class=['"]divstyle['"]>[^<]*<\/span>/gi, ''));
+  const divisions = new Map();
+  for (const entry of entries) {
+    if (!entry.name) continue;
+    const orgClass = entry.age + ' - ' + entry.style;
+    if (!divisions.has(orgClass)) divisions.set(orgClass, { champion: null, names: new Set() });
+    const division = divisions.get(orgClass);
+    division.names.add(nameKey(entry.name));
+    if (!division.champion && entry.place === '1') division.champion = entry.name;
+  }
+  const titles = [];
+  for (const [orgClass, division] of divisions) {
+    if (division.champion) titles.push({ name: division.champion, org, orgClass, kind: 'state', season, field: division.names.size, past: true });
+  }
+  return titles;
 }
 
 // The season list on a TFAA results page → [{ id, label, kind, year }], newest first.
@@ -989,12 +1034,26 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   }
 
   // Titles go to the archer's ranking in the equipment class they were won in.
+  // A title from before the ranked seasons (`past`) earns no bonus, and where
+  // the archer has no ranking in its equipment class any more it shows on the
+  // rankings the archer does have, so a career's titles are not lost.
+  const rankingsOf = {};
+  for (const m of Object.values(mergedMap)) {
+    const name = nameKey(m.name);
+    if (!rankingsOf[name]) rankingsOf[name] = [];
+    rankingsOf[name].push(m.key);
+  }
   const titlesByKey = {};
   for (const t of titles) {
     const key = keyOf(t.name) + '||' + mapEquipmentClass(t.orgClass, t.org);
-    if (!mergedMap[key]) continue;
-    if (!titlesByKey[key]) titlesByKey[key] = [];
-    titlesByKey[key].push({ kind: t.kind, org: t.org, season: t.season, orgClass: t.orgClass, field: t.field || 1, bonus: (t.field || 1) >= TITLE_BONUS_MIN_FIELD });
+    const keys = mergedMap[key] ? [key] : t.past ? rankingsOf[keyOf(t.name)] || [] : [];
+    for (const k of keys) {
+      if (!titlesByKey[k]) titlesByKey[k] = [];
+      titlesByKey[k].push({
+        kind: t.kind, org: t.org, season: t.season, orgClass: t.orgClass, field: t.field || 1,
+        bonus: !t.past && (t.field || 1) >= TITLE_BONUS_MIN_FIELD, past: Boolean(t.past)
+      });
+    }
   }
   // Newest first, and Shooter of the Year before State Champion within a season.
   const titleOrder = (a, b) => b.season.slice(-4) - a.season.slice(-4) || a.kind.localeCompare(b.kind) || a.org.localeCompare(b.org);
@@ -1299,12 +1358,14 @@ async function readSources(fetchText, { asaSnapshots = [] } = {}) {
   // Reads the newest seasons of one kind. A season nobody has shot in yet is
   // passed over for the one before it, so three seasons with scores are ranked.
   // An unreadable season is not replaced: it is a problem, not an empty season.
+  const seasonsRead = new Set();
   async function readTfaaSeasons(kind) {
     const shooters = [];
     let counted = 0;
     for (const season of seasons) {
       if (season.kind !== kind) continue;
       if (counted === TFAA_SEASONS_RANKED) break;
+      seasonsRead.add(season.id);
       const what = 'TFAA ' + season.label;
       const url = TFAA_BASE + '/results/sywat/' + season.id;
       const html = await read(url, what);
@@ -1354,6 +1415,52 @@ async function readSources(fetchText, { asaSnapshots = [] } = {}) {
   const tfaaShooters = await readTfaaSeasons('outdoor');
   const tfaaIndoorShooters = await readTfaaSeasons('indoor');
 
+  // The titles of the seasons before the ranked ones. They are for show, so a
+  // page that cannot be read here is noted and passed over: it never holds
+  // the standings back.
+  async function readQuietly(url) {
+    requests++;
+    try {
+      return await fetchText(url);
+    } catch (err) {
+      return null;
+    }
+  }
+  for (const season of seasons) {
+    if (seasonsRead.has(season.id) || season.year < TFAA_TITLES_FROM) continue;
+    const what = 'TFAA ' + season.label + ' titles';
+    const url = TFAA_BASE + '/results/sywat/' + season.id;
+    const html = await readQuietly(url);
+    const layout = html === null ? null : tfaaPageLayout(html);
+    if (layout === null) {
+      if (html === null) pages.push({ what, url, results: 0, note: 'could not be read' });
+      continue;
+    }
+    const page = parseTfaaPage(html, season.label, layout);
+    const org = layout === 'outdoor' ? 'TFAA Outdoor' : 'TFAA Indoor';
+    const yr = season.label.replace(/\s*(Outdoor|Indoor)\s*/i, '').trim();
+    const past = page.titles.filter(t => t.kind === 'soy').map(t => ({ ...t, past: true }));
+    const notes = [];
+    const list = await readQuietly(TFAA_BASE + '/results/season/' + season.id);
+    const stateShoots = list === null ? [] : parseTfaaStateShoots(list);
+    if (list === null) notes.push('its list of shoots could not be read');
+    const champions = new Map();
+    for (const id of stateShoots) {
+      const results = await readQuietly(TFAA_BASE + '/results/' + id);
+      if (results === null) {
+        notes.push('its State Championship results could not be read');
+        continue;
+      }
+      // Where two pages hold the State Championship, a division's champion is the first found.
+      for (const t of parseTfaaStateChampions(results, org, yr)) {
+        if (!champions.has(t.orgClass)) champions.set(t.orgClass, t);
+      }
+    }
+    past.push(...champions.values());
+    titles.push(...past);
+    pages.push(notes.length > 0 ? { what, url, results: past.length, note: notes.join('; ') } : { what, url, results: past.length });
+  }
+
   const recordPages = await Promise.all(TFAA_RECORD_PAGES.map(async page => {
     const what = 'TFAA ' + page.type + ' records';
     const html = await read(page.url, what);
@@ -1388,6 +1495,8 @@ module.exports = {
   parseTfaaRecordsHtml,
   parseTfaaSeasonList,
   parseTfaaPage,
+  parseTfaaStateShoots,
+  parseTfaaStateChampions,
   asaTitlesOf,
   sameAsaSeason,
   tfaaPageLayout,

@@ -405,7 +405,7 @@ function showArcher(idx) {
 
   document.getElementById('amTitles').innerHTML = TITLE_KINDS.map(function(k) {
     return (r.titles || []).filter(function(t) { return t.kind === k.kind; }).map(function(t) {
-      return '<li>' + k.icon + ' ' + esc(titleLine(t)) + (t.bonus === false ? ' <span style="color:#8b949e;">(unopposed, no bonus)</span>' : '') + '</li>';
+      return '<li>' + k.icon + ' ' + esc(titleLine(t)) + (t.past ? ' <span style="color:#8b949e;">(earlier season, no bonus)</span>' : t.bonus === false ? ' <span style="color:#8b949e;">(unopposed, no bonus)</span>' : '') + '</li>';
     }).join('');
   }).join('');
 

@@ -20,7 +20,7 @@ GitHub switches off the timer of a public repository after 60 days without a com
 
 The site's **How TAGR Works** page explains it. Its weights and national records are printed from the same numbers the code uses, so the page and the ranking cannot drift apart.
 
-Shooters of the Year (🏆) and State Champions (⭐) are worked out from the same pages: the TOTAL SCORE and STATE columns of the Texas ASA sheets, and TFAA's SYWAT aggregate and State scores. They are shown beside the archer's name and add a bonus to the TAGR score (`SOY_TITLE_BONUS` and `STATE_TITLE_BONUS` in `tagr/engine.js`) when the title was won against at least one other archer.
+Shooters of the Year (🏆) and State Champions (⭐) are worked out from the same pages: the TOTAL SCORE and STATE columns of the Texas ASA sheets, and TFAA's SYWAT aggregate and State scores. TFAA titles go back to the 2015-2016 season: the seasons before the three that are ranked are read for their titles only, with the State Champions taken from the results of the State Championship itself. Titles are shown beside the archer's name, and those from the ranked seasons add a bonus to the TAGR score (`SOY_TITLE_BONUS` and `STATE_TITLE_BONUS` in `tagr/engine.js`) when the title was won against at least one other archer.
 
 TFAA rounds are scored against the NFAA national record for each style (`NATIONAL_RECORDS` in `tagr/engine.js`), not against the perfect score. Texas ASA rounds are scored against the best score of their own class in the seasons read. A State Championship round also earns up to 5% for the ranked archers it beat in its class. When NFAA publishes new records, update them there, with the date of the list they come from, and run `UPDATE_GOLDEN=1 npm test`.
 

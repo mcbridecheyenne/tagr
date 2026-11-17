@@ -395,7 +395,52 @@ const tfaaSeasonNotStarted = tfaaResultsPage(55, '2027 Shoot Your Way Across Tex
 // What the site sends, with a normal "200 OK", for a season id it does not have.
 const TFAA_NOT_FOUND = '<html><head><title>TFAA</title></head><body><h1>TFAA</h1><h2>Page Not Found</h2></body></html>\n';
 
+// ---------- A season before the ranked ones ----------
+
+// Its standings, as older seasons have them: the State column holds one day's
+// score, so Casey's 280 is ahead of Robin's 270 there.
+const tfaaIndoor2023 = tfaaResultsPage(33, '2022-2023 Indoor Shoot Your Way Across Texas', INDOOR_HEADS, [
+  { age: 'Adult Male', styles: [
+    { style: 'Barebow Recurve (BBR)', rows: [
+      [1, 'Stringwalker, Casey', 250, 10, 245, 8, 240, 5, 280, 17, 1015, 40],
+      [2, 'Shelfshooter, Robin', 249, 9, 244, 7, 239, 4, 270, 18, 1002, 38]
+    ] },
+    { style: 'Longbow (LB)', rows: [
+      [1, 'Yew, Stick', 200, 2, 190, 1, 180, 0, 210, 3, 780, 6]
+    ] }
+  ] }
+]);
+
+// The season's list of shoots (/results/season/<id>).
+function tfaaShootList(seasonId, shoots) {
+  return '<html><body>\n<h1>Results</h1>\n' + tfaaSeasonList(seasonId) + '<table class="table table-hover">\n' +
+    shoots.map(([id, dates, name]) => "<tr><td class='text-center'>" + dates + '</td><td><a href = "/results/' + id + '">' + name + '</a></td></tr>').join('') +
+    '\n</table>\n</body></html>\n';
+}
+
+// The State Championship itself: both days, and Robin first on the total.
+// Newer pages write the division's code after the archer's name.
+const STATE_INDOOR_HEADS = ['Score', 'Xs', 'Score', 'Xs', 'Total', 'Total X', 'I/Os'];
+const tfaaStateIndoor2023 = tfaaResultsPage(33, 'Results - TFAA State Championship 2023', STATE_INDOOR_HEADS, [
+  { age: 'Adult Male', styles: [
+    { style: 'Barebow Recurve (BBR)', rows: [
+      [1, "Shelfshooter, Robin <span class='divstyle'>AMBBR</span>", 270, 18, 285, 20, 555, 38, 0],
+      [2, "Stringwalker, Casey <span class='divstyle'>AMBBR</span>", 280, 17, 270, 12, 550, 29, 0]
+    ] },
+    { style: 'Longbow (LB)', rows: [
+      [1, "Yew, Stick <span class='divstyle'>AMLB</span>", 210, 3, 205, 2, 415, 5, 0]
+    ] }
+  ] }
+]);
+
 const tfaaPages = {
+  '/results/sywat/33': tfaaIndoor2023,
+  '/results/season/33': tfaaShootList(33, [
+    [9011, '03/03/2023 - 03/05/2023', 'TFAA State Championship 2023'],
+    [9012, '09/16/2023 - 09/17/2023', 'TFAA State 900'],
+    [9013, '01/14/2023 - 01/15/2023', 'Arena Archery - 1']
+  ]),
+  '/results/9011': tfaaStateIndoor2023,
   // With no season id the site shows whichever season is current. Here that is
   // the newest indoor one, so nothing may treat this page as a fixed season.
   '/results/sywat': tfaaIndoor2026,
@@ -440,6 +485,6 @@ function responseFor(url) {
 }
 
 module.exports = {
-  responseFor, asaUrl, gviz, tfaaResultsPage, tfaaRecordsPage, tfaaSeasonList,
+  responseFor, asaUrl, gviz, tfaaResultsPage, tfaaRecordsPage, tfaaSeasonList, tfaaShootList,
   OUTDOOR_HEADS, INDOOR_HEADS, EMPTY_TAB, SUMMARY_SHEET, TFAA_NOT_FOUND, ASA_2026, ASA_2025, ASA_2024
 };

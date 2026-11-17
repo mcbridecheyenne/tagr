@@ -53,8 +53,11 @@ test('the ranking worked out from the made-up pages is exactly the recorded one'
   const { result, problems, requests } = await engine.buildRankings({ fetchText: fakeFetch() });
   assert.deepStrictEqual(problems, []);
   // 46 tabs of the 2026 sheet and 45 of each older sheet, the TFAA season
-  // list, 4 outdoor seasons (one not started), 3 indoor seasons, 3 records pages.
-  assert.strictEqual(requests, 46 + 45 + 45 + 1 + 4 + 3 + 3);
+  // list, 4 outdoor seasons (one not started), 3 indoor seasons, 3 records pages,
+  // and for their titles the two seasons before the ranked ones: one the site
+  // has no page for, the other with its standings, its list of shoots and its
+  // State Championship.
+  assert.strictEqual(requests, 46 + 45 + 45 + 1 + 4 + 3 + 3 + 1 + 3);
   if (process.env.UPDATE_GOLDEN) {
     fs.writeFileSync(goldenFile, JSON.stringify(withoutTimestamp(result), null, 1) + '\n');
     return;
@@ -172,7 +175,7 @@ test('the class table is consistent', () => {
 test('the three newest outdoor and indoor seasons with scores are read, from the season list', async () => {
   const { pages, asked, problems } = await build();
   assert.deepStrictEqual(problems, []);
-  const seasons = pages.filter(p => /^TFAA \d{4}/.test(p.what)).map(p => p.what + (p.note ? ' (' + p.note + ')' : ''));
+  const seasons = pages.filter(p => /^TFAA \d{4}/.test(p.what) && !/ titles$/.test(p.what)).map(p => p.what + (p.note ? ' (' + p.note + ')' : ''));
   assert.deepStrictEqual(seasons, [
     'TFAA 2027 Outdoor (no scores yet)',
     'TFAA 2026 Outdoor (1 State score listed twice, counted once; 1 score above the round maximum left out)',
@@ -182,9 +185,10 @@ test('the three newest outdoor and indoor seasons with scores are read, from the
     'TFAA 2024-2025 Indoor',
     'TFAA 2023-2024 Indoor'
   ]);
-  // Older seasons, test entries and other programs in the list are never asked for.
+  // Test entries and other programs in the list are never asked for. The two
+  // seasons before the ranked ones are read last, for their titles only.
   const ids = asked.filter(u => /\/results\/sywat\/\d+$/.test(u)).map(u => Number(u.split('/').pop()));
-  assert.deepStrictEqual(ids, [55, 50, 48, 38, 49, 46, 37]);
+  assert.deepStrictEqual(ids, [55, 50, 48, 38, 49, 46, 37, 35, 33]);
 });
 
 test('the page without a season number is used for its season list only', async () => {
@@ -218,9 +222,11 @@ test('a season listed as outdoor whose page holds indoor scores is reported, not
 });
 
 test('a listed season the site has no page for is reported, and no older season takes its place', async () => {
-  const { problems, asked } = await build({ '/results/sywat/48': sources.TFAA_NOT_FOUND });
+  const { problems, pages, result } = await build({ '/results/sywat/48': sources.TFAA_NOT_FOUND });
   assert.deepStrictEqual(problemLines(problems), ['TFAA 2025 Outdoor: the page had no results on it']);
-  assert.ok(!asked.some(u => u.endsWith('/results/sywat/35')));
+  // The 2023 season is read for its titles only: it is not ranked in 2025's place.
+  assert.ok(!pages.some(p => p.what === 'TFAA 2023 Outdoor'));
+  assert.ok(!result.adult.concat(result.youth).some(r => r.rounds.some(x => /^2023 /.test(x.event || ''))));
 });
 
 test('a row that does not fit its column headings is left out and reported, and the rest of the page counts', async () => {
@@ -728,7 +734,7 @@ test('titles show on the ranking for the equipment class they were won in, newes
   });
   const by = cls => result.adult.find(r => r.equipmentClass === cls);
   assert.deepStrictEqual(by('Barebow').titles.map(t => t.season + ' ' + t.kind), ['2025-2026 soy', '2025-2026 state', '2024 state']);
-  assert.deepStrictEqual(by('Compound').titles, [{ kind: 'soy', org: 'TX ASA', season: '2026', orgClass: 'Open Pro', field: 1, bonus: false }]);
+  assert.deepStrictEqual(by('Compound').titles, [{ kind: 'soy', org: 'TX ASA', season: '2026', orgClass: 'Open Pro', field: 1, bonus: false, past: false }]);
   assert.strictEqual(result.sources.titleHolders, 1);
   assert.strictEqual(result.sources.soyTitles, 2);
   assert.strictEqual(result.sources.stateTitles, 2);
@@ -953,4 +959,60 @@ test('a season going on is the same season as its copy; a class cleared early is
   assert.strictEqual(partly.pages.find(p => p.what === "TX ASA 2026, Men's Open 45").note, 'the saved copy has more scores than the sheet, so it is used');
   // What is handed back to be saved keeps that class.
   assert.strictEqual(partly.asaLive.tabs["Men's Open 45"].rows.length, 3);
+});
+
+// ---- Titles of the seasons before the ranked ones ----
+
+test('the State Championship of a season is the State shoot that is not the 900 round, the 3D shoot or an overflow line', () => {
+  const list = sources.tfaaShootList(22, [
+    [595, '03/02/2018 - 03/04/2018', '2018 TFAA State Indoor - OVERFLOW LINE'], [546, '03/02/2018 - 03/04/2018', '2018 TFAA State Indoor Championship'],
+    [600, '09/15/2018 - 09/16/2018', '2018 - State 900 Round'], [599, '09/15/2018 - 09/16/2018', '2018 - State Known 3D'], [500, '01/13/2018 - 01/14/2018', 'Arena Archery - 1']
+  ]);
+  assert.deepStrictEqual(engine.parseTfaaStateShoots(list), ['546']);
+});
+
+test('the champions of a State Championship are the archers placed first in each division', () => {
+  const champions = engine.parseTfaaStateChampions(sources.responseFor(TFAA + '/results/9011'), 'TFAA Indoor', '2022-2023');
+  assert.deepStrictEqual(champions, [
+    { name: 'Shelfshooter, Robin', org: 'TFAA Indoor', orgClass: 'Adult Male - Barebow Recurve (BBR)', kind: 'state', season: '2022-2023', field: 2, past: true },
+    { name: 'Yew, Stick', org: 'TFAA Indoor', orgClass: 'Adult Male - Longbow (LB)', kind: 'state', season: '2022-2023', field: 1, past: true }
+  ]);
+});
+
+test('titles from before the ranked seasons are shown, from the State Championship\'s own results, and earn no bonus', async () => {
+  const { titles } = await engine.readSources(fakeFetch());
+  assert.deepStrictEqual(titleLines(titles.filter(t => t.past)), [
+    // Casey is Shooter of the Year on the standings. Robin is State Champion on the
+    // Championship's results, though the standings' State column has Casey's day ahead.
+    '2022-2023 | TFAA Indoor | soy | Adult Male - Barebow Recurve (BBR) | Stringwalker, Casey',
+    '2022-2023 | TFAA Indoor | soy | Adult Male - Longbow (LB) | Yew, Stick',
+    '2022-2023 | TFAA Indoor | state | Adult Male - Barebow Recurve (BBR) | Shelfshooter, Robin',
+    '2022-2023 | TFAA Indoor | state | Adult Male - Longbow (LB) | Yew, Stick'
+  ]);
+
+  const { result, pages, problems } = await build();
+  assert.deepStrictEqual(problems, []);
+  assert.strictEqual(pages.find(p => p.what === 'TFAA 2022-2023 Indoor titles').results, 4);
+  const casey = result.adult.find(r => r.name === 'Casey Stringwalker' && r.equipmentClass === 'Barebow');
+  const old = casey.titles.find(t => t.season === '2022-2023');
+  assert.deepStrictEqual([old.kind, old.past, old.bonus], ['soy', true, false]);
+  // Robin is ranked in Traditional only now: the barebow title of 2023 still shows, on that ranking.
+  const robin = result.adult.find(r => r.name === 'Robin Shelfshooter');
+  assert.strictEqual(robin.equipmentClass, 'Traditional');
+  assert.ok(robin.titles.some(t => t.season === '2022-2023' && t.kind === 'state' && t.past));
+
+  // With only a past title there is no bonus.
+  const bonus = titles => engine.computeRankings({
+    asaShooters: [asa('A B', [360, 360, 360])], tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
+    titles: titles.map(past => ({ kind: 'soy', season: '2020', field: 9, org: 'TX ASA', orgClass: "Men's Pins 30", name: 'A B', past }))
+  }).adult[0].titleBonus;
+  assert.strictEqual(bonus([true]), 1);
+  assert.strictEqual(bonus([true, false]), 1.03);
+});
+
+test('a page of an earlier season that cannot be read is noted, and never a problem', async () => {
+  const { pages, problems } = await build({ '/results/9011': new Error('HTTP 500'), '/results/sywat/35': new Error('HTTP 500') });
+  assert.deepStrictEqual(problems, []);
+  assert.strictEqual(pages.find(p => p.what === 'TFAA 2022-2023 Indoor titles').note, 'its State Championship results could not be read');
+  assert.strictEqual(pages.find(p => p.what === 'TFAA 2023 Outdoor titles').note, 'could not be read');
 });

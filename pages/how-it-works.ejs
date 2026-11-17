@@ -194,7 +194,7 @@
     <p>Records are scraped from <a href="https://texasfieldarchery.org/records/indoor" style="color:var(--accent-gold);">texasfieldarchery.org</a> and matched by name. Only the <strong>current</strong> record holder matters — if scores are tied, the most recent year wins.</p>
 
     <h2 id="titles">🏆 Shooters of the Year and ⭐ State Champions</h2>
-    <p>A <strong>🏆 trophy</strong> next to a name marks a Shooter of the Year, and a <strong>⭐ star</strong> a State Champion, in any season TAGR reads. A number beside the icon counts the titles. Hover the icon, or open the archer, to see which ones.</p>
+    <p>A <strong>🏆 trophy</strong> next to a name marks a Shooter of the Year, and a <strong>⭐ star</strong> a State Champion. TFAA titles go back to the 2015-2016 season, the oldest TFAA still publishes standings for, and Texas ASA titles to 2024. A number beside the icon counts the titles. Hover the icon, or open the archer, to see which ones.</p>
     <p>Titles add to the TAGR score:</p>
     <table class="weight-table">
       <thead><tr><th>Title</th><th>Bonus</th></tr></thead>
@@ -205,7 +205,8 @@
       </tbody>
     </table>
     <ul>
-      <li>Each bonus counts once, however many titles of that kind you hold in the seasons TAGR reads.</li>
+      <li>Only a title from the three seasons TAGR ranks earns the bonus. Earlier titles are shown and counted beside your name, without a bonus.</li>
+      <li>Each bonus counts once, however many titles of that kind you hold.</li>
       <li>A title earns the bonus only when it was won against somebody: at least <%= rules.titleBonusMinField %> archers were in the running for it. A title in a class of one still shows its icon.</li>
       <li>The bonus goes to your ranking in the equipment class the title was won in.</li>
     </ul>
@@ -213,7 +214,8 @@
     <ul>
       <li><span class="badge asa">TX ASA</span> <strong>Shooter of the Year</strong> — the best TOTAL SCORE in a class on the Texas ASA Shooter of the Year sheet (the best five qualifiers plus the State Championship score). Texas ASA gives the award only in a class where at least <%= rules.asaSoyMinArchers %> archers have five scores. <strong>State Champion</strong> — the best State Championship score in the class. Both appear once the State Championship has been shot.</li>
       <li><span class="badge tfaa">TFAA Outdoor</span> <span class="badge indoor">TFAA Indoor</span> <strong>Shooter of the Year</strong> — the SYWAT Aggregate award: the best total of three SYWAT scores plus the State Championship score in a division (age group and style). TFAA requires all four scores. <strong>State Champion</strong> — the best State Championship score in the division. Indoors, X counts break ties.</li>
-      <li>A title shows on the archer's ranking for the equipment class it was won in, and two archers with exactly the same score both hold it.</li>
+      <li>For seasons before the ranked ones, the State Champion is the archer placed first in the division in TFAA's results of the State Championship itself.</li>
+      <li>A title shows on the archer's ranking for the equipment class it was won in, and two archers with exactly the same score both hold it. An earlier title won in an equipment class you no longer shoot shows on the rankings you do have.</li>
     </ul>
 
     <h2>🤝 Ties</h2>

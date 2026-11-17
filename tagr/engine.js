@@ -123,10 +123,13 @@ const NATIONAL_RECORDS_STYLES = {
   FS: 'Freestyle', BHFS: 'Bowhunter Freestyle', FSL: 'Freestyle Limited', BBC: 'Barebow Compound',
   FSLR: 'Freestyle Limited Recurve, Olympic', BBR: 'Barebow Recurve', TRAD: 'Traditional', LB: 'Longbow'
 };
+// Texas ASA names a Shooter of the Year only in a class where this many archers have a total.
+const ASA_SOY_MIN_ARCHERS = 3;
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
-  nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES
+  nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
+  asaSoyMinArchers: ASA_SOY_MIN_ARCHERS
 };
 
 // ---------------------------------------------------------------------------
@@ -230,9 +233,10 @@ function bestBy(entries, standing) {
 // ([{ tab, shooters }]). In each class the State Champion is the best score in
 // the STATE column, and the Shooter of the Year is the best TOTAL SCORE, which
 // the sheet works out from the best five qualifiers and the State score and
-// leaves empty for an archer with fewer than five qualifiers. Until the State
-// Championship has been shot the season is still going, so nobody holds
-// either title yet.
+// leaves empty for an archer with fewer than five scores. Texas ASA gives the
+// award only in a class where at least three archers have five scores (the
+// sheet's "Read this First" tab). Until the State Championship has been shot
+// the season is still going, so nobody holds either title yet.
 function asaTitlesOf(year, tabs) {
   if (!tabs.some(t => t.shooters.some(s => s.stateScore > 0))) return [];
   const titles = [];
@@ -240,7 +244,9 @@ function asaTitlesOf(year, tabs) {
     const award = (kind, winners) => {
       for (const s of winners) titles.push({ name: s.name, org: 'TX ASA', orgClass: tab.name, kind, season: String(year) });
     };
-    award('soy', bestBy(shooters, s => (s.soyTotal > 0 ? [s.soyTotal] : null)));
+    if (shooters.filter(s => s.soyTotal > 0).length >= ASA_SOY_MIN_ARCHERS) {
+      award('soy', bestBy(shooters, s => (s.soyTotal > 0 ? [s.soyTotal] : null)));
+    }
     award('state', bestBy(shooters, s => (s.stateScore > 0 ? [s.stateScore] : null)));
   }
   return titles;

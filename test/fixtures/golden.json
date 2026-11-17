@@ -1340,6 +1340,82 @@
    ]
   },
   {
+   "name": "Chris Kisser",
+   "org": "TX ASA",
+   "orgClass": "Men's Open 45",
+   "orgClasses": [
+    "Men's Open 45"
+   ],
+   "age": "adult",
+   "equipmentClass": "Compound",
+   "events": 6,
+   "bestScore": 325,
+   "totalX": 0,
+   "npsScores": [
+    995,
+    980,
+    965,
+    949,
+    934
+   ],
+   "avgNPS": 1013,
+   "bestNPS": 995,
+   "rounds": [
+    {
+     "raw": 325,
+     "nps": 995,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 KILGORE",
+     "counted": true
+    },
+    {
+     "raw": 320,
+     "nps": 980,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 BROWNWOOD",
+     "counted": true
+    },
+    {
+     "raw": 315,
+     "nps": 965,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STATE",
+     "counted": true
+    },
+    {
+     "raw": 310,
+     "nps": 949,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
+     "raw": 305,
+     "nps": 934,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 300,
+     "nps": 919,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 PARIS",
+     "counted": false
+    }
+   ],
+   "multiOrg": false,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": []
+  },
+  {
    "name": "Fox Silver",
    "org": "TFAA Outdoor",
    "orgClass": "Silver Senior Male - Freestyle (FS)",
@@ -1646,6 +1722,74 @@
      "orgClass": "Adult Male - Modern Bowhunter (MBH)"
     }
    ]
+  },
+  {
+   "name": "Alex Vane",
+   "org": "TX ASA",
+   "orgClass": "Men's Open 45",
+   "orgClasses": [
+    "Men's Open 45"
+   ],
+   "age": "adult",
+   "equipmentClass": "Compound",
+   "events": 5,
+   "bestScore": 310,
+   "totalX": 0,
+   "npsScores": [
+    949,
+    934,
+    919,
+    903,
+    888
+   ],
+   "avgNPS": 956,
+   "bestNPS": 949,
+   "rounds": [
+    {
+     "raw": 310,
+     "nps": 949,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 KILGORE",
+     "counted": true
+    },
+    {
+     "raw": 305,
+     "nps": 934,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 BROWNWOOD",
+     "counted": true
+    },
+    {
+     "raw": 300,
+     "nps": 919,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
+     "raw": 295,
+     "nps": 903,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 290,
+     "nps": 888,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 PARIS",
+     "counted": true
+    }
+   ],
+   "multiOrg": false,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": []
   },
   {
    "name": "Morgan Clicker",
@@ -2950,11 +3094,11 @@
   }
  ],
  "sources": {
-  "txAsa": 28,
+  "txAsa": 30,
   "tfaa": 23,
   "tfaaIndoor": 12,
-  "totalEntries": 63,
-  "total": 28,
+  "totalEntries": 65,
+  "total": 30,
   "merged": 35,
   "stateRecordHolders": 5,
   "stateRecords": 7,

@@ -483,7 +483,8 @@ test('Texas ASA titles come from the TOTAL SCORE and STATE columns of a finished
   assert.deepStrictEqual(titleLines(titles.filter(t => t.org === 'TX ASA')), [
     // 2025: one State score. Nobody has the five qualifiers a total needs.
     '2025 | TX ASA | state | Senior Known 50 | LEE GREYBEARD',
-    // 2026: Riley has five qualifiers and the State score; Pat and Avery only the best State score of their class.
+    // 2026: Men's Open 45 has three archers with five scores, and Riley the best total and State score.
+    // Pat and Avery have only the best State score of their class.
     "2026 | TX ASA | soy | Men's Open 45 | RILEY STABILIZER",
     "2026 | TX ASA | state | Known 50 | PAT O'NOCK",
     "2026 | TX ASA | state | Men's Open 45 | RILEY STABILIZER",
@@ -498,12 +499,16 @@ test('a Texas ASA season names nobody until its State Championship has been shot
   assert.deepStrictEqual(engine.asaTitlesOf(2026, leading), []);
 
   // The decimals count 12s: they break a tie on points, and an exact tie is shared.
-  const finished = [{ tab, shooters: [shooter('A B', 1900.004, 310.0005), shooter('C D', 1900.006, 310.0005), shooter('E F', 0, 300)] }];
+  const finished = [{ tab, shooters: [shooter('A B', 1900.004, 310.0005), shooter('C D', 1900.006, 310.0005), shooter('E F', 1700, 300), shooter('G H', 0, 0)] }];
   assert.deepStrictEqual(titleLines(engine.asaTitlesOf(2026, finished)), [
     '2026 | TX ASA | soy | Known 50 | C D',
     '2026 | TX ASA | state | Known 50 | A B',
     '2026 | TX ASA | state | Known 50 | C D'
   ]);
+
+  // Texas ASA gives the award only where three archers have a total: with two, there is a State Champion alone.
+  const thin = [{ tab, shooters: [shooter('A B', 1900.004, 310.0005), shooter('C D', 1850, 0), shooter('E F', 0, 300)] }];
+  assert.deepStrictEqual(titleLines(engine.asaTitlesOf(2026, thin)), ['2026 | TX ASA | state | Known 50 | A B']);
 });
 
 test('a Texas ASA row carries its total, its State score and the year of its events', () => {

@@ -61,7 +61,9 @@ const asa2026ByGid = {
   ]),
   // Men's Open 45
   '160365011': gviz(ASA_LABELS_2026, [
-    [1, 'RILEY', 'STABILIZER', 'TX1010', 'Tyler', 320, 325, 330, 335, null, 340, 345]
+    [1, 'RILEY', 'STABILIZER', 'TX1010', 'Tyler', 320, 325, 330, 335, null, 340, 345],
+    [2, 'CHRIS', 'KISSER', 'TX1011', 'Tyler', 300, 305, 310, 315, null, 320, 325],
+    [3, 'ALEX', 'VANE', 'TX1012', 'Tyler', 290, 295, 300, null, null, 305, 310]
   ]),
   // Men's Pins 30 (unknown distance, 30 yards)
   '370061797': gviz(ASA_LABELS_2026, [

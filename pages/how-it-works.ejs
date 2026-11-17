@@ -35,6 +35,7 @@
   const barebowBar = (records.BBR.field + records.BBR.hunter) / 2;
   const barebowNps = Math.round(470 / barebowBar * 1000 * outdoorWeight);
   const freestyleNps = Math.round(540 / records.FS.field * 1000 * outdoorWeight);
+  const pct = n => '+' + Math.round((n - 1) * 100) + '%';
 %>
 <section>
   <div class="tgr-exp">
@@ -116,7 +117,7 @@
     </ul>
 
     <h2>📈 Your TAGR Score</h2>
-    <div class="formula-box">TAGR = (Sum of Top 5 NPS ÷ 5) × Event Count Bonus × Org Diversity Bonus</div>
+    <div class="formula-box">TAGR = (Sum of Top 5 NPS ÷ 5) × Event Count Bonus × Org Diversity Bonus × Title Bonus</div>
     <p>Your TAGR score is <strong>always divided by 5</strong> — even if you have fewer than 5 events. Empty slots count as zero. This prevents someone with one lucky tournament from outranking consistent archers.</p>
 
     <h2>📅 Minimum Events</h2>
@@ -152,7 +153,22 @@
     <p>Records are scraped from <a href="https://texasfieldarchery.org/records/indoor" style="color:var(--accent-gold);">texasfieldarchery.org</a> and matched by name. Only the <strong>current</strong> record holder matters — if scores are tied, the most recent year wins.</p>
 
     <h2 id="titles">🏆 Shooters of the Year and ⭐ State Champions</h2>
-    <p>A <strong>🏆 trophy</strong> next to a name marks a Shooter of the Year, and a <strong>⭐ star</strong> a State Champion, in any season TAGR reads. A number beside the icon counts the titles. Hover the icon, or open the archer, to see which ones. Titles are for show: they add nothing to the TAGR score.</p>
+    <p>A <strong>🏆 trophy</strong> next to a name marks a Shooter of the Year, and a <strong>⭐ star</strong> a State Champion, in any season TAGR reads. A number beside the icon counts the titles. Hover the icon, or open the archer, to see which ones.</p>
+    <p>Titles add to the TAGR score:</p>
+    <table class="weight-table">
+      <thead><tr><th>Title</th><th>Bonus</th></tr></thead>
+      <tbody>
+        <tr><td>🏆 Shooter of the Year</td><td><strong><%= times(rules.soyTitleBonus) %></strong> (<%= pct(rules.soyTitleBonus) %>)</td></tr>
+        <tr><td>⭐ State Champion</td><td><strong><%= times(rules.stateTitleBonus) %></strong> (<%= pct(rules.stateTitleBonus) %>)</td></tr>
+        <tr><td>Both</td><td><strong><%= (rules.soyTitleBonus * rules.stateTitleBonus).toFixed(4) %>×</strong></td></tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>Each bonus counts once, however many titles of that kind you hold in the seasons TAGR reads.</li>
+      <li>A title earns the bonus only when it was won against somebody: at least <%= rules.titleBonusMinField %> archers were in the running for it. A title in a class of one still shows its icon.</li>
+      <li>The bonus goes to your ranking in the equipment class the title was won in.</li>
+    </ul>
+    <p>How the titles are decided:</p>
     <ul>
       <li><span class="badge asa">TX ASA</span> <strong>Shooter of the Year</strong> — the best TOTAL SCORE in a class on the Texas ASA Shooter of the Year sheet (the best five qualifiers plus the State Championship score). Texas ASA gives the award only in a class where at least <%= rules.asaSoyMinArchers %> archers have five scores. <strong>State Champion</strong> — the best State Championship score in the class. Both appear once the State Championship has been shot.</li>
       <li><span class="badge tfaa">TFAA Outdoor</span> <span class="badge indoor">TFAA Indoor</span> <strong>Shooter of the Year</strong> — the SYWAT Aggregate award: the best total of three SYWAT scores plus the State Championship score in a division (age group and style). TFAA requires all four scores. <strong>State Champion</strong> — the best State Championship score in the division. Indoors, X counts break ties.</li>

@@ -125,11 +125,19 @@ const NATIONAL_RECORDS_STYLES = {
 };
 // Texas ASA names a Shooter of the Year only in a class where this many archers have a total.
 const ASA_SOY_MIN_ARCHERS = 3;
+// A title adds to the TAGR score: one bonus for being a Shooter of the Year and
+// one for being a State Champion, however many of each the archer holds. A
+// title counts for the bonus only when it was won against somebody: at least
+// this many archers were in the running for it.
+const SOY_TITLE_BONUS = 1.03;
+const STATE_TITLE_BONUS = 1.02;
+const TITLE_BONUS_MIN_FIELD = 2;
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
-  asaSoyMinArchers: ASA_SOY_MIN_ARCHERS
+  asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
+  soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD
 };
 
 // ---------------------------------------------------------------------------
@@ -204,19 +212,23 @@ function parseAsaRows(res, tab, year) {
 
 // ---- Titles ----
 //
-// A title is { name, org, orgClass, kind, season }: `kind` is 'soy' (Shooter of
-// the Year) or 'state' (State Champion), and `season` is the year, or the two
-// years of an indoor season ("2025-2026").
+// A title is { name, org, orgClass, kind, season, field }: `kind` is 'soy'
+// (Shooter of the Year) or 'state' (State Champion), `season` is the year, or
+// the two years of an indoor season ("2025-2026"), and `field` is how many
+// archers were in the running for it.
 
 // The entries with the best standing, where `standing` gives the numbers to
 // compare, most important first, or null for an entry that is not in the
-// running. More than one entry comes back only for an exact tie.
+// running. More than one entry comes back only for an exact tie. `field` is
+// how many archers were in the running, an archer listed twice counting once.
 function bestBy(entries, standing) {
   let best = null;
   let winners = [];
+  const names = new Set();
   for (const entry of entries) {
     const mine = standing(entry);
     if (!mine) continue;
+    names.add(normalizeName(entry.name).toLowerCase());
     let cmp = best ? 0 : 1;
     for (let i = 0; best && cmp === 0 && i < mine.length; i++) cmp = mine[i] - best[i];
     if (cmp > 0) {
@@ -226,7 +238,7 @@ function bestBy(entries, standing) {
       winners.push(entry);
     }
   }
-  return winners;
+  return { winners, field: names.size };
 }
 
 // The Texas ASA titles of one year, from that year's class tabs
@@ -241,12 +253,11 @@ function asaTitlesOf(year, tabs) {
   if (!tabs.some(t => t.shooters.some(s => s.stateScore > 0))) return [];
   const titles = [];
   for (const { tab, shooters } of tabs) {
-    const award = (kind, winners) => {
-      for (const s of winners) titles.push({ name: s.name, org: 'TX ASA', orgClass: tab.name, kind, season: String(year) });
+    const award = (kind, { winners, field }) => {
+      for (const s of winners) titles.push({ name: s.name, org: 'TX ASA', orgClass: tab.name, kind, season: String(year), field });
     };
-    if (shooters.filter(s => s.soyTotal > 0).length >= ASA_SOY_MIN_ARCHERS) {
-      award('soy', bestBy(shooters, s => (s.soyTotal > 0 ? [s.soyTotal] : null)));
-    }
+    const soy = bestBy(shooters, s => (s.soyTotal > 0 ? [s.soyTotal] : null));
+    if (soy.field >= ASA_SOY_MIN_ARCHERS) award('soy', soy);
     award('state', bestBy(shooters, s => (s.stateScore > 0 ? [s.stateScore] : null)));
   }
   return titles;
@@ -275,14 +286,14 @@ function tfaaTitlesOf(entries, org, season) {
   }
   const titles = [];
   for (const [orgClass, division] of divisions) {
-    const award = (kind, winners) => {
+    const award = (kind, { winners, field }) => {
       // An archer listed twice in a division holds the title once.
       const names = new Set();
       for (const w of winners) {
         const key = normalizeName(w.name).toLowerCase();
         if (names.has(key)) continue;
         names.add(key);
-        titles.push({ name: w.name, org, orgClass, kind, season });
+        titles.push({ name: w.name, org, orgClass, kind, season, field });
       }
     };
     award('soy', bestBy(division, e => e.aggregate));
@@ -765,7 +776,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     const key = normalizeName(t.name).toLowerCase() + '||' + mapEquipmentClass(t.orgClass, t.org);
     if (!mergedMap[key]) continue;
     if (!titlesByKey[key]) titlesByKey[key] = [];
-    titlesByKey[key].push({ kind: t.kind, org: t.org, season: t.season, orgClass: t.orgClass });
+    titlesByKey[key].push({ kind: t.kind, org: t.org, season: t.season, orgClass: t.orgClass, field: t.field || 1, bonus: (t.field || 1) >= TITLE_BONUS_MIN_FIELD });
   }
   // Newest first, and Shooter of the Year before State Champion within a season.
   const titleOrder = (a, b) => b.season.slice(-4) - a.season.slice(-4) || a.kind.localeCompare(b.kind) || a.org.localeCompare(b.org);
@@ -799,7 +810,12 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     if (top5Orgs.size >= 3) orgBonus = 1.05;
     else if (top5Orgs.size >= 2) orgBonus = 1.03;
 
-    avgNPS = Math.round(avgNPS * eventBonus * orgBonus);
+    // Title bonus: one for Shooter of the Year, one for State Champion.
+    const myTitles = (titlesByKey[m.name.toLowerCase() + '||' + m.equipmentClass] || []).sort(titleOrder);
+    const earns = kind => myTitles.some(t => t.kind === kind && t.bonus);
+    const titleBonus = (earns('soy') ? SOY_TITLE_BONUS : 1) * (earns('state') ? STATE_TITLE_BONUS : 1);
+
+    avgNPS = Math.round(avgNPS * eventBonus * orgBonus * titleBonus);
 
     // Per-round breakdown for the click-through detail view.
     // Sorted highest-NPS first; the first up-to-5 non-empty rounds are the
@@ -832,7 +848,8 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       multiOrg: orgsArr.length > 1,
       provisional,
       stateRecord: stateRecordHolders.has(m.name.toLowerCase()),
-      titles: (titlesByKey[m.name.toLowerCase() + '||' + m.equipmentClass] || []).sort(titleOrder)
+      titles: myTitles,
+      titleBonus: Math.round(titleBonus * 10000) / 10000
     };
   });
 

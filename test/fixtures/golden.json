@@ -25,7 +25,7 @@
     1086,
     1077
    ],
-   "avgNPS": 1209,
+   "avgNPS": 1270,
    "bestNPS": 1139,
    "rounds": [
     {
@@ -237,57 +237,204 @@
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 2,
+     "bonus": true
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 2,
+     "bonus": true
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 2,
+     "bonus": true
     },
     {
      "kind": "state",
      "org": "TX ASA",
      "season": "2026",
-     "orgClass": "Open Pro"
+     "orgClass": "Open Pro",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2024-2025",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 2,
+     "bonus": true
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2025",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 2,
+     "bonus": true
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2024-2025",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 2,
+     "bonus": true
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2025",
-     "orgClass": "Adult Male - Freestyle (FS)"
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "field": 2,
+     "bonus": true
     }
-   ]
+   ],
+   "titleBonus": 1.0506
+  },
+  {
+   "name": "Riley Stabilizer",
+   "org": "TX ASA + TFAA Outdoor",
+   "orgClass": "Men's Open 45",
+   "orgClasses": [
+    "Men's Open 45",
+    "Men's Open 45",
+    "Adult Male - Freestyle (FS)"
+   ],
+   "age": "adult",
+   "equipmentClass": "Compound",
+   "events": 10,
+   "bestScore": 530,
+   "totalX": 0,
+   "npsScores": [
+    1057,
+    1041,
+    1026,
+    1022,
+    1011
+   ],
+   "avgNPS": 1183,
+   "bestNPS": 1057,
+   "rounds": [
+    {
+     "raw": 345,
+     "nps": 1057,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 KILGORE",
+     "counted": true
+    },
+    {
+     "raw": 340,
+     "nps": 1041,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 BROWNWOOD",
+     "counted": true
+    },
+    {
+     "raw": 335,
+     "nps": 1026,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STATE",
+     "counted": true
+    },
+    {
+     "raw": 530,
+     "nps": 1022,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2026 SYWAT #2",
+     "counted": true
+    },
+    {
+     "raw": 330,
+     "nps": 1011,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
+     "raw": 325,
+     "nps": 995,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STEPHENVILLE",
+     "counted": false
+    },
+    {
+     "raw": 320,
+     "nps": 980,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 PARIS",
+     "counted": false
+    },
+    {
+     "raw": 501,
+     "nps": 966,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2026 SYWAT #1",
+     "counted": false
+    },
+    {
+     "raw": 315,
+     "nps": 965,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2025 Qualifier 2",
+     "counted": false
+    },
+    {
+     "raw": 310,
+     "nps": 949,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2025 Qualifier 1",
+     "counted": false
+    }
+   ],
+   "multiOrg": true,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": [
+    {
+     "kind": "soy",
+     "org": "TX ASA",
+     "season": "2026",
+     "orgClass": "Men's Open 45",
+     "field": 3,
+     "bonus": true
+    },
+    {
+     "kind": "state",
+     "org": "TX ASA",
+     "season": "2026",
+     "orgClass": "Men's Open 45",
+     "field": 2,
+     "bonus": true
+    }
+   ],
+   "titleBonus": 1.0506
   },
   {
    "name": "Jordan Fletcher",
@@ -405,7 +552,8 @@
    "multiOrg": true,
    "provisional": false,
    "stateRecord": true,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Maria De La Fletch",
@@ -536,150 +684,36 @@
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2023-2024",
-     "orgClass": "Adult Female - Freestyle (FS)"
+     "orgClass": "Adult Female - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2024",
-     "orgClass": "Adult Female - Freestyle (FS)"
+     "orgClass": "Adult Female - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2023-2024",
-     "orgClass": "Adult Female - Freestyle (FS)"
+     "orgClass": "Adult Female - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2024",
-     "orgClass": "Adult Female - Freestyle (FS)"
-    }
-   ]
-  },
-  {
-   "name": "Riley Stabilizer",
-   "org": "TX ASA + TFAA Outdoor",
-   "orgClass": "Men's Open 45",
-   "orgClasses": [
-    "Men's Open 45",
-    "Men's Open 45",
-    "Adult Male - Freestyle (FS)"
-   ],
-   "age": "adult",
-   "equipmentClass": "Compound",
-   "events": 10,
-   "bestScore": 530,
-   "totalX": 0,
-   "npsScores": [
-    1057,
-    1041,
-    1026,
-    1022,
-    1011
-   ],
-   "avgNPS": 1126,
-   "bestNPS": 1057,
-   "rounds": [
-    {
-     "raw": 345,
-     "nps": 1057,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 KILGORE",
-     "counted": true
-    },
-    {
-     "raw": 340,
-     "nps": 1041,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 BROWNWOOD",
-     "counted": true
-    },
-    {
-     "raw": 335,
-     "nps": 1026,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 STATE",
-     "counted": true
-    },
-    {
-     "raw": 530,
-     "nps": 1022,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2026 SYWAT #2",
-     "counted": true
-    },
-    {
-     "raw": 330,
-     "nps": 1011,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 325,
-     "nps": 995,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 STEPHENVILLE",
-     "counted": false
-    },
-    {
-     "raw": 320,
-     "nps": 980,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 PARIS",
-     "counted": false
-    },
-    {
-     "raw": 501,
-     "nps": 966,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2026 SYWAT #1",
-     "counted": false
-    },
-    {
-     "raw": 315,
-     "nps": 965,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2025 Qualifier 2",
-     "counted": false
-    },
-    {
-     "raw": 310,
-     "nps": 949,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2025 Qualifier 1",
-     "counted": false
+     "orgClass": "Adult Female - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     }
    ],
-   "multiOrg": true,
-   "provisional": false,
-   "stateRecord": false,
-   "titles": [
-    {
-     "kind": "soy",
-     "org": "TX ASA",
-     "season": "2026",
-     "orgClass": "Men's Open 45"
-    },
-    {
-     "kind": "state",
-     "org": "TX ASA",
-     "season": "2026",
-     "orgClass": "Men's Open 45"
-    }
-   ]
+   "titleBonus": 1
   },
   {
    "name": "Taylor Bolt",
@@ -764,7 +798,8 @@
    "multiOrg": true,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Sam Broadhead",
@@ -895,27 +930,36 @@
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)"
+     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)"
+     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)"
+     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)"
+     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Lee Greybeard",
@@ -1104,45 +1148,60 @@
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Master Senior Male - Freestyle (FS)"
+     "orgClass": "Master Senior Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Senior Female - Freestyle (FS)"
+     "orgClass": "Senior Female - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Master Senior Male - Freestyle (FS)"
+     "orgClass": "Master Senior Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Senior Female - Freestyle (FS)"
+     "orgClass": "Senior Female - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2025",
-     "orgClass": "Master Senior Male - Freestyle (FS)"
+     "orgClass": "Master Senior Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2025",
-     "orgClass": "Master Senior Male - Freestyle (FS)"
+     "orgClass": "Master Senior Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TX ASA",
      "season": "2025",
-     "orgClass": "Senior Known 50"
+     "orgClass": "Senior Known 50",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Dana McArrow",
@@ -1212,7 +1271,8 @@
    "multiOrg": true,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Pat O'nock",
@@ -1335,9 +1395,12 @@
      "kind": "state",
      "org": "TX ASA",
      "season": "2026",
-     "orgClass": "Known 50"
+     "orgClass": "Known 50",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Chris Kisser",
@@ -1413,7 +1476,8 @@
    "multiOrg": false,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Fox Silver",
@@ -1486,15 +1550,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Silver Senior Male - Freestyle (FS)"
+     "orgClass": "Silver Senior Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Silver Senior Male - Freestyle (FS)"
+     "orgClass": "Silver Senior Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Casey Stringwalker",
@@ -1625,27 +1694,36 @@
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)"
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)"
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)"
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)"
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Fixed Pins",
@@ -1719,9 +1797,12 @@
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Modern Bowhunter (MBH)"
+     "orgClass": "Adult Male - Modern Bowhunter (MBH)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Alex Vane",
@@ -1789,7 +1870,8 @@
    "multiOrg": false,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Morgan Clicker",
@@ -1879,15 +1961,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)"
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)"
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Sight Limited",
@@ -1960,15 +2047,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Freestyle Limited (FSL)"
+     "orgClass": "Adult Male - Freestyle Limited (FSL)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Freestyle Limited (FSL)"
+     "orgClass": "Adult Male - Freestyle Limited (FSL)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Finger Tab",
@@ -2041,15 +2133,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Bowhunter Freestyle Limited (BHFSL)"
+     "orgClass": "Adult Male - Bowhunter Freestyle Limited (BHFSL)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Bowhunter Freestyle Limited (BHFSL)"
+     "orgClass": "Adult Male - Bowhunter Freestyle Limited (BHFSL)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Compound Bare",
@@ -2122,15 +2219,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Barebow Compound (BBC)"
+     "orgClass": "Adult Male - Barebow Compound (BBC)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Barebow Compound (BBC)"
+     "orgClass": "Adult Male - Barebow Compound (BBC)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Robin Shelfshooter",
@@ -2237,15 +2339,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Traditional (TRAD)"
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Traditional (TRAD)"
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Barebow Plain",
@@ -2318,15 +2425,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Barebow (BB)"
+     "orgClass": "Adult Male - Barebow (BB)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Barebow (BB)"
+     "orgClass": "Adult Male - Barebow (BB)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Stick Yew",
@@ -2399,15 +2511,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Longbow (LB)"
+     "orgClass": "Adult Male - Longbow (LB)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Adult Male - Longbow (LB)"
+     "orgClass": "Adult Male - Longbow (LB)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Blake Backtension",
@@ -2459,7 +2576,8 @@
    "multiOrg": false,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Three Events",
@@ -2511,7 +2629,8 @@
    "multiOrg": false,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Two Timer",
@@ -2555,7 +2674,8 @@
    "multiOrg": false,
    "provisional": true,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "One Timer",
@@ -2591,7 +2711,8 @@
    "multiOrg": false,
    "provisional": true,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   }
  ],
  "youth": [
@@ -2733,27 +2854,36 @@
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Young Adult Male - Freestyle (FS)"
+     "orgClass": "Young Adult Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Young Adult Male - Freestyle (FS)"
+     "orgClass": "Young Adult Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Young Adult Male - Freestyle (FS)"
+     "orgClass": "Young Adult Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Young Adult Male - Freestyle (FS)"
+     "orgClass": "Young Adult Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Piper Peepsight",
@@ -2876,27 +3006,36 @@
      "kind": "soy",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Cub Female - Genesis"
+     "orgClass": "Cub Female - Genesis",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Youth Female - Genesis"
+     "orgClass": "Youth Female - Genesis",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Indoor",
      "season": "2025-2026",
-     "orgClass": "Cub Female - Genesis"
+     "orgClass": "Cub Female - Genesis",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Youth Female - Genesis"
+     "orgClass": "Youth Female - Genesis",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Cub Little",
@@ -2969,15 +3108,20 @@
      "kind": "soy",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Cub Male - Freestyle (FS)"
+     "orgClass": "Cub Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     },
     {
      "kind": "state",
      "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Cub Male - Freestyle (FS)"
+     "orgClass": "Cub Male - Freestyle (FS)",
+     "field": 1,
+     "bonus": false
     }
-   ]
+   ],
+   "titleBonus": 1
   },
   {
    "name": "Skyler Stringwalker",
@@ -3038,7 +3182,8 @@
    "multiOrg": false,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   },
   {
    "name": "Drew Fingertab",
@@ -3090,7 +3235,8 @@
    "multiOrg": false,
    "provisional": false,
    "stateRecord": false,
-   "titles": []
+   "titles": [],
+   "titleBonus": 1
   }
  ],
  "sources": {

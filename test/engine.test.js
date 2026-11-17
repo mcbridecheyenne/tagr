@@ -590,7 +590,7 @@ test('titles show on the ranking for the equipment class they were won in, newes
   });
   const by = cls => result.adult.find(r => r.equipmentClass === cls);
   assert.deepStrictEqual(by('Barebow').titles.map(t => t.season + ' ' + t.kind), ['2025-2026 soy', '2025-2026 state', '2024 state']);
-  assert.deepStrictEqual(by('Compound').titles, [{ kind: 'soy', org: 'TX ASA', season: '2026', orgClass: 'Open Pro' }]);
+  assert.deepStrictEqual(by('Compound').titles, [{ kind: 'soy', org: 'TX ASA', season: '2026', orgClass: 'Open Pro', field: 1, bonus: false }]);
   assert.strictEqual(result.sources.titleHolders, 1);
   assert.strictEqual(result.sources.soyTitles, 2);
   assert.strictEqual(result.sources.stateTitles, 2);
@@ -627,4 +627,37 @@ test('equal TAGR scores are listed in the same order every time: better best rou
   const ranked = rank([asa('Zed Last', [360, 360, 360]), asa('Amy First', [360, 360, 360]), asa('Bo Peak', [360, 360, 360])]);
   assert.deepStrictEqual(ranked.map(r => r.avgNPS), [630, 630, 630]);
   assert.deepStrictEqual(ranked.map(r => r.name), ['Amy First', 'Bo Peak', 'Zed Last']);
+});
+
+test('a Shooter of the Year and a State Champion each earn a bonus, once, for a title won against somebody', () => {
+  const { soyTitleBonus, stateTitleBonus, titleBonusMinField } = engine.rules;
+  assert.deepStrictEqual([soyTitleBonus, stateTitleBonus, titleBonusMinField], [1.03, 1.02, 2]);
+  const score = titles => {
+    const result = engine.computeRankings({
+      asaShooters: [asa('A B', [360, 360, 360])], tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
+      titles: titles.map(([kind, season, field]) => ({ kind, season, field, org: 'TX ASA', orgClass: "Men's Pins 30", name: 'A B' }))
+    });
+    return [result.adult[0].avgNPS, result.adult[0].titleBonus];
+  };
+  assert.deepStrictEqual(score([]), [630, 1]);
+  assert.deepStrictEqual(score([['soy', '2026', 3]]), [Math.round(630 * 1.03), 1.03]);
+  assert.deepStrictEqual(score([['state', '2026', 2]]), [Math.round(630 * 1.02), 1.02]);
+  assert.deepStrictEqual(score([['soy', '2026', 3], ['state', '2026', 2]]), [Math.round(630 * 1.03 * 1.02), 1.0506]);
+  // Three Shooter of the Year titles are still one bonus.
+  assert.deepStrictEqual(score([['soy', '2026', 3], ['soy', '2025', 4], ['soy', '2024', 5]]), [Math.round(630 * 1.03), 1.03]);
+  // The only archer in the class holds the title, without the bonus.
+  assert.deepStrictEqual(score([['state', '2026', 1]]), [630, 1]);
+  assert.deepStrictEqual(score([['state', '2026', 1], ['state', '2025', 2]]), [Math.round(630 * 1.02), 1.02]);
+});
+
+test('a title says how many archers were in the running for it', () => {
+  const page = outdoorPage([freestyle('Adult Male', [
+    [1, 'Quillfeather, Avery', 540, 545, 538, 1085, 2708],
+    [2, 'Stabilizer, Riley', 550, 551, 552, 0, 1653],
+    [3, 'Fletcher, Jordan', 520, 0, 510, 1090, 2120],
+    [4, 'Fletcher, Jordan', 0, 0, 0, 1090, 1090]
+  ])]);
+  const fields = engine.parseTfaaPage(page, '2026 Outdoor', 'outdoor').titles.map(t => [t.kind, t.name, t.field]);
+  // Only Avery has the three rounds and the State score; two archers shot State, one of them listed twice.
+  assert.deepStrictEqual(fields, [['soy', 'Quillfeather, Avery', 1], ['state', 'Fletcher, Jordan', 2]]);
 });

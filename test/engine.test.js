@@ -881,3 +881,76 @@ test('only a State Championship round earns the bonus, in Texas ASA and in TFAA'
     for (const x of r.rounds) assert.ok(x.field === 0 || /state/i.test(x.event), r.name + ': ' + x.event);
   }
 });
+
+// ---- The saved copies of the Texas ASA sheet ----
+
+const withoutTime = result => JSON.stringify(withoutTimestamp(result));
+// The sheet after Texas ASA has cleared it: every class tab with its headings and no archers.
+const clearedSheet = { [sources.ASA_2026]: sources.EMPTY_TAB };
+
+test('the sheet is handed back as it should be saved: its year and its class tabs, without the empty rows', async () => {
+  const { asaLive } = await build();
+  assert.strictEqual(asaLive.year, 2026);
+  const openPro = asaLive.tabs['Open Pro'];
+  assert.deepStrictEqual(openPro.cols.slice(0, 5).map(c => c.label), ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE']);
+  // The row with no name is dropped; the archer with no scores is kept, as the sheet has them.
+  assert.deepStrictEqual(openPro.rows.map(r => r.c[1].v + ' ' + r.c[2].v), ['AVERY QUILLFEATHER', 'DANA MCARROW', 'NO SCORES']);
+});
+
+test('with a saved copy of the year the sheet still holds, nothing changes', async () => {
+  const plain = await build();
+  const copy = { year: 2026, savedAt: '2026-11-17T12:00:00.000Z', tabs: plain.asaLive.tabs };
+  const again = await engine.buildRankings({ fetchText: fakeFetch(), asaSnapshots: [copy] });
+  assert.strictEqual(again.asaLive.year, 2026);
+  assert.strictEqual(withoutTime(again.result), withoutTime(plain.result));
+});
+
+test('once Texas ASA clears the sheet, the year is read from the saved copy and the sheet is the next year', async () => {
+  const plain = await build();
+  const copy = { year: 2026, savedAt: '2026-11-17T12:00:00.000Z', tabs: plain.asaLive.tabs };
+  const asked = [];
+  const fetch = fakeFetch(clearedSheet);
+  const cleared = await engine.buildRankings({ fetchText: url => { asked.push(url); return fetch(url); }, asaSnapshots: [copy] });
+  assert.deepStrictEqual(cleared.problems, []);
+  assert.strictEqual(cleared.asaLive.year, 2027);
+  // The standings are the same: nobody has shot in 2027, so 2026, 2025 and 2024 are still the three years.
+  assert.strictEqual(withoutTime(cleared.result), withoutTime(plain.result));
+  const riley = cleared.pages.find(p => p.what === "TX ASA 2026, Men's Open 45");
+  assert.deepStrictEqual([riley.url, riley.results, riley.note], ['archive/asa-2026.json', 3, 'from the saved copy of the sheet']);
+  assert.ok(asked.some(u => u.includes(sources.ASA_2024)));
+});
+
+test('when the new season has scores it is ranked as the new year, and the oldest year drops out', async () => {
+  const plain = await build();
+  const copy = { year: 2026, savedAt: '2026-11-17T12:00:00.000Z', tabs: plain.asaLive.tabs };
+  // 2027: the sheet holds one class, with new archers and new shoots.
+  const newSeason = sources.gviz(
+    ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE', 'TYLER', 'WACO', 'STATE'],
+    [[1, 'NEW', 'SEASON', 'TX2001', 'Tyler', 301, 305, null], [2, 'AVERY', 'QUILLFEATHER', 'TX1001', 'Paris', 333, null, null]]
+  );
+  const asked = [];
+  const fetch = fakeFetch({ 'gid=795531792': newSeason, ...clearedSheet });
+  const next = await engine.buildRankings({ fetchText: url => { asked.push(url); return fetch(url); }, asaSnapshots: [copy] });
+  assert.strictEqual(next.asaLive.year, 2027);
+  const avery = next.result.adult.find(r => r.name === 'Avery Quillfeather');
+  assert.ok(avery.rounds.some(x => x.event === '2027 TYLER'));
+  assert.ok(avery.rounds.some(x => x.event === '2026 PARIS'));
+  // 2027, 2026 and 2025 are ranked: the 2024 sheet is not even asked for.
+  assert.ok(asked.some(u => u.includes(sources.ASA_2025)));
+  assert.ok(!asked.some(u => u.includes(sources.ASA_2024)));
+  assert.ok(!avery.rounds.some(x => /^2024 /.test(x.event) && x.org === 'TX ASA'));
+});
+
+test('a season going on is the same season as its copy; a class cleared early is read from the copy', async () => {
+  const plain = await build();
+  const copy = { year: 2026, savedAt: '2026-11-17T12:00:00.000Z', tabs: plain.asaLive.tabs };
+  assert.strictEqual(engine.sameAsaSeason(copy, plain.asaLive.tabs), true);
+  assert.strictEqual(engine.sameAsaSeason(copy, {}), false);
+  // One class tab comes back empty while the rest of the sheet is as it was.
+  const partly = await engine.buildRankings({ fetchText: fakeFetch({ 'gid=160365011': sources.EMPTY_TAB }), asaSnapshots: [copy] });
+  assert.strictEqual(partly.asaLive.year, 2026);
+  assert.strictEqual(withoutTime(partly.result), withoutTime(plain.result));
+  assert.strictEqual(partly.pages.find(p => p.what === "TX ASA 2026, Men's Open 45").note, 'the saved copy has more scores than the sheet, so it is used');
+  // What is handed back to be saved keeps that class.
+  assert.strictEqual(partly.asaLive.tabs["Men's Open 45"].rows.length, 3);
+});

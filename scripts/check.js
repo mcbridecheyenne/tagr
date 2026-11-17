@@ -107,6 +107,7 @@ async function main() {
   };
   const startedAt = Date.now();
   const build = await engine.buildRankings({
+    asaSnapshots: require('../tagr/snapshots').loadAsaSnapshots(),
     fetchText: async url => {
       const body = await read(url);
       fetched.push({ url, body });

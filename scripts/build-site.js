@@ -20,6 +20,7 @@ const engine = require('../tagr/engine');
 const { fetchText, savedPages } = require('../tagr/fetch');
 const { fingerprintOf } = require('../tagr/publish');
 const { runSiteJob, fetchPublished } = require('../tagr/site');
+const { loadAsaSnapshots, saveAsaSnapshot } = require('../tagr/snapshots');
 
 const args = process.argv.slice(2);
 const valueOf = flag => (args.includes(flag) ? args[args.indexOf(flag) + 1] : null);
@@ -53,12 +54,18 @@ async function main() {
   }
 
   const source = fromDir ? savedPages(fromDir) : fetchText;
+  // The Texas ASA sheet as the rebuild read it, to save a copy of.
+  let asaLive = null;
   const { deploy, behind, rebuild, standings } = await runSiteJob({
     outDir,
     published,
     scheduled,
     force,
-    build: () => engine.buildRankings({ fetchText: source }),
+    build: async () => {
+      const built = await engine.buildRankings({ fetchText: source, asaSnapshots: loadAsaSnapshots() });
+      asaLive = built.asaLive;
+      return built;
+    },
     engineId: fingerprintOf(require.resolve('../tagr/engine'))
   });
 
@@ -76,6 +83,12 @@ async function main() {
     lines.push(standings
       ? 'The site keeps the standings built ' + day(standings.builtAt) + '. The next run tries again.'
       : 'There are no standings to show yet, so nothing is published.');
+  }
+  // Texas ASA clears its sheet every year, so a rebuild that was good enough
+  // to publish also saves the sheet. The workflow commits the file.
+  if (rebuild && rebuild.published && asaLive && !fromDir) {
+    const saved = saveAsaSnapshot(asaLive);
+    if (saved) lines.push('Saved a copy of the Texas ASA ' + asaLive.year + ' sheet in archive/' + require('path').basename(saved) + '.');
   }
   lines.push(deploy ? 'The site is in ' + outDir + ', ready to publish.' : 'Nothing new to publish.');
   report(lines, { deploy, behind });

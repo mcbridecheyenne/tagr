@@ -50,6 +50,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    # To commit the saved copy of the Texas ASA sheet.
+    permissions:
+      contents: write
     outputs:
       deploy: ${{ steps.site.outputs.deploy }}
       behind: ${{ steps.site.outputs.behind }}
@@ -65,6 +68,18 @@ jobs:
           SCHEDULED: ${{ github.event_name == 'schedule' && '--scheduled' || '' }}
           FORCE: ${{ github.event_name == 'workflow_dispatch' && inputs.rebuild && '--force' || '' }}
         run: node scripts/build-site.js --out site --published "https://${GITHUB_REPOSITORY_OWNER}.github.io/${GITHUB_REPOSITORY#*/}" $SCHEDULED $FORCE
+      # Texas ASA clears its sheet for each new season and keeps no copy. A
+      # rebuild saves the sheet in archive/, and this keeps that file in the
+      # repository, where the ranking reads the year from once the sheet has
+      # moved on. A push that fails is tried again by the next rebuild.
+      - if: github.event_name != 'pull_request'
+        run: |
+          if [ -z "$(git status --porcelain archive)" ]; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add archive
+          git commit -m 'Save a copy of the Texas ASA sheet' -m 'Texas ASA clears the sheet every year, so the ranking keeps its own copy.'
+          git push origin HEAD:"$GITHUB_REF_NAME" || echo "::warning::The copy of the Texas ASA sheet could not be pushed. The next rebuild saves it again."
       - if: steps.site.outputs.deploy == 'true' && github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:

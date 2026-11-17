@@ -24,6 +24,12 @@ Shooters of the Year (🏆) and State Champions (⭐) are worked out from the sa
 
 TFAA rounds are scored against the NFAA national record for each style (`NATIONAL_RECORDS` in `tagr/engine.js`), not against the perfect score. Texas ASA rounds are scored against the best score of their own class in the seasons read. A State Championship round also earns up to 5% for the ranked archers it beat in its class. When NFAA publishes new records, update them there, with the date of the list they come from, and run `UPDATE_GOLDEN=1 npm test`.
 
+## The Texas ASA sheet is saved here
+
+Texas ASA keeps one Shooter of the Year sheet, clears it for each new season, and keeps no copy. So every rebuild that is published saves the sheet as it stands in `archive/asa-<year>.json`, and the Site workflow commits that file. While the sheet still holds the year of the newest copy, the ranking reads the sheet. Once the copy's scores are gone from it, the ranking reads that year from the copy and treats the sheet as the next year. Nothing needs doing by hand at the turn of the year.
+
+A class tab that has lost scores since the copy was saved is read from the copy, so a sheet cleared one tab at a time loses nothing. Do not delete the files in `archive/`: for a year the sheet no longer holds, they are the only copy there is.
+
 ## Working on it
 
 Needs Node 20 or newer.
@@ -43,6 +49,8 @@ npm run build   # build the site into site/ from the live sources
 | `tagr/fetch.js` | fetches one page, with a time limit and retries |
 | `tagr/publish.js` | when to rebuild, and whether new standings are good enough to publish |
 | `tagr/site.js` | writes the site's files |
+| `tagr/snapshots.js` | loads and saves the copies of the Texas ASA sheet |
+| `archive/` | the saved copies of the Texas ASA sheet, one file a year |
 | `pages/` | the rankings page, How TAGR Works, and the stylesheet |
 | `scripts/build-site.js` | what the Site workflow runs |
 | `scripts/check.js` | the live check |

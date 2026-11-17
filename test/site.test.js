@@ -196,3 +196,26 @@ test('the published standings are read back from the site, and a site without an
   await assert.rejects(fetchPublished(url, site({ 'api/status.json': new Error('down') })), /answered 503 for api\/status\.json/);
   await assert.rejects(fetchPublished(url, site({ ...files, 'api/tgr.json': new Error('down') })), /answered 503 for api\/tgr\.json/);
 });
+
+test('a copy of the Texas ASA sheet is saved once a year, and written again only when the sheet changes', () => {
+  const { loadAsaSnapshots, saveAsaSnapshot } = require('../tagr/snapshots');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tagr-archive-'));
+  const row = score => ({ c: [{ v: 'TX1' }, { v: 'A' }, { v: 'B' }, { v: 1 }, null, { v: score, f: String(score) }] });
+  const sheet = score => ({ year: 2026, tabs: { 'Open Pro': { cols: [{ label: 'ASA NUMBER' }], rows: [row(score)] } } });
+  const at = () => new Date('2026-11-17T12:00:00Z');
+
+  assert.deepStrictEqual(loadAsaSnapshots(dir), []);
+  assert.strictEqual(path.basename(saveAsaSnapshot(sheet(300), dir, at)), 'asa-2026.json');
+  assert.strictEqual(saveAsaSnapshot(sheet(300), dir, at), null);
+  assert.strictEqual(path.basename(saveAsaSnapshot(sheet(310), dir, at)), 'asa-2026.json');
+  // A sheet with no scores on it (cleared for a season nobody has shot in) is not saved.
+  assert.strictEqual(saveAsaSnapshot({ year: 2027, tabs: { 'Open Pro': { cols: [], rows: [] } } }, dir, at), null);
+  const [copy] = loadAsaSnapshots(dir);
+  assert.deepStrictEqual([copy.year, copy.savedAt, copy.tabs['Open Pro'].rows[0].c[5].v], [2026, '2026-11-17T12:00:00.000Z', 310]);
+});
+
+test('the copy in the project is the 2026 sheet, with its class tabs', () => {
+  const { loadAsaSnapshots } = require('../tagr/snapshots');
+  const copies = loadAsaSnapshots();
+  assert.ok(copies.some(c => c.year === 2026 && Object.keys(c.tabs).length >= 40));
+});

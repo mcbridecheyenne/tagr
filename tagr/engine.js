@@ -8,8 +8,16 @@
 // Express or the database, so the site, a script and the tests all run the
 // same code.
 
-// ---- TX ASA: the 2026 Shooter of the Year sheet, and the 2025 and 2024 sheets ----
+// ---- TX ASA: the Shooter of the Year sheet, and the 2025 and 2024 sheets ----
+// Texas ASA keeps one sheet for the season being shot and clears it for the
+// next, keeping no copy. So the site saves its own copy of the sheet at every
+// rebuild (archive/asa-<year>.json), and a year the sheet no longer holds is
+// read from its saved copy. ASA_LIVE_YEAR is the year the sheet held when
+// there is no saved copy to tell by.
 const ASA_SOY_SHEET = '1xZyOXGonL0NljMLx0suiGWy85JkSWLR7LIUaK0_P1FE';
+const ASA_LIVE_YEAR = 2026;
+// How many Texas ASA years are ranked, counting the one being shot.
+const ASA_YEARS_RANKED = 3;
 const ASA_ARCHIVE_SHEETS = [
   { id: '1_JG82xQPkp-qsKmsHcxMRsWOcifCJy8ANfzGjf0FoAk', year: 2025 },
   { id: '10zDwD5voueDqoNhHMDrMezOIvVT2atpGHFc2_kVmfIc', year: 2024 }
@@ -252,6 +260,66 @@ function parseAsaRows(res, tab, year) {
     });
   }
   return shooters;
+}
+
+// ---- The saved copies of the Texas ASA sheet ----
+//
+// A saved copy is { year, savedAt, tabs: { class name: table } }, with each
+// table as the sheet sent it, cut down to its labels and cells.
+
+function asaTableToKeep(table) {
+  return {
+    cols: table.cols.map(c => ({ label: c.label || '' })),
+    // The sheets carry rows of formulas below the last archer: only rows with a name are kept.
+    rows: table.rows.filter(r => r.c && ((r.c[1] && r.c[1].v) || (r.c[2] && r.c[2].v))).map(r => ({
+      c: (r.c || []).map(cell => (!cell || cell.v === null || cell.v === undefined ? null : cell.f !== undefined ? { v: cell.v, f: cell.f } : { v: cell.v }))
+    }))
+  };
+}
+
+// The archers of a class tab with their scores by column: [{ name, scores: Map(column → score) }].
+// A column is its label and how many columns before it share the label.
+function asaTabScores(table) {
+  const seen = {};
+  const columns = table.cols.map(c => {
+    const label = String(c.label || '').replace(/\s+/g, ' ').trim().toLowerCase();
+    seen[label] = (seen[label] || 0) + 1;
+    return label + '#' + seen[label];
+  });
+  const archers = [];
+  for (const row of table.rows) {
+    const cells = row.c || [];
+    const name = ((cells[1] && cells[1].v ? String(cells[1].v) : '') + ' ' + (cells[2] && cells[2].v ? String(cells[2].v) : '')).trim();
+    const scores = new Map();
+    for (let j = 5; j < cells.length; j++) {
+      const v = asaNumber(cells[j]);
+      if (v > 0) scores.set(columns[j], v);
+    }
+    if (name && scores.size > 0) archers.push({ name: nameKey(name), scores });
+  }
+  return archers;
+}
+
+function asaScoreCount(table) {
+  return table ? asaTabScores(table).reduce((n, a) => n + a.scores.size, 0) : 0;
+}
+
+// Whether the sheet still holds the season of a saved copy: at least half of
+// the copy's archers are on the sheet with every score the copy has for them.
+// A season going on only adds scores, so it passes; a sheet cleared for the
+// next season, or filling with the next season's scores, does not.
+function sameAsaSeason(snapshot, liveTabs) {
+  let archers = 0;
+  let stillThere = 0;
+  for (const [name, table] of Object.entries(snapshot.tabs)) {
+    const live = liveTabs[name] ? asaTabScores(liveTabs[name]) : [];
+    for (const saved of asaTabScores(table)) {
+      archers++;
+      const now = live.find(a => a.name === saved.name);
+      if (now && [...saved.scores].every(([column, score]) => Math.abs((now.scores.get(column) || 0) - score) < 1e-6)) stillThere++;
+    }
+  }
+  return archers === 0 || stillThere >= archers / 2;
 }
 
 // ---- Titles ----
@@ -1106,7 +1174,9 @@ function gvizUrl(sheetId, query) {
 // ranking and is listed in `problems`, as is a page with rows that could not
 // be read, so the caller can decide whether the result is good enough to
 // publish. `pages` lists every page that was read and how many results it held.
-async function readSources(fetchText) {
+// `asaSnapshots` are the saved copies of the Texas ASA sheet. `asaLive` in the
+// answer is the sheet as it should be saved now: its year and its class tabs.
+async function readSources(fetchText, { asaSnapshots = [] } = {}) {
   const problems = [];
   const pages = [];
   let requests = 0;
@@ -1139,7 +1209,7 @@ async function readSources(fetchText) {
     if (where.sheet && !table.cols.some(c => c.label && c.label.toUpperCase().includes('FIRST'))) {
       return { what, url, tab, year, shooters: [], note: 'the sheet has no tab of this name' };
     }
-    return { what, url, tab, year, shooters: parseAsaRows(table, tab, year), rows: JSON.stringify([table.cols.map(c => c.label), table.rows]) };
+    return { what, url, tab, year, table: asaTableToKeep(table) };
   }
 
   async function readAsaSheet(sheetId, year, whereFor) {
@@ -1152,10 +1222,52 @@ async function readSources(fetchText) {
     return found.filter(Boolean);
   }
 
-  // TX ASA 2026 (tabs by gid, or by name), then the 2025 and 2024 sheets (tabs by name)
-  const asaTabs = await readAsaSheet(ASA_SOY_SHEET, 2026, tab => (tab.gid ? { gid: tab.gid } : tab.tab ? { sheet: tab.tab } : null));
-  for (const archive of ASA_ARCHIVE_SHEETS) {
-    asaTabs.push(...await readAsaSheet(archive.id, archive.year, tab => (tab.archive === null ? null : { sheet: tab.archive || tab.name })));
+  // The sheet of the season being shot (tabs by gid, or by name). Which year
+  // it holds is told by the newest saved copy: the same year while the copy's
+  // scores are still on it, the next year once they are gone.
+  const newestCopy = asaSnapshots.slice().sort((a, b) => b.year - a.year)[0] || null;
+  const asaTabs = await readAsaSheet(ASA_SOY_SHEET, newestCopy ? newestCopy.year : ASA_LIVE_YEAR, tab => (tab.gid ? { gid: tab.gid } : tab.tab ? { sheet: tab.tab } : null));
+  const liveTables = {};
+  for (const t of asaTabs) if (t.table) liveTables[t.tab.name] = t.table;
+  const sameSeason = Boolean(newestCopy) && sameAsaSeason(newestCopy, liveTables);
+  const liveYear = newestCopy ? (sameSeason ? newestCopy.year : newestCopy.year + 1) : ASA_LIVE_YEAR;
+  for (const t of asaTabs) {
+    t.what = t.what.replace('TX ASA ' + t.year, 'TX ASA ' + liveYear);
+    t.year = liveYear;
+  }
+  // While the sheet holds the copy's season, a class that has lost scores
+  // since the copy was saved (a tab cleared early) is read from the copy.
+  const copyUrl = year => 'archive/asa-' + year + '.json';
+  if (sameSeason) {
+    for (const tab of ASA_TABS) {
+      const saved = newestCopy.tabs[tab.name];
+      if (!saved || asaScoreCount(saved) <= asaScoreCount(liveTables[tab.name])) continue;
+      const read = asaTabs.find(t => t.tab === tab);
+      const kept = { what: 'TX ASA ' + liveYear + ', ' + tab.name, url: copyUrl(liveYear), tab, year: liveYear, table: saved, note: 'the saved copy has more scores than the sheet, so it is used' };
+      if (read) Object.assign(read, kept);
+      else asaTabs.push(kept);
+      liveTables[tab.name] = saved;
+    }
+  }
+  // The years before, newest first, as far back as is ranked: from a saved
+  // copy where there is one, else from the 2025 and 2024 sheets (tabs by name).
+  // A sheet cleared for a season nobody has shot in yet does not count as a year.
+  const newestRanked = Object.values(liveTables).some(table => asaScoreCount(table) > 0) ? liveYear : liveYear - 1;
+  for (let year = Math.min(newestRanked, liveYear - 1); year > newestRanked - ASA_YEARS_RANKED; year--) {
+    const copy = asaSnapshots.find(c => c.year === year);
+    const sheet = ASA_ARCHIVE_SHEETS.find(a => a.year === year);
+    if (copy) {
+      for (const tab of ASA_TABS) {
+        if (copy.tabs[tab.name]) asaTabs.push({ what: 'TX ASA ' + year + ', ' + tab.name, url: copyUrl(year), tab, year, table: copy.tabs[tab.name], note: 'from the saved copy of the sheet' });
+      }
+    } else if (sheet) {
+      asaTabs.push(...await readAsaSheet(sheet.id, sheet.year, tab => (tab.archive === null ? null : { sheet: tab.archive || tab.name })));
+    }
+  }
+  for (const t of asaTabs) {
+    if (!t.table) continue;
+    t.shooters = parseAsaRows(t.table, t.tab, t.year);
+    t.rows = JSON.stringify([t.table.cols.map(c => c.label), t.table.rows]);
   }
   // Each year's sheet starts as a copy of the one before, and a class nobody
   // shot in can still hold last year's rows. A tab with exactly the rows of the
@@ -1253,16 +1365,16 @@ async function readSources(fetchText) {
   }));
   const stateRecordDetails = recordPages.flat();
 
-  return { asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles, requests, problems, pages };
+  return { asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles, requests, problems, pages, asaLive: { year: liveYear, tabs: liveTables } };
 }
 
 // Reads the sources and works out the ranking.
 // Returns { result, problems, pages, requests }: `result` is what api/tgr.json holds.
-async function buildRankings({ fetchText, now = () => new Date() }) {
-  const sources = await readSources(fetchText);
+async function buildRankings({ fetchText, now = () => new Date(), asaSnapshots = [] }) {
+  const sources = await readSources(fetchText, { asaSnapshots });
   const result = computeRankings(sources);
   result.updatedAt = now().toISOString();
-  return { result, problems: sources.problems, pages: sources.pages, requests: sources.requests };
+  return { result, problems: sources.problems, pages: sources.pages, requests: sources.requests, asaLive: sources.asaLive };
 }
 
 module.exports = {
@@ -1277,6 +1389,7 @@ module.exports = {
   parseTfaaSeasonList,
   parseTfaaPage,
   asaTitlesOf,
+  sameAsaSeason,
   tfaaPageLayout,
   mapEquipmentClass,
   normalizeName,

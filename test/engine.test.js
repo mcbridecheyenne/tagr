@@ -1016,3 +1016,27 @@ test('a page of an earlier season that cannot be read is noted, and never a prob
   assert.strictEqual(pages.find(p => p.what === 'TFAA 2022-2023 Indoor titles').note, 'its State Championship results could not be read');
   assert.strictEqual(pages.find(p => p.what === 'TFAA 2023 Outdoor titles').note, 'could not be read');
 });
+
+test('the State Champion is whoever shot the best State total, and professionals shoot for their own titles', () => {
+  const page = indoorPage([
+    freestyle('Pro Adult Male', [
+      [1, 'Backtension, Blake', 300, 59, 300, 58, 299, 55, 600, 117, 1499, 289],
+      [2, 'Hinge, Harper', 300, 60, 300, 60, 300, 60, 598, 110, 1498, 290]
+    ]),
+    freestyle('Adult Male', [
+      [1, 'Quillfeather, Avery', 300, 58, 299, 55, 300, 60, 600, 120, 1499, 293],
+      [2, 'Mcarrow, Dana', 300, 60, 300, 60, 300, 60, 599, 119, 1499, 299]
+    ])
+  ]);
+  const { titles, shooters } = engine.parseTfaaPage(page, '2025-2026 Indoor', 'indoor');
+  assert.deepStrictEqual(titleLines(titles), [
+    // Dana has the better aggregate on X count; Avery the better State total.
+    '2025-2026 | TFAA Indoor | soy | Adult Male - Freestyle (FS) | Mcarrow, Dana',
+    '2025-2026 | TFAA Indoor | soy | Pro Adult Male - Freestyle (FS) | Backtension, Blake',
+    '2025-2026 | TFAA Indoor | state | Adult Male - Freestyle (FS) | Quillfeather, Avery',
+    // Blake's 600 with 117 Xs does not lose the professionals' title to Avery's 600 with 120.
+    '2025-2026 | TFAA Indoor | state | Pro Adult Male - Freestyle (FS) | Backtension, Blake'
+  ]);
+  // For the ranking, a professional is still filed with the adults.
+  assert.strictEqual(shooters.find(a => a.name === 'Backtension, Blake').orgClass, 'Adult Male - Freestyle (FS)');
+});

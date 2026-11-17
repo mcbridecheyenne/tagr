@@ -383,7 +383,8 @@ function asaTitlesOf(year, tabs) {
 }
 
 // The TFAA titles of one season, from the entries on its page. In each
-// division (age group and style) the State Champion is the best State score,
+// division (age group and style, professionals apart) the State Champion is
+// whoever shot the best State total,
 // and the Shooter of the Year is TFAA's SYWAT Aggregate award: the best total
 // of three SYWAT scores and the State score, for which TFAA requires all four.
 // Indoors, X counts break ties. Scores above the round maximum count here:
@@ -392,7 +393,7 @@ function tfaaTitlesOf(entries, org, season) {
   const divisions = new Map();
   for (const entry of entries) {
     if (!entry.name) continue;
-    const orgClass = entry.age + ' - ' + entry.style;
+    const orgClass = entry.division + ' - ' + entry.style;
     if (!divisions.has(orgClass)) divisions.set(orgClass, []);
     const rounds = entry.scores.filter(sc => sc.kind === 'round' && sc.score > 0);
     const state = entry.scores.find(sc => sc.kind === 'state' && sc.score > 0);
@@ -472,6 +473,7 @@ function readTfaaEntries(html) {
   const entries = [];
   let unreadRows = 0;
   let age = '';
+  let division = '';
   let adult = false;
   let style = '';
   let columns = null;
@@ -480,6 +482,9 @@ function readTfaaEntries(html) {
     if (known) {
       age = known[1].replace(/\s+/g, ' ').trim();
       adult = adultAges.includes(age);
+      // The division as the page names it. Professionals are ranked with the
+      // adults of their age, but they shoot for their own titles.
+      division = row.includes('results-dgp') ? (tfaaCells(row)[0] || age).replace(/\s*\([^)]*\)\s*$/, '').replace(/\s+/g, ' ').trim() : age;
     } else if (row.includes('results-dgp')) {
       // An age group this code has not met. It keeps its own name, so its
       // archers are not filed under the group above, and counts as adult
@@ -487,6 +492,7 @@ function readTfaaEntries(html) {
       const heading = tfaaCells(row)[0] || '';
       const range = heading.match(/\((\d+)[^)]*\)$/);
       age = heading.replace(/\s*\([^)]*\)$/, '');
+      division = age;
       adult = range ? Number(range[1]) >= 18 : false;
     }
     if (row.includes('results-fi')) {
@@ -506,7 +512,7 @@ function readTfaaEntries(html) {
       if (kind !== 'round' && kind !== 'state') return;
       scores.push({ kind, score: tfaaNumber(cells[i]), x: columns[i + 1] === 'x' ? tfaaNumber(cells[i + 1]) : 0 });
     });
-    entries.push({ name: cells[nameAt], age, adult, style, scores, place: cells[0] });
+    entries.push({ name: cells[nameAt], age, division: division || age, adult, style, scores, place: cells[0] });
   }
   return { entries, unreadRows };
 }
@@ -566,7 +572,7 @@ function parseTfaaPage(html, seasonLabel, kind) {
     // and indoors the X count as the tie-break.
     const eventKeys = [];
     const fieldScores = [];
-    const stateKey = ['tfaa-state', org, yr, entry.age + ' - ' + entry.style].join(':');
+    const stateKey = ['tfaa-state', org, yr, entry.division + ' - ' + entry.style].join(':');
     let n = 0;
     for (const { kind: column, score, x } of entry.scores) {
       if (score <= 0) continue;
@@ -661,7 +667,7 @@ function parseTfaaStateChampions(html, org, season) {
   const divisions = new Map();
   for (const entry of entries) {
     if (!entry.name) continue;
-    const orgClass = entry.age + ' - ' + entry.style;
+    const orgClass = entry.division + ' - ' + entry.style;
     if (!divisions.has(orgClass)) divisions.set(orgClass, { champion: null, names: new Set() });
     const division = divisions.get(orgClass);
     division.names.add(nameKey(entry.name));

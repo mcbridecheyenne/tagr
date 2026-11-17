@@ -126,6 +126,26 @@
       <li><strong>Scores above the maximum</strong> — A TFAA Outdoor round is scored out of 560, and the two State rounds together out of 1120. A few listed scores are higher than that. They are left out of the rankings for now, until it is clear how they were scored.</li>
     </ul>
 
+    <h2 id="field">⚔️ Who You Beat</h2>
+    <p>A round counts for more when it beat ranked archers <strong>in the same class at the same shoot</strong>. Beating a highly ranked archer adds much more than beating a low ranked one:</p>
+    <table class="weight-table">
+      <thead><tr><th>Archer you beat</th><th>Adds to the round</th></tr></thead>
+      <tbody>
+        <tr><td>The best-ranked archer in TAGR</td><td><strong>+<%= (rules.fieldBeatTop * 100).toFixed(1) %>%</strong></td></tr>
+        <tr><td>An archer three quarters of the way up the ranking</td><td>+<%= (rules.fieldBeatTop * Math.pow(0.75, rules.fieldStandingPower) * 100).toFixed(1) %>%</td></tr>
+        <tr><td>An archer in the middle of the ranking</td><td>+<%= (rules.fieldBeatTop * Math.pow(0.5, rules.fieldStandingPower) * 100).toFixed(1) %>%</td></tr>
+        <tr><td>An archer near the bottom, or without a full ranking yet</td><td>about nothing</td></tr>
+      </tbody>
+    </table>
+    <ul>
+      <li>The amounts for everybody you beat are added up, and a round's bonus stops at <strong><%= Math.round(rules.fieldBonusMax * 100) %>%</strong>.</li>
+      <li>An archer's standing is where they are in the whole TAGR ranking before this bonus: 1 for the best, 0.5 for the middle. Each archer beaten adds <%= (rules.fieldBeatTop * 100).toFixed(1) %>% × standing<sup><%= rules.fieldStandingPower %></sup>.</li>
+      <li>An equal score beats nobody, and a class you shot alone earns nothing. Losing to somebody costs nothing.</li>
+      <li><span class="badge asa">TX ASA</span> Every shoot on the Shooter of the Year sheet counts: the field is everybody with a score in your class at that shoot.</li>
+      <li><span class="badge tfaa">TFAA Outdoor</span> <span class="badge indoor">TFAA Indoor</span> The State Championship field is everybody in your division with a State score. A SYWAT score is traced to the shoot it was shot at from TFAA's results for each shoot; a score that cannot be traced (a few in a hundred) earns no bonus.</li>
+      <li>Open an archer on the rankings page to see, round by round, how many archers they beat and what it added.</li>
+    </ul>
+
     <h2 id="recency">🕒 Newer Rounds Count for More</h2>
     <p>TAGR reads three seasons of each organization. A round counts in full in the newest season, and for a little less each season before:</p>
     <table class="weight-table">
@@ -236,6 +256,7 @@
       <li><span class="badge asa">TX ASA</span> — <strong>2024, 2025, 2026</strong> individual tournament results from Texas ASA Google Sheets (SOY + Tournament Results Archive)</li>
       <li><span class="badge tfaa">TFAA Outdoor</span> — the <strong>3 most recent seasons</strong> with scores, read from texasfieldarchery.org</li>
       <li><span class="badge indoor">TFAA Indoor</span> — the <strong>3 most recent seasons</strong> with scores, read from texasfieldarchery.org</li>
+      <li>The results of every TFAA shoot in those seasons, to see who shot against whom</li>
       <li><em>TSAA — Coming soon</em></li>
     </ul>
     <p>Rankings are rebuilt every Tuesday morning (Central time). Cross-organization names are automatically matched and merged (e.g., "SMITH, JOHN" from TFAA + "JOHN SMITH" from ASA = same archer). Extra spaces, full stops and where "Jr." is written make no difference, and two spellings on the same ASA number (Ken and Kenneth) are one archer when they share a first or last name. Two different people with exactly the same name still cannot be told apart.</p>

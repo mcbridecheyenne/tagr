@@ -86,6 +86,8 @@ const ASA_BATCH_SIZE = 5;
 const TFAA_BASE = 'https://texasfieldarchery.org';
 const TFAA_SEASON_LIST_URL = TFAA_BASE + '/results/sywat';
 const TFAA_SEASONS_RANKED = 3;
+// Shoot pages are read this many at a time.
+const TFAA_BATCH_SIZE = 5;
 const TFAA_RECORD_PAGES = [
   { type: 'indoor', url: TFAA_BASE + '/records/indoor' },
   { type: 'outdoor', url: TFAA_BASE + '/records/outdoor' },
@@ -142,6 +144,14 @@ const ASA_SOY_MIN_ARCHERS = 3;
 // one for being a State Champion, however many of each the archer holds. A
 // title counts for the bonus only when it was won against somebody: at least
 // this many archers were in the running for it.
+// A round counts for more when it beat ranked archers in the same class at
+// the same shoot. Each archer beaten adds FIELD_BEAT_TOP times the cube of
+// their standing (1 for the best-ranked archer, 0.5 for the middle of the
+// ranking, 0 for an archer without a full ranking), so beating the top archer
+// adds 2.5%, a middling one 0.3%. A round's bonus stops at FIELD_BONUS_MAX.
+const FIELD_BONUS_MAX = 0.05;
+const FIELD_BEAT_TOP = 0.025;
+const FIELD_STANDING_POWER = 3;
 const SOY_TITLE_BONUS = 1.03;
 const STATE_TITLE_BONUS = 1.02;
 const TITLE_BONUS_MIN_FIELD = 2;
@@ -149,6 +159,7 @@ const TITLE_BONUS_MIN_FIELD = 2;
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
   recencyWeights: RECENCY_WEIGHTS, recordStyleFor: RECORD_STYLE_FOR, asaPar: ASA_PAR,
+  fieldBonusMax: FIELD_BONUS_MAX, fieldBeatTop: FIELD_BEAT_TOP, fieldStandingPower: FIELD_STANDING_POWER,
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD
@@ -204,6 +215,10 @@ function parseAsaRows(res, tab, year) {
     const eventScores = [];
     const eventNames = [];
     const isState = [];
+    // Which shoot each score is from, and the score as the sheet has it (the
+    // decimals count 12s), for seeing who beat whom there.
+    const eventKeys = [];
+    const fieldScores = [];
     const qualifiers = [];
     for (let j = 5; j < cells.length; j++) {
       if (cells[j] && cells[j].v) {
@@ -214,6 +229,8 @@ function parseAsaRows(res, tab, year) {
           const state = stateCols.includes(j) || (stateCols.includes(j - 1) && !labelOf(j));
           eventScores.push(Math.floor(v));
           eventNames.push(eventNameFor(j));
+          eventKeys.push(['asa', year || 0, tab.name, j].join(':'));
+          fieldScores.push(v);
           isState.push(state);
           if (!state) qualifiers.push(v);
         }
@@ -227,7 +244,7 @@ function parseAsaRows(res, tab, year) {
       org: 'TX ASA', orgClass: tab.name, age: tab.age,
       knownDistance: tab.known || false,
       asaMaxYards: tab.maxYards || 40,
-      eventScores, eventNames, isState, maxPerRound: ASA_ROUND_MAX,
+      eventScores, eventNames, isState, eventKeys, fieldScores, maxPerRound: ASA_ROUND_MAX,
       when: year || 0,
       asaNumber: cells[0] && cells[0].v !== null && cells[0].v !== undefined ? String(cells[0].v).trim() : '',
       soyTotal: totalCol === -1 ? 0 : asaNumber(cells[totalCol]),
@@ -473,6 +490,13 @@ function parseTfaaPage(html, seasonLabel, kind) {
     const roundMax = [];
     const xMax = [];
     const roundKinds = [];
+    // Which shoot each score is from, where the page says: the State
+    // Championship. The SYWAT scores are matched to their shoots later
+    // (attachTfaaShoots). fieldScores is what places archers at the shoot:
+    // the whole State total, and indoors the X count as the tie-break.
+    const eventKeys = [];
+    const fieldScores = [];
+    const stateKey = ['tfaa-state', org, yr, entry.age + ' - ' + entry.style].join(':');
     let n = 0;
     for (const { kind: column, score, x } of entry.scores) {
       if (score <= 0) continue;
@@ -485,12 +509,16 @@ function parseTfaaPage(html, seasonLabel, kind) {
           eventScores.push(half, score - half);
           eventNames.push(stateName + ' (Field)', stateName + ' (Hunter)');
           roundKinds.push('field', 'hunter');
+          eventKeys.push(stateKey, stateKey);
+          fieldScores.push(score, score);
         } else {
           if (isAboveMax(entry, score, TFAA_OUTDOOR_ROUND_MAX)) continue;
           n++;
           eventScores.push(score);
           eventNames.push(roundName + ' #' + n);
           roundKinds.push('sywat');
+          eventKeys.push(null);
+          fieldScores.push(score);
         }
       } else if (column === 'round') {
         if (isAboveMax(entry, score, TFAA_INDOOR_ROUND_MAX)) continue;
@@ -501,6 +529,8 @@ function parseTfaaPage(html, seasonLabel, kind) {
         roundMax.push(TFAA_INDOOR_ROUND_MAX);
         xMax.push(60);
         eventNames.push(roundName + ' #' + n);
+        eventKeys.push(null);
+        fieldScores.push(score + Math.min(x, 60) / 1000);
       } else {
         // State Indoor is a double round; the source only publishes the
         // combined total (e.g. 541), not the two individual rounds, so we
@@ -512,13 +542,15 @@ function parseTfaaPage(html, seasonLabel, kind) {
         roundMax.push(2 * TFAA_INDOOR_ROUND_MAX);
         xMax.push(120);
         eventNames.push(stateName);
+        eventKeys.push(stateKey);
+        fieldScores.push(score + Math.min(x, 120) / 1000);
       }
     }
     if (!entry.name || eventScores.length === 0) continue;
     const who = { name: entry.name, org, orgClass: entry.age + ' - ' + entry.style, age: entry.adult ? 'adult' : 'youth', when };
     shooters.push(outdoor
-      ? { ...who, eventScores, eventNames, roundKinds, maxPerRound: TFAA_OUTDOOR_ROUND_MAX }
-      : { ...who, eventScores, xCounts, isState, eventNames, roundMax, xMax, maxPerRound: TFAA_INDOOR_ROUND_MAX });
+      ? { ...who, eventScores, eventNames, roundKinds, eventKeys, fieldScores, maxPerRound: TFAA_OUTDOOR_ROUND_MAX }
+      : { ...who, eventScores, xCounts, isState, eventNames, roundMax, xMax, eventKeys, fieldScores, maxPerRound: TFAA_INDOOR_ROUND_MAX });
   }
   return { shooters, repeatedState, unreadRows, aboveMax, titles: tfaaTitlesOf(entries, org, yr) };
 }
@@ -529,6 +561,74 @@ function parseTfaaOutdoorHtml(html, seasonLabel) {
 
 function parseTfaaIndoorHtml(html, seasonLabel) {
   return parseTfaaPage(html, seasonLabel, 'indoor').shooters;
+}
+
+// ---- TFAA shoots ----
+//
+// The standings give an archer's best three SYWAT scores but not where they
+// were shot. Each shoot has a results page of its own, so a score can be
+// traced to its shoot, and with it to the archers it was shot against.
+
+// A season's list of shoots (/results/season/<id>) → [{ id, name }]. The State
+// Championships are left out: the standings already say who shot State.
+function parseTfaaShootList(html) {
+  const shoots = [];
+  const seen = new Set();
+  const link = /<a\s+href\s*=\s*["']\/results\/(\d+)["'][^>]*>([^<]*)/gi;
+  let m;
+  while ((m = link.exec(html)) !== null) {
+    const name = tfaaText(m[2]);
+    if (seen.has(m[1]) || /\bstate\b/i.test(name)) continue;
+    seen.add(m[1]);
+    shoots.push({ id: m[1], name });
+  }
+  return shoots;
+}
+
+// One shoot's results page → [{ name, orgClass, days: [{ score, x }] }]. A
+// two-day shoot lists a score for each day.
+function parseTfaaShoot(html) {
+  return readTfaaEntries(html).entries
+    .map(e => ({ name: e.name, orgClass: e.age + ' - ' + e.style, days: e.scores.filter(sc => sc.kind === 'round' && sc.score > 0).map(sc => ({ score: sc.score, x: sc.x })) }))
+    .filter(e => e.name && e.days.length > 0);
+}
+
+// Traces each SYWAT score of a season's archers to the shoot it was shot at:
+// the shoot where the archer has that score (indoors, with that X count) in
+// that division. Sets the round's eventKey, and returns the field of every
+// shoot traced, { eventKey: [{ name, org, orgClass, score }] }: everybody who
+// shot that division there, with their best day.
+//   shoots   [{ id, entries }] with entries as parseTfaaShoot gives them
+function attachTfaaShoots(shooters, shoots, org) {
+  const indoor = org === 'TFAA Indoor';
+  const placing = d => d.score + (indoor ? Math.min(d.x, 60) / 1000 : 0);
+  const byArcher = new Map();
+  const byDivision = new Map();
+  for (const shoot of shoots) {
+    for (const entry of shoot.entries) {
+      const archer = nameKey(entry.name) + '|' + entry.orgClass;
+      if (!byArcher.has(archer)) byArcher.set(archer, []);
+      byArcher.get(archer).push({ shoot, entry });
+      const division = shoot.id + ':' + entry.orgClass;
+      if (!byDivision.has(division)) byDivision.set(division, []);
+      byDivision.get(division).push({ name: entry.name, org, orgClass: entry.orgClass, score: Math.max(...entry.days.map(placing)) });
+    }
+  }
+  const fields = {};
+  for (const s of shooters) {
+    const mine = byArcher.get(nameKey(s.name) + '|' + s.orgClass) || [];
+    const used = new Set();
+    s.eventScores.forEach((score, i) => {
+      if (s.eventKeys[i]) return;
+      const hit = mine.find(c => !used.has(c.shoot.id) && c.entry.days.some(d => d.score === score && (!indoor || Math.min(d.x, 60) === s.xCounts[i])));
+      if (!hit) return;
+      used.add(hit.shoot.id);
+      const division = hit.shoot.id + ':' + s.orgClass;
+      s.eventKeys[i] = 'tfaa:' + division;
+      fields[s.eventKeys[i]] = byDivision.get(division);
+    });
+  }
+  return fields;
 }
 
 // The season list on a TFAA results page → [{ id, label, kind, year }], newest first.
@@ -717,7 +817,9 @@ function asaNameAliases(asaShooters) {
 
 // Takes the parsed results and returns the ranking the site and the app show.
 // `updatedAt` is left for the caller to stamp.
-function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles = [] }) {
+// `fields` is who shot each TFAA shoot (attachTfaaShoots); the fields of
+// Texas ASA shoots and of the State Championships are read off the archers.
+function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles = [], fields = {} }) {
   // Deduplicate records: for each (ageGroup + style + recordType + round), keep only the current holder
   // "Current" = the entry with the highest score; if tied, the most recent year
   // For outdoor, multiple rounds exist (Aggregate, Field, Hunter) — each is a separate record
@@ -825,7 +927,11 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
           nps = nps * 1.03;
         }
       }
-      return { nps: Math.round(nps), org: s.org, raw: score, orgClass: s.orgClass, event: (s.eventNames && s.eventNames[i]) ? s.eventNames[i] : null };
+      return {
+        nps: Math.round(nps), exact: nps, org: s.org, raw: score, orgClass: s.orgClass, event: (s.eventNames && s.eventNames[i]) ? s.eventNames[i] : null,
+        eventKey: (s.eventKeys && s.eventKeys[i]) || null,
+        fieldScore: s.fieldScores && s.fieldScores[i] !== undefined ? s.fieldScores[i] : score
+      };
     });
     const totalX = s.xCounts ? s.xCounts.reduce((a, b) => a + b, 0) : 0;
     const eqClass = mapEquipmentClass(s.orgClass, s.org);
@@ -848,12 +954,12 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     const key = nameKey(entry.normalizedName) + '||' + entry.equipmentClass;
     if (!mergedMap[key]) {
       mergedMap[key] = {
+        key,
         name: entry.normalizedName,
         ages: [],
         equipmentClass: entry.equipmentClass,
         orgs: new Set(),
         orgClasses: [],
-        allNPS: [],
         allNPSWithOrg: [],
         totalX: 0,
         totalEvents: 0,
@@ -864,7 +970,6 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     const m = mergedMap[key];
     m.orgs.add(entry.org);
     m.orgClasses.push(entry.orgClass);
-    m.allNPS.push(...entry.npsScores);
     m.allNPSWithOrg.push(...entry.npsWithOrg);
     m.totalX += entry.totalX;
     m.totalEvents += entry.eventCount;
@@ -898,11 +1003,13 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   // Newest first, and Shooter of the Year before State Champion within a season.
   const titleOrder = (a, b) => b.season.slice(-4) - a.season.slice(-4) || a.kind.localeCompare(b.kind) || a.org.localeCompare(b.org);
 
-  // Third pass: compute final rankings from merged data
-  const rankings = Object.values(mergedMap).map(m => {
+  // Third pass: compute final rankings from merged data. It runs twice: once
+  // to see where everybody stands, and again once each round has its bonus
+  // for the archers it beat.
+  const rankAll = () => Object.values(mergedMap).map(m => {
     // Sort NPS with org tracking together
     m.allNPSWithOrg.sort((a, b) => b.nps - a.nps);
-    m.allNPS.sort((a, b) => b - a);
+    m.allNPS = m.allNPSWithOrg.map(r => r.nps);
     const totalEvents = m.totalEvents;
     const bestNPS = m.allNPS.length > 0 ? m.allNPS[0] : 0;
 
@@ -946,7 +1053,12 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       org: r.org,
       orgClass: r.orgClass,
       event: r.event || null,
-      counted: i < 5
+      counted: i < 5,
+      // How many archers shot the same class at the same shoot, how many of
+      // them this round beat, and the bonus that earned.
+      field: r.field || 0,
+      beat: r.beat || 0,
+      fieldBonus: r.fieldBonus || 0
     }));
 
     // Minimum 3 events to be fully ranked
@@ -973,6 +1085,47 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       titleBonus: Math.round(titleBonus * 10000) / 10000
     };
   });
+
+  // Where everybody stands before any field bonus: 1 for the best fully
+  // ranked archer, down towards 0 for the last, equal scores sharing a
+  // standing. An archer without a full ranking has none.
+  const standing = {};
+  const full = rankAll().filter(r => !r.provisional).sort((a, b) => b.avgNPS - a.avgNPS);
+  let place = 0;
+  full.forEach((r, i) => {
+    if (i === 0 || r.avgNPS !== full[i - 1].avgNPS) place = i;
+    standing[nameKey(r.name) + '||' + r.equipmentClass] = 1 - place / full.length;
+  });
+
+  // Who shot each shoot, in each class: archer → the score that placed them.
+  const fieldOf = {};
+  const enter = (eventKey, archer, score) => {
+    if (!fieldOf[eventKey]) fieldOf[eventKey] = new Map();
+    if (!fieldOf[eventKey].has(archer) || score > fieldOf[eventKey].get(archer)) fieldOf[eventKey].set(archer, score);
+  };
+  for (const [eventKey, entries] of Object.entries(fields)) {
+    for (const e of entries) enter(eventKey, keyOf(e.name) + '||' + mapEquipmentClass(e.orgClass, e.org), e.score);
+  }
+  for (const m of Object.values(mergedMap)) {
+    for (const r of m.allNPSWithOrg) {
+      if (r.eventKey && !fields[r.eventKey]) enter(r.eventKey, m.key, r.fieldScore);
+    }
+  }
+
+  // The bonus of each round, for the archers it beat.
+  for (const m of Object.values(mergedMap)) {
+    for (const r of m.allNPSWithOrg) {
+      if (!r.eventKey || !fieldOf[r.eventKey]) continue;
+      const others = [...fieldOf[r.eventKey]].filter(([archer]) => archer !== m.key);
+      const beaten = others.filter(([, score]) => score < r.fieldScore);
+      const earned = beaten.reduce((sum, [archer]) => sum + FIELD_BEAT_TOP * Math.pow(standing[archer] || 0, FIELD_STANDING_POWER), 0);
+      r.field = others.length;
+      r.beat = beaten.length;
+      r.fieldBonus = Math.round(Math.min(FIELD_BONUS_MAX, earned) * 10000) / 10000;
+      r.nps = Math.round(r.exact * (1 + r.fieldBonus));
+    }
+  }
+  const rankings = rankAll();
 
   // Best TAGR score first. Equal scores share a rank on the site; among them
   // the better single round comes first, then the name, so the order is the
@@ -1089,6 +1242,7 @@ async function readSources(fetchText) {
       newer.note = 'the same rows as the ' + older.year + ' sheet, so not counted twice';
     }
   }
+  const fields = {};
   const titles = [];
   for (const year of new Set(asaTabs.map(t => t.year))) {
     titles.push(...asaTitlesOf(year, asaTabs.filter(t => t.year === year)));
@@ -1104,6 +1258,38 @@ async function readSources(fetchText) {
   const seasons = seasonListHtml === null ? [] : parseTfaaSeasonList(seasonListHtml);
   if (seasonListHtml !== null && seasons.length === 0) {
     problems.push({ what: 'TFAA season list', url: TFAA_SEASON_LIST_URL, error: 'the page had no season list on it' });
+  }
+
+  // Reads the results of every shoot of a season: [{ id, entries }]. A shoot
+  // whose page cannot be read is passed over, since some never get one (the
+  // national shoots answer with an error): its scores then earn no bonus for
+  // who they beat. Only when most of a season's shoots cannot be read is that
+  // a problem.
+  async function readTfaaShoots(season) {
+    const what = 'TFAA ' + season.label + ' shoots';
+    const url = TFAA_BASE + '/results/season/' + season.id;
+    const html = await read(url, what);
+    if (html === null) return [];
+    const list = parseTfaaShootList(html);
+    const shoots = [];
+    const unread = [];
+    for (let i = 0; i < list.length; i += TFAA_BATCH_SIZE) {
+      await Promise.all(list.slice(i, i + TFAA_BATCH_SIZE).map(async shoot => {
+        requests++;
+        try {
+          shoots.push({ id: shoot.id, entries: parseTfaaShoot(await fetchText(TFAA_BASE + '/results/' + shoot.id)) });
+        } catch (err) {
+          unread.push(shoot.name);
+        }
+      }));
+    }
+    if (unread.length > list.length / 2) {
+      problems.push({ what, url, error: unread.length + ' of its ' + list.length + ' shoots could not be read' });
+    }
+    const summary = { what, url, results: shoots.reduce((n, s) => n + s.entries.length, 0) };
+    if (unread.length > 0) summary.note = 'not read: ' + unread.join(', ');
+    pages.push(summary);
+    return shoots;
   }
 
   // Reads the newest seasons of one kind. A season nobody has shot in yet is
@@ -1157,6 +1343,7 @@ async function readSources(fetchText) {
       pages.push(summary);
       shooters.push(...page.shooters);
       titles.push(...page.titles);
+      Object.assign(fields, attachTfaaShoots(page.shooters, await readTfaaShoots(season), page.shooters[0].org));
     }
     return shooters;
   }
@@ -1175,7 +1362,7 @@ async function readSources(fetchText) {
   }));
   const stateRecordDetails = recordPages.flat();
 
-  return { asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles, requests, problems, pages };
+  return { asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles, fields, requests, problems, pages };
 }
 
 // Reads the sources and works out the ranking.
@@ -1198,6 +1385,9 @@ module.exports = {
   parseTfaaRecordsHtml,
   parseTfaaSeasonList,
   parseTfaaPage,
+  parseTfaaShootList,
+  parseTfaaShoot,
+  attachTfaaShoots,
   asaTitlesOf,
   tfaaPageLayout,
   mapEquipmentClass,

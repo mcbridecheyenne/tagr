@@ -157,7 +157,7 @@
     <div class="tgr-modal-summary" id="amSummary"></div>
     <ul class="tgr-modal-titles" id="amTitles"></ul>
     <div id="amRounds"></div>
-    <div class="tgr-round-note">Rounds marked <span class="tgr-round-counted">✓</span> counted toward the TAGR score (best 5 by NPS). NPS = normalized performance score after difficulty, distance, equipment, X-count, State Championship and season adjustments.</div>
+    <div class="tgr-round-note">Rounds marked <span class="tgr-round-counted">✓</span> counted toward the TAGR score (best 5 by NPS). NPS = normalized performance score after difficulty, distance, equipment, X-count, State Championship and season adjustments. <strong>Beat</strong> is how many archers in the same class at the same shoot the round beat, and the bonus for beating them (more for highly ranked archers).</div>
   </div>
 </div>
 
@@ -374,6 +374,14 @@ function renderTable() {
   document.getElementById('countLine').textContent = list.length + ' archer' + (list.length !== 1 ? 's' : '') + ' ranked — ' + (currentAge === 'adult' ? 'Adult 18+' : 'Youth Under 18') + classLabel;
 }
 
+// Who the round beat in its class at the shoot, and the bonus that earned.
+function beatText(rd) {
+  if (!rd.field) return '<span style="color:#555;">\u2014</span>';
+  var text = esc(rd.beat) + ' of ' + esc(rd.field);
+  if (rd.fieldBonus > 0) text += ' <span class="tgr-round-counted">+' + esc(Math.round(rd.fieldBonus * 1000) / 10) + '%</span>';
+  return text;
+}
+
 function showArcher(idx) {
   var r = currentList[idx];
   if (!r) return;
@@ -407,7 +415,7 @@ function showArcher(idx) {
     rhtml = '<div style="color:#8b949e;font-size:0.85rem;">No individual round data available.</div>';
   } else {
     rhtml = '<table class="tgr-rounds-table"><thead><tr>' +
-      '<th>#</th><th>Event</th><th>Organization</th><th>Org Class</th><th>Score</th><th>NPS</th><th>Counted</th>' +
+      '<th>#</th><th>Event</th><th>Organization</th><th>Org Class</th><th>Score</th><th>Beat</th><th>NPS</th><th>Counted</th>' +
       '</tr></thead><tbody>';
     rounds.forEach(function(rd, i) {
       var oc = rd.org === 'TX ASA' ? 'asa' : rd.org === 'TFAA Indoor' ? 'indoor' : 'tfaa';
@@ -417,6 +425,7 @@ function showArcher(idx) {
         '<td><span class="tgr-org ' + oc + '">' + esc(rd.org) + '</span></td>' +
         '<td style="font-size:0.72rem;color:#8b949e;">' + (rd.orgClass ? esc(rd.orgClass) : '\u2014') + '</td>' +
         '<td>' + esc(rd.raw) + '</td>' +
+        '<td style="font-size:0.72rem;white-space:nowrap;">' + beatText(rd) + '</td>' +
         '<td style="font-weight:bold;">' + esc(rd.nps) + '</td>' +
         '<td>' + (rd.counted ? '<span class="tgr-round-counted">\u2713</span>' : '\u2014') + '</td>' +
         '</tr>';

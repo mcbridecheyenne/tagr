@@ -395,7 +395,56 @@ const tfaaSeasonNotStarted = tfaaResultsPage(55, '2027 Shoot Your Way Across Tex
 // What the site sends, with a normal "200 OK", for a season id it does not have.
 const TFAA_NOT_FOUND = '<html><head><title>TFAA</title></head><body><h1>TFAA</h1><h2>Page Not Found</h2></body></html>\n';
 
+// ---------- TFAA shoots ----------
+
+// A season's list of shoots, as /results/season/<id> writes it.
+// shoots: [[id, dates, name]]
+function tfaaShootList(seasonId, shoots) {
+  return '<html><body>\n<h1>Results</h1>\n' + tfaaSeasonList(seasonId) + '<div class="row">\n<table class="table table-hover">\n' +
+    shoots.map(([id, dates, name]) => "<tr><td class='text-center'>" + dates + '</td><td><a href = "/results/' + id + '">' + name + '</a></td></tr>').join('') +
+    '\n</table>\n</div>\n</body></html>\n';
+}
+
+const OUTDOOR_SHOOT_HEADS = ['Score', 'Xs'];
+const INDOOR_SHOOT_HEADS = ['Score', 'Xs', 'I/Os'];
+
+// One shoot's results: the same table as the standings, with one score an archer.
+const tfaaShootHuaco = tfaaResultsPage(50, 'Results - Huaco Bowmen - 1', OUTDOOR_SHOOT_HEADS, [
+  { age: 'Adult Male', styles: [
+    { style: 'Freestyle (FS)', rows: [
+      [1, 'Quillfeather, Avery', 545, 0],
+      [2, 'Stabilizer, Riley', 530, 0],
+      [3, 'Fletcher, Jordan', 520, 0],
+      // Shot here, but not one of the three scores the standings keep.
+      [4, "O'Nock, Pat", 480, 0]
+    ] },
+    { style: 'Bowhunter Freestyle (BHFS)', rows: [
+      [1, 'Broadhead, Sam', 505, 0]
+    ] }
+  ] }
+]);
+
+const tfaaShootArena = tfaaResultsPage(49, 'Results - Arena Archery - 1', INDOOR_SHOOT_HEADS, [
+  { age: 'Adult Male', styles: [
+    { style: 'Freestyle (FS)', rows: [
+      [1, 'Quillfeather, Avery', 300, 58, 0],
+      [2, 'Mcarrow, Dana', 295, 40, 0],
+      [3, 'Bolt, Taylor', 288, 31, 0]
+    ] }
+  ] }
+]);
+
 const tfaaPages = {
+  // The shoots of each season read. The State Championship is on the list but
+  // is not read as a shoot, and the national shoot's page answers with an error.
+  '/results/season/50': tfaaShootList(50, [[9002, '06/27/2026 - 06/28/2026', 'TFAA State Field Championship - 2026'], [9001, '04/18/2026 - 04/19/2026', 'Huaco Bowmen - 1']]),
+  '/results/season/48': tfaaShootList(48, []),
+  '/results/season/38': tfaaShootList(38, []),
+  '/results/season/49': tfaaShootList(49, [[9004, '03/26/2026 - 03/29/2026', 'The Vegas Shoot'], [9003, '01/10/2026 - 01/11/2026', 'Arena Archery - 1']]),
+  '/results/season/46': tfaaShootList(46, []),
+  '/results/season/37': tfaaShootList(37, []),
+  '/results/9001': tfaaShootHuaco,
+  '/results/9003': tfaaShootArena,
   // With no season id the site shows whichever season is current. Here that is
   // the newest indoor one, so nothing may treat this page as a fixed season.
   '/results/sywat': tfaaIndoor2026,
@@ -440,6 +489,7 @@ function responseFor(url) {
 }
 
 module.exports = {
-  responseFor, asaUrl, gviz, tfaaResultsPage, tfaaRecordsPage, tfaaSeasonList,
+  responseFor, asaUrl, gviz, tfaaResultsPage, tfaaRecordsPage, tfaaSeasonList, tfaaShootList,
+  OUTDOOR_SHOOT_HEADS, INDOOR_SHOOT_HEADS,
   OUTDOOR_HEADS, INDOOR_HEADS, EMPTY_TAB, SUMMARY_SHEET, TFAA_NOT_FOUND, ASA_2026, ASA_2025, ASA_2024
 };

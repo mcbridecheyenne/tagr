@@ -166,6 +166,9 @@ function asaNumber(cell) {
 // club can be told apart. Each archer also carries what the titles are decided
 // on, as the sheet has them (the decimals count 12s, and break ties):
 //   soyTotal     the TOTAL SCORE column, the Shooter of the Year standing
+//   soyWorkedOut the same total worked out from the scores (the best five
+//                qualifiers plus the State score, for an archer with five
+//                qualifiers), for a sheet whose totals have been cleared
 //   stateScore   the score in the STATE column
 function parseAsaRows(res, tab, year) {
   const rows = Array.isArray(res) ? res : (res.rows || []);
@@ -186,16 +189,21 @@ function parseAsaRows(res, tab, year) {
     if (!firstName && !lastName) continue;
     const eventScores = [];
     const eventNames = [];
+    const qualifiers = [];
     for (let j = 5; j < cells.length; j++) {
       if (cells[j] && cells[j].v) {
         const v = parseFloat(String(cells[j].f || cells[j].v));
         if (!isNaN(v) && v > 0) {
           eventScores.push(Math.floor(v));
           eventNames.push(eventNameFor(j));
+          // The unnamed column after STATE belongs to the State Championship too.
+          if (!stateCols.includes(j) && !(stateCols.includes(j - 1) && !labelOf(j))) qualifiers.push(v);
         }
       }
     }
     if (eventScores.length === 0) continue;
+    const stateScore = Math.max(0, ...stateCols.map(j => asaNumber(cells[j])));
+    qualifiers.sort((a, b) => b - a);
     shooters.push({
       name: (firstName + ' ' + lastName).trim(),
       org: 'TX ASA', orgClass: tab.name, age: tab.age,
@@ -204,7 +212,8 @@ function parseAsaRows(res, tab, year) {
       eventScores, eventNames, maxPerRound: 360,
       when: year || 0,
       soyTotal: totalCol === -1 ? 0 : asaNumber(cells[totalCol]),
-      stateScore: Math.max(0, ...stateCols.map(j => asaNumber(cells[j])))
+      soyWorkedOut: qualifiers.length >= 5 ? qualifiers.slice(0, 5).reduce((a, b) => a + b, 0) + stateScore : 0,
+      stateScore
     });
   }
   return shooters;
@@ -247,8 +256,10 @@ function bestBy(entries, standing) {
 // the sheet works out from the best five qualifiers and the State score and
 // leaves empty for an archer with fewer than five scores. Texas ASA gives the
 // award only in a class where at least three archers have five scores (the
-// sheet's "Read this First" tab). Until the State Championship has been shot
-// the season is still going, so nobody holds either title yet.
+// sheet's "Read this First" tab). The sheet's own totals are used while it has
+// them; a tab whose totals have all been cleared is worked out from its
+// scores. Until the State Championship has been shot the season is still
+// going, so nobody holds either title yet.
 function asaTitlesOf(year, tabs) {
   if (!tabs.some(t => t.shooters.some(s => s.stateScore > 0))) return [];
   const titles = [];
@@ -256,7 +267,8 @@ function asaTitlesOf(year, tabs) {
     const award = (kind, { winners, field }) => {
       for (const s of winners) titles.push({ name: s.name, org: 'TX ASA', orgClass: tab.name, kind, season: String(year), field });
     };
-    const soy = bestBy(shooters, s => (s.soyTotal > 0 ? [s.soyTotal] : null));
+    const total = shooters.some(s => s.soyTotal > 0) ? s => s.soyTotal : s => s.soyWorkedOut || 0;
+    const soy = bestBy(shooters, s => (total(s) > 0 ? [total(s)] : null));
     if (soy.field >= ASA_SOY_MIN_ARCHERS) award('soy', soy);
     award('state', bestBy(shooters, s => (s.stateScore > 0 ? [s.stateScore] : null)));
   }

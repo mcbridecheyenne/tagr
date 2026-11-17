@@ -506,6 +506,12 @@ test('a Texas ASA season names nobody until its State Championship has been shot
     '2026 | TX ASA | state | Known 50 | C D'
   ]);
 
+  // A sheet whose totals have been cleared: the Shooter of the Year is worked out from the scores.
+  const cleared = [{ tab, shooters: [
+    { ...shooter('A B', 0, 310), soyWorkedOut: 1900 }, { ...shooter('C D', 0, 0), soyWorkedOut: 1910 }, { ...shooter('E F', 0, 300), soyWorkedOut: 1800 }
+  ] }];
+  assert.deepStrictEqual(titleLines(engine.asaTitlesOf(2025, cleared)), ['2025 | TX ASA | soy | Known 50 | C D', '2025 | TX ASA | state | Known 50 | A B']);
+
   // Texas ASA gives the award only where three archers have a total: with two, there is a State Champion alone.
   const thin = [{ tab, shooters: [shooter('A B', 1900.004, 310.0005), shooter('C D', 1850, 0), shooter('E F', 0, 300)] }];
   assert.deepStrictEqual(titleLines(engine.asaTitlesOf(2026, thin)), ['2026 | TX ASA | state | Known 50 | A B']);
@@ -522,6 +528,16 @@ test('a Texas ASA row carries its total, its State score and the year of its eve
   assert.deepStrictEqual(archer.eventScores, [328, 298]);
   assert.strictEqual(archer.stateScore, 298.0004);
   assert.strictEqual(archer.soyTotal, 0);
+  assert.strictEqual(archer.soyWorkedOut, 0);
+
+  // Five qualifiers and State: the best five qualifiers plus the State score, the cell after STATE left out.
+  const full = engine.parseGvizTable(sources.gviz(
+    ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE', 'A', 'B', 'C', 'D', 'E', 'F', 'STATE', ''],
+    [[1, 'KOREY', 'TWELVES', '71695', 'Tyler', 300, 310, 320, 290, 305, 315, 298, 12]]
+  ));
+  const [six] = engine.parseAsaRows(full, engine.ASA_TABS[0], 2025);
+  assert.strictEqual(six.soyWorkedOut, 320 + 315 + 310 + 305 + 300 + 298);
+  assert.strictEqual(six.soyTotal, six.soyWorkedOut);
 });
 
 test('a TFAA Shooter of the Year needs three SYWAT scores and the State score; the State Champion has the best State score', () => {

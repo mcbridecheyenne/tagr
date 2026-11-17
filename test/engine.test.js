@@ -1040,3 +1040,25 @@ test('the State Champion is whoever shot the best State total, and professionals
   // For the ranking, a professional is still filed with the adults.
   assert.strictEqual(shooters.find(a => a.name === 'Backtension, Blake').orgClass, 'Adult Male - Freestyle (FS)');
 });
+
+test('an older page lists an age group twice, professionals first, without saying so', () => {
+  const page = indoorPage([
+    freestyle('Adult Male', [[1, 'Backtension, Blake', 300, 59, 300, 58, 299, 55, 600, 117, 1499, 289]]),
+    freestyle('Adult Male', [[1, 'Quillfeather, Avery', 300, 58, 299, 55, 300, 60, 600, 120, 1499, 293]]),
+    freestyle('Senior Male', [[1, 'Greybeard, Lee', 290, 30, 288, 28, 291, 33, 580, 60, 1449, 151]])
+  ]);
+  assert.deepStrictEqual(titleLines(engine.parseTfaaPage(page, '2019-2020 Indoor', 'indoor').titles.filter(t => t.kind === 'state')), [
+    '2019-2020 | TFAA Indoor | state | Adult Male - Freestyle (FS) | Quillfeather, Avery',
+    '2019-2020 | TFAA Indoor | state | Pro Adult Male - Freestyle (FS) | Backtension, Blake',
+    '2019-2020 | TFAA Indoor | state | Senior Male - Freestyle (FS) | Greybeard, Lee'
+  ]);
+  // The same on the results of a State Championship.
+  const state = sources.tfaaResultsPage(27, 'Results - State', ['Score', 'Xs', 'Score', 'Xs', 'Total', 'Total X', 'I/Os'], [
+    freestyle('Adult Male', [[1, 'Backtension, Blake', 300, 59, 300, 58, 600, 117, 0]]),
+    freestyle('Adult Male', [[1, 'Quillfeather, Avery', 300, 60, 300, 60, 600, 120, 0], [2, 'Mcarrow, Dana', 299, 50, 300, 55, 599, 105, 0]])
+  ]);
+  assert.deepStrictEqual(engine.parseTfaaStateChampions(state, 'TFAA Indoor', '2019-2020').map(t => [t.orgClass, t.name, t.field]), [
+    ['Pro Adult Male - Freestyle (FS)', 'Backtension, Blake', 1],
+    ['Adult Male - Freestyle (FS)', 'Quillfeather, Avery', 2]
+  ]);
+});

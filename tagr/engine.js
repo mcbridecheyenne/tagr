@@ -474,6 +474,13 @@ function readTfaaEntries(html) {
   let unreadRows = 0;
   let age = '';
   let division = '';
+  // How often each age group heads a part of the page, and how often so far.
+  const headingName = row => (tfaaCells(row)[0] || '').replace(/\s*\([^)]*\)\s*$/, '').replace(/\s+/g, ' ').trim();
+  const listed = {};
+  const met = {};
+  for (const row of html.split('<tr')) {
+    if (row.includes('results-dgp')) listed[headingName(row)] = (listed[headingName(row)] || 0) + 1;
+  }
   let adult = false;
   let style = '';
   let columns = null;
@@ -483,8 +490,13 @@ function readTfaaEntries(html) {
       age = known[1].replace(/\s+/g, ' ').trim();
       adult = adultAges.includes(age);
       // The division as the page names it. Professionals are ranked with the
-      // adults of their age, but they shoot for their own titles.
-      division = row.includes('results-dgp') ? (tfaaCells(row)[0] || age).replace(/\s*\([^)]*\)\s*$/, '').replace(/\s+/g, ' ').trim() : age;
+      // adults of their age, but they shoot for their own titles. Older pages
+      // do not say "Pro": they list the age group twice, professionals first.
+      division = row.includes('results-dgp') ? headingName(row) : age;
+      if (row.includes('results-dgp')) {
+        met[division] = (met[division] || 0) + 1;
+        if (listed[division] > 1 && met[division] === 1) division = 'Pro ' + division;
+      }
     } else if (row.includes('results-dgp')) {
       // An age group this code has not met. It keeps its own name, so its
       // archers are not filed under the group above, and counts as adult

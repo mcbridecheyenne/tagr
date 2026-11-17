@@ -20,9 +20,24 @@ function cell(value) {
   return { v: value };
 }
 
+// A class tab's row as the Texas ASA sheets hold it, from a row written here
+// as [place, first name, last name, ASA number, city, ...scores]: the sheet
+// counts the events and works out TOTAL SCORE, the Shooter of the Year
+// standing, as the best five qualifiers plus the State score. With fewer than
+// five qualifiers it has no total.
+function asaSheetRow(labels, row) {
+  const [, first, last, number, , ...scores] = row;
+  const stateAt = labels.indexOf('STATE') - 5;
+  const points = scores.map(v => (typeof v === 'number' ? v : v && typeof v === 'object' ? parseFloat(v.f) : NaN)).map(v => (v > 0 ? v : 0));
+  const qualifiers = points.filter((v, i) => i !== stateAt && v > 0).sort((a, b) => b - a);
+  const total = qualifiers.length >= 5 ? qualifiers.slice(0, 5).reduce((a, b) => a + b, 0) + (points[stateAt] || 0) : null;
+  return [number, first, last, points.filter(v => v > 0).length, total, ...scores];
+}
+
 function gviz(labels, rows) {
+  if (labels[0] === 'ASA NUMBER') rows = rows.map(r => asaSheetRow(labels, r));
   const table = {
-    cols: labels.map((label, i) => ({ id: String.fromCharCode(65 + i), label, type: i >= 4 ? 'number' : 'string' })),
+    cols: labels.map((label, i) => ({ id: String.fromCharCode(65 + i), label, type: i >= 3 ? 'number' : 'string' })),
     rows: rows.map(r => ({ c: r.map(cell) })),
     parsedNumHeaders: 1
   };
@@ -30,8 +45,8 @@ function gviz(labels, rows) {
     JSON.stringify({ version: '0.6', reqId: '0', status: 'ok', sig: '1', table }) + ');';
 }
 
-const ASA_LABELS_2026 = ['PLACE', 'FIRST NAME', 'LAST NAME', 'ASA #', 'CITY', 'PARIS', 'STEPHENVILLE ', 'TEMPLE', 'STATE', '', 'BROWNWOOD', 'KILGORE'];
-const ASA_LABELS_ARCHIVE = ['PLACE', 'FIRST NAME', 'LAST NAME', 'ASA #', 'CITY', 'Qualifier  1', 'Qualifier 2', 'STATE'];
+const ASA_LABELS_2026 = ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE', 'PARIS', 'STEPHENVILLE ', 'TEMPLE', 'STATE', '', 'BROWNWOOD', 'KILGORE'];
+const ASA_LABELS_ARCHIVE = ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE', 'Qualifier  1', 'Qualifier 2', 'State'];
 const EMPTY_TAB = gviz(ASA_LABELS_2026, []);
 // What Google returns when a tab name does not exist: the first (summary) sheet.
 const SUMMARY_SHEET = gviz(['CLASS', 'SHOOTERS', 'AVERAGE'], [['Open Pro', 14, 331.2], ['Known 50', 22, 318.9]]);

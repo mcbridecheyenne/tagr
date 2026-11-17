@@ -270,7 +270,7 @@ test('an outdoor row gives its ordinary rounds, and the State total as two halve
     eventScores: [510, 509, 508, 507],
     eventNames: ['2026 SYWAT #1', '2026 SYWAT #2', '2026 State Outdoor (Field)', '2026 State Outdoor (Hunter)'],
     roundKinds: ['sywat', 'sywat', 'field', 'hunter'],
-    maxPerRound: 560
+    maxPerRound: 560, when: 2026
   });
 });
 
@@ -314,7 +314,7 @@ test('an indoor State score is the State round, never an ordinary round as well'
     eventNames: ['2025-2026 Indoor #1', '2025-2026 Indoor #2', '2025-2026 State Indoor'],
     roundMax: [300, 300, 600],
     xMax: [60, 60, 120],
-    maxPerRound: 300
+    maxPerRound: 300, when: 2025.5
   });
 });
 
@@ -472,4 +472,154 @@ test('names are matched across "FIRST LAST" and "Last, First" spellings', () => 
   assert.strictEqual(engine.normalizeName('MCARROW, DANA'), 'Dana McArrow');
   assert.strictEqual(engine.normalizeName('dana mcarrow'), 'Dana McArrow');
   assert.strictEqual(engine.normalizeName(' Quillfeather,  Avery '), 'Avery Quillfeather');
+});
+
+// ---- Titles: Shooter of the Year and State Champion ----
+
+const titleLines = titles => titles.map(t => [t.season, t.org, t.kind, t.orgClass, t.name].join(' | ')).sort();
+
+test('Texas ASA titles come from the TOTAL SCORE and STATE columns of a finished season', async () => {
+  const { titles } = await engine.readSources(fakeFetch());
+  assert.deepStrictEqual(titleLines(titles.filter(t => t.org === 'TX ASA')), [
+    // 2025: one State score. Nobody has the five qualifiers a total needs.
+    '2025 | TX ASA | state | Senior Known 50 | LEE GREYBEARD',
+    // 2026: Riley has five qualifiers and the State score; Pat and Avery only the best State score of their class.
+    "2026 | TX ASA | soy | Men's Open 45 | RILEY STABILIZER",
+    "2026 | TX ASA | state | Known 50 | PAT O'NOCK",
+    "2026 | TX ASA | state | Men's Open 45 | RILEY STABILIZER",
+    '2026 | TX ASA | state | Open Pro | AVERY QUILLFEATHER'
+  ]);
+});
+
+test('a Texas ASA season names nobody until its State Championship has been shot', () => {
+  const tab = engine.ASA_TABS.find(t => t.name === 'Known 50');
+  const shooter = (name, soyTotal, stateScore) => ({ name, soyTotal, stateScore });
+  const leading = [{ tab, shooters: [shooter('A B', 1600.004, 0), shooter('C D', 1590.002, 0)] }];
+  assert.deepStrictEqual(engine.asaTitlesOf(2026, leading), []);
+
+  // The decimals count 12s: they break a tie on points, and an exact tie is shared.
+  const finished = [{ tab, shooters: [shooter('A B', 1900.004, 310.0005), shooter('C D', 1900.006, 310.0005), shooter('E F', 0, 300)] }];
+  assert.deepStrictEqual(titleLines(engine.asaTitlesOf(2026, finished)), [
+    '2026 | TX ASA | soy | Known 50 | C D',
+    '2026 | TX ASA | state | Known 50 | A B',
+    '2026 | TX ASA | state | Known 50 | C D'
+  ]);
+});
+
+test('a Texas ASA row carries its total, its State score and the year of its events', () => {
+  const table = engine.parseGvizTable(sources.gviz(
+    ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE', 'BROWNWOOD', 'STATE', '', 'STATE', ''],
+    [[1, 'KOREY', 'TWELVES', '71695', 'Tyler', { v: 328.0014, f: '328.0014' }, { v: 298.0004, f: '298.0004' }]]
+  ));
+  table.rows[0].c[4] = { v: '#NUM!' };
+  const [archer] = engine.parseAsaRows(table, engine.ASA_TABS[0], 2026);
+  assert.deepStrictEqual(archer.eventNames, ['2026 BROWNWOOD', '2026 STATE']);
+  assert.deepStrictEqual(archer.eventScores, [328, 298]);
+  assert.strictEqual(archer.stateScore, 298.0004);
+  assert.strictEqual(archer.soyTotal, 0);
+});
+
+test('a TFAA Shooter of the Year needs three SYWAT scores and the State score; the State Champion has the best State score', () => {
+  const page = outdoorPage([freestyle('Adult Male', [
+    [1, 'Quillfeather, Avery', 540, 545, 538, 1085, 2708],
+    // The best three rounds, but no State score: not in the running for the aggregate.
+    [2, 'Stabilizer, Riley', 550, 551, 552, 0, 1653],
+    // The best State score, but only two rounds.
+    [3, 'Fletcher, Jordan', 520, 0, 510, 1090, 2120],
+    // Listed a second time with the State score alone: still one title.
+    [4, 'Fletcher, Jordan', 0, 0, 0, 1090, 1090],
+    // Above the round maximum, so left out of the ranking, but it cannot win here.
+    [5, 'Onceonly, Toby', 608, 0, 0, 0, 608]
+  ]), freestyle('Cub Male', [[1, 'Little, Cub', 280, 290, 285, 0, 855]])]);
+  assert.deepStrictEqual(titleLines(engine.parseTfaaPage(page, '2026 Outdoor', 'outdoor').titles), [
+    '2026 | TFAA Outdoor | soy | Adult Male - Freestyle (FS) | Quillfeather, Avery',
+    '2026 | TFAA Outdoor | state | Adult Male - Freestyle (FS) | Fletcher, Jordan'
+  ]);
+});
+
+test('a title is won with a score above the round maximum, though the score is left out of the ranking', () => {
+  const page = outdoorPage([freestyle('Adult Male', [
+    [1, 'Overdraw, Jesse', 629, 627, 623, 1231, 3110],
+    [2, 'Quillfeather, Avery', 560, 559, 558, 1120, 2797]
+  ])]);
+  const { titles, shooters } = engine.parseTfaaPage(page, '2025 Outdoor', 'outdoor');
+  assert.deepStrictEqual(shooters.map(a => a.name), ['Quillfeather, Avery']);
+  assert.deepStrictEqual(titleLines(titles), [
+    '2025 | TFAA Outdoor | soy | Adult Male - Freestyle (FS) | Overdraw, Jesse',
+    '2025 | TFAA Outdoor | state | Adult Male - Freestyle (FS) | Overdraw, Jesse'
+  ]);
+});
+
+test('indoors the X count breaks a tie, and an exact tie is shared', () => {
+  const page = indoorPage([freestyle('Adult Male', [
+    [1, 'Quillfeather, Avery', 300, 60, 300, 58, 300, 57, 600, 110, 1500, 285],
+    [2, 'Mcarrow, Dana', 300, 60, 300, 60, 300, 60, 600, 108, 1500, 288],
+    [3, 'Bolt, Taylor', 299, 40, 298, 41, 297, 39, 600, 110, 1494, 230]
+  ])]);
+  assert.deepStrictEqual(titleLines(engine.parseTfaaPage(page, '2025-2026 Indoor', 'indoor').titles), [
+    '2025-2026 | TFAA Indoor | soy | Adult Male - Freestyle (FS) | Mcarrow, Dana',
+    '2025-2026 | TFAA Indoor | state | Adult Male - Freestyle (FS) | Bolt, Taylor',
+    '2025-2026 | TFAA Indoor | state | Adult Male - Freestyle (FS) | Quillfeather, Avery'
+  ]);
+});
+
+test('a season still being shot has no titles', () => {
+  const page = indoorPage([freestyle('Adult Male', [[1, 'Quillfeather, Avery', 300, 60, 300, 58, 300, 57, 0, 0, 900, 175]])]);
+  assert.deepStrictEqual(engine.parseTfaaPage(page, '2026-2027 Indoor', 'indoor').titles, []);
+});
+
+test('titles show on the ranking for the equipment class they were won in, newest first', () => {
+  const compound = asa('Casey Stringwalker', [300, 300, 300]);
+  const barebow = { ...tfaaOutdoor('Stringwalker, Casey', 'Barebow Recurve (BBR)', [400, 400, 400], ['sywat', 'sywat', 'sywat']) };
+  const title = (kind, org, season, orgClass, name) => ({ kind, org, season, orgClass, name });
+  const result = engine.computeRankings({
+    asaShooters: [compound], tfaaShooters: [barebow], tfaaIndoorShooters: [], stateRecordDetails: [],
+    titles: [
+      title('state', 'TFAA Outdoor', '2024', 'Adult Male - Barebow Recurve (BBR)', 'Stringwalker, Casey'),
+      title('soy', 'TFAA Indoor', '2025-2026', 'Adult Male - Barebow Recurve (BBR)', 'Stringwalker, Casey'),
+      title('state', 'TFAA Indoor', '2025-2026', 'Adult Male - Barebow Recurve (BBR)', 'Stringwalker, Casey'),
+      title('soy', 'TX ASA', '2026', 'Open Pro', 'CASEY STRINGWALKER'),
+      // Won by somebody who is not ranked: it has nowhere to show.
+      title('soy', 'TX ASA', '2026', 'Known 50', 'NOT RANKED')
+    ]
+  });
+  const by = cls => result.adult.find(r => r.equipmentClass === cls);
+  assert.deepStrictEqual(by('Barebow').titles.map(t => t.season + ' ' + t.kind), ['2025-2026 soy', '2025-2026 state', '2024 state']);
+  assert.deepStrictEqual(by('Compound').titles, [{ kind: 'soy', org: 'TX ASA', season: '2026', orgClass: 'Open Pro' }]);
+  assert.strictEqual(result.sources.titleHolders, 1);
+  assert.strictEqual(result.sources.soyTitles, 2);
+  assert.strictEqual(result.sources.stateTitles, 2);
+});
+
+test('the made-up pages give their title holders a trophy and a star to show', async () => {
+  const { result } = await build();
+  const avery = result.adult.find(r => r.name === 'Avery Quillfeather');
+  assert.deepStrictEqual(avery.titles.map(t => [t.season, t.org, t.kind].join(' ')), [
+    '2025-2026 TFAA Indoor soy', '2026 TFAA Outdoor soy', '2025-2026 TFAA Indoor state', '2026 TFAA Outdoor state', '2026 TX ASA state',
+    '2024-2025 TFAA Indoor soy', '2025 TFAA Outdoor soy', '2024-2025 TFAA Indoor state', '2025 TFAA Outdoor state'
+  ]);
+});
+
+// ---- Adult or youth, and equal scores ----
+
+test('an archer who has moved up to an adult TFAA age group is ranked with the adults', () => {
+  const tfaa = (age, when) => ({ ...tfaaOutdoor('Nockpoint, Jamie', 'Freestyle (FS)', [500, 500, 500], ['sywat', 'sywat', 'sywat']), orgClass: (age === 'youth' ? 'Young Adult Male' : 'Adult Male') + ' - Freestyle (FS)', age, when });
+  const list = shooters => {
+    const result = engine.computeRankings({ asaShooters: shooters.filter(s => s.org === 'TX ASA'), tfaaShooters: shooters.filter(s => s.org !== 'TX ASA'), tfaaIndoorShooters: [], stateRecordDetails: [] });
+    return result.adult.length ? 'adult' : 'youth';
+  };
+  assert.strictEqual(list([tfaa('youth', 2024), tfaa('adult', 2026)]), 'adult');
+  assert.strictEqual(list([tfaa('adult', 2024), tfaa('youth', 2026)]), 'youth');
+  // Both in the newest season: still a youth.
+  assert.strictEqual(list([tfaa('youth', 2026), tfaa('adult', 2026)]), 'youth');
+  // A young archer may shoot up into an adult Texas ASA class: the TFAA age group is believed.
+  assert.strictEqual(list([tfaa('youth', 2025), { ...asa('Jamie Nockpoint', [300, 300, 300]), when: 2026 }]), 'youth');
+  // With Texas ASA results alone, the newest season decides.
+  assert.strictEqual(list([{ ...asa('Jamie Nockpoint', [300, 300, 300]), age: 'youth', when: 2024 }, { ...asa('Jamie Nockpoint', [300, 300, 300]), when: 2026 }]), 'adult');
+});
+
+test('equal TAGR scores are listed in the same order every time: better best round first, then by name', () => {
+  const ranked = rank([asa('Zed Last', [360, 360, 360]), asa('Amy First', [360, 360, 360]), asa('Bo Peak', [360, 360, 360])]);
+  assert.deepStrictEqual(ranked.map(r => r.avgNPS), [630, 630, 630]);
+  assert.deepStrictEqual(ranked.map(r => r.name), ['Amy First', 'Bo Peak', 'Zed Last']);
 });

@@ -71,6 +71,12 @@
 .tgr-provisional { opacity: 0.5; }
 .tgr-prov-badge { font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; background: rgba(231,76,60,0.15); color: #e74c3c; font-weight: bold; margin-left: 0.3rem; }
 .tgr-record-badge { font-size: 0.85rem; margin-left: 0.25rem; cursor: help; }
+.tgr-title-badge { font-size: 0.85rem; margin-left: 0.25rem; cursor: help; white-space: nowrap; }
+.tgr-title-badge .x { font-size: 0.65rem; font-weight: bold; color: var(--accent-gold); }
+.tgr-legend { text-align: center; color: #8b949e; font-size: 0.72rem; margin: -0.4rem 0 0.9rem; }
+.tgr-legend span { white-space: nowrap; margin: 0 0.4rem; }
+.tgr-modal-titles { list-style: none; padding: 0; margin: 0 0 1.2rem; font-size: 0.8rem; color: var(--text-light); }
+.tgr-modal-titles li { padding: 0.15rem 0; }
 .tgr-bar { height: 4px; border-radius: 2px; margin-top: 0.3rem; }
 .tgr-loading { text-align: center; padding: 3rem; color: var(--text-light); }
 .tgr-count { text-align: center; color: #8b949e; font-size: 0.75rem; margin-top: 0.8rem; }
@@ -111,6 +117,7 @@
       <div class="tgr-stat"><div class="num" id="statIndoor">—</div><div class="lbl">TFAA Indoor</div></div>
       <div class="tgr-stat" id="mergedStat" style="display:none;"><div class="num" id="statMerged" style="color:#2ecc71;">—</div><div class="lbl">Cross-Org Merged</div></div>
       <div class="tgr-stat" id="recordStat" style="display:none;"><div class="num" id="statRecords" style="color:#f1c40f;">—</div><div class="lbl">👑 Record Holders</div></div>
+      <div class="tgr-stat" id="titleStat" style="display:none;"><div class="num" id="statTitles" style="color:#f1c40f;">—</div><div class="lbl">🏆 Title Holders</div></div>
     </div>
 
     <div class="tgr-tabs">
@@ -128,6 +135,9 @@
     </div>
 
     <input type="text" class="tgr-search" id="searchInput" placeholder="Search by name or organization class..." oninput="renderTable()">
+    <div class="tgr-legend">
+      <span>🏆 Shooter of the Year</span><span>⭐ State Champion</span><span>👑 TFAA record holder</span>
+    </div>
 
     <div id="rankingsContent">
       <div class="tgr-loading">Loading TAGR rankings...</div>
@@ -145,6 +155,7 @@
     </div>
     <div class="tgr-modal-sub" id="amSub"></div>
     <div class="tgr-modal-summary" id="amSummary"></div>
+    <ul class="tgr-modal-titles" id="amTitles"></ul>
     <div id="amRounds"></div>
     <div class="tgr-round-note">Rounds marked <span class="tgr-round-counted">✓</span> counted toward the TAGR score (best 5 by NPS). NPS = normalized performance score after difficulty, distance, equipment and X-count adjustments.</div>
   </div>
@@ -195,6 +206,10 @@ async function loadTAGR() {
       document.getElementById('statRecords').textContent = tagrData.sources.stateRecordHolders;
       document.getElementById('recordStat').style.display = '';
     }
+    if (tagrData.sources.titleHolders > 0) {
+      document.getElementById('statTitles').textContent = tagrData.sources.titleHolders;
+      document.getElementById('titleStat').style.display = '';
+    }
     
     renderTable();
   } catch(err) {
@@ -223,6 +238,32 @@ function npsColorClass(nps, max) {
   return 'tgr-nps-low';
 }
 
+// Titles: Shooter of the Year and State Champion, from Texas ASA and TFAA.
+var TITLE_KINDS = [
+  { kind: 'soy', icon: '🏆', label: 'Shooter of the Year' },
+  { kind: 'state', icon: '⭐', label: 'State Champion' }
+];
+
+function titleLine(t) {
+  var kind = TITLE_KINDS.filter(function(k) { return k.kind === t.kind; })[0];
+  return t.season + ' ' + t.org + ' ' + (kind ? kind.label : t.kind) + ' — ' + t.orgClass;
+}
+
+// One icon for each kind of title the archer holds, with how many when more than one.
+function titleBadges(r) {
+  var titles = r.titles || [];
+  return TITLE_KINDS.map(function(k) {
+    var mine = titles.filter(function(t) { return t.kind === k.kind; });
+    if (mine.length === 0) return '';
+    var tip = k.label + (mine.length > 1 ? ' (' + mine.length + ' titles)' : '') + ':\n' + mine.map(titleLine).join('\n');
+    return '<span class="tgr-title-badge" title="' + esc(tip) + '">' + k.icon + (mine.length > 1 ? '<span class="x">×' + mine.length + '</span>' : '') + '</span>';
+  }).join('');
+}
+
+function holdsTitle(r, kind) {
+  return (r.titles || []).some(function(t) { return !kind || t.kind === kind; });
+}
+
 function renderTable() {
   if (!tagrData) return;
   var fullList = currentAge === 'adult' ? tagrData.adult : tagrData.youth;
@@ -233,16 +274,19 @@ function renderTable() {
     fullList = fullList.filter(function(r) { return r.equipmentClass === currentClass; });
   }
 
-  // Assign ranks on the FULL list (before search filter)
+  // Assign ranks on the FULL list (before search filter). Archers with the
+  // same TAGR score share a rank, and the next rank skips past them.
   var rankedCount = 0;
+  var lastRanked = null;
   fullList.forEach(function(r) {
     if (r.provisional) {
       r._rank = '—';
       r._rankNum = 0;
     } else {
       rankedCount++;
-      r._rank = rankedCount;
-      r._rankNum = rankedCount;
+      r._rankNum = lastRanked && lastRanked.avgNPS === r.avgNPS ? lastRanked._rankNum : rankedCount;
+      r._rank = r._rankNum;
+      lastRanked = r;
     }
   });
 
@@ -254,6 +298,9 @@ function renderTable() {
       if (r.orgClass.toLowerCase().indexOf(search) !== -1) return true;
       if (r.org.toLowerCase().indexOf(search) !== -1) return true;
       if ((search === 'record' || search === 'record holder') && r.stateRecord) return true;
+      if ((search === 'title' || search === 'titles') && holdsTitle(r)) return true;
+      if ((search === 'soy' || search === 'shooter of the year') && holdsTitle(r, 'soy')) return true;
+      if ((search === 'champion' || search === 'state champion') && holdsTitle(r, 'state')) return true;
       return false;
     });
   }
@@ -308,7 +355,7 @@ function renderTable() {
 
     html += '<tr class="' + rowClass + '">';
     html += '<td class="tgr-rank' + rankClass + '">' + medal + rank + '</td>';
-    html += '<td class="tgr-name"><span class="tgr-name-link" onclick="showArcher(' + idx + ')">' + esc(r.name) + '</span>' + recordBadge + (isProvisional ? '<span class="tgr-prov-badge">PROVISIONAL</span>' : '') + '</td>';
+    html += '<td class="tgr-name"><span class="tgr-name-link" onclick="showArcher(' + idx + ')">' + esc(r.name) + '</span>' + titleBadges(r) + recordBadge + (isProvisional ? '<span class="tgr-prov-badge">PROVISIONAL</span>' : '') + '</td>';
     html += '<td><span class="tgr-nps ' + npsClass + '">' + esc(r.avgNPS) + '</span><div class="tgr-bar" style="width:' + barWidth + '%;background:' + barColor + ';"></div></td>';
     html += '<td>' + esc(r.bestNPS) + '</td>';
     html += '<td>' + esc(r.events) + '</td>';
@@ -346,6 +393,12 @@ function showArcher(idx) {
     '<div class="box"><div class="n">' + esc(r.events) + '</div><div class="l">Events</div></div>' +
     '<div class="box"><div class="n">' + esc(r.bestNPS) + '</div><div class="l">Best NPS</div></div>' +
     '<div class="box"><div class="n">' + (r.totalX > 0 ? esc(r.totalX) + 'X' : '\u2014') + '</div><div class="l">X Count</div></div>';
+
+  document.getElementById('amTitles').innerHTML = TITLE_KINDS.map(function(k) {
+    return (r.titles || []).filter(function(t) { return t.kind === k.kind; }).map(function(t) {
+      return '<li>' + k.icon + ' ' + esc(titleLine(t)) + '</li>';
+    }).join('');
+  }).join('');
 
   var rounds = r.rounds || [];
   var rhtml;

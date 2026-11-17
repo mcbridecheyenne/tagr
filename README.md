@@ -20,6 +20,8 @@ GitHub switches off the timer of a public repository after 60 days without a com
 
 The site's **How TAGR Works** page explains it. Its weights and national records are printed from the same numbers the code uses, so the page and the ranking cannot drift apart.
 
+Shooters of the Year (🏆) and State Champions (⭐) are worked out from the same pages: the TOTAL SCORE and STATE columns of the Texas ASA sheets, and TFAA's SYWAT aggregate and State scores. They are shown beside the archer's name and do not change the score.
+
 TFAA rounds are scored against the NFAA national record for each style (`NATIONAL_RECORDS` in `tagr/engine.js`), not against the perfect score. When NFAA publishes new records, update them there, with the date of the list they come from, and run `UPDATE_GOLDEN=1 npm test`.
 
 ## Working on it

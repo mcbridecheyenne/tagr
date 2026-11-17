@@ -108,6 +108,7 @@ async function main() {
   const startedAt = Date.now();
   const build = await engine.buildRankings({
     asaSnapshots: require('../tagr/snapshots').loadAsaSnapshots(),
+    asaStateResults: require('../tagr/snapshots').loadAsaStateResults(),
     fetchText: async url => {
       const body = await read(url);
       fetched.push({ url, body });

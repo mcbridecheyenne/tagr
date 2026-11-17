@@ -1,0 +1,2071 @@
+{
+ "year": 2026,
+ "source": "https://docs.google.com/spreadsheets/d/1Fe-Te9h-tyH35_8wVakdP5J_IzOnO9E0",
+ "savedAt": "2026-11-17T13:14:49.356Z",
+ "results": [
+  {
+   "place": 1,
+   "asaNumber": "49591",
+   "name": "CHEYENNE MCBRIDE",
+   "orgClass": "Barebow Recurve",
+   "score": 280,
+   "twelves": 4
+  },
+  {
+   "place": 2,
+   "asaNumber": "38253",
+   "name": "RON OLIVE",
+   "orgClass": "Barebow Recurve",
+   "score": 253,
+   "twelves": 0
+  },
+  {
+   "place": 3,
+   "asaNumber": "57797",
+   "name": "TOM RAMSBACHER",
+   "orgClass": "Barebow Recurve",
+   "score": 252,
+   "twelves": 2
+  },
+  {
+   "place": 4,
+   "asaNumber": "72707",
+   "name": "LARRY MITCHELL",
+   "orgClass": "Barebow Recurve",
+   "score": 220,
+   "twelves": 1
+  },
+  {
+   "place": 5,
+   "asaNumber": "68704",
+   "name": "SCOOTER FARBER",
+   "orgClass": "Barebow Recurve",
+   "score": 196,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "31711",
+   "name": "BILLY MARTIN",
+   "orgClass": "Crossbow",
+   "score": 320,
+   "twelves": 13
+  },
+  {
+   "place": 2,
+   "asaNumber": "60084",
+   "name": "HARVEY HOWARTON",
+   "orgClass": "Crossbow",
+   "score": 268,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "62983",
+   "name": "DILLON MICHELS",
+   "orgClass": "Eagle Open Boys",
+   "score": 338,
+   "twelves": 19
+  },
+  {
+   "place": 2,
+   "asaNumber": "68610",
+   "name": "WILLIAM EARLY",
+   "orgClass": "Eagle Open Boys",
+   "score": 298,
+   "twelves": 7
+  },
+  {
+   "place": 3,
+   "asaNumber": "62974",
+   "name": "CALVIN BAKER",
+   "orgClass": "Eagle Open Boys",
+   "score": 214,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "67976",
+   "name": "EVELYN HYDEN",
+   "orgClass": "Eagle Open Girls",
+   "score": 290,
+   "twelves": 2
+  },
+  {
+   "place": 2,
+   "asaNumber": "72932",
+   "name": "KENDALL GARNER",
+   "orgClass": "Eagle Open Girls",
+   "score": 286,
+   "twelves": 3
+  },
+  {
+   "place": 1,
+   "asaNumber": "69706",
+   "name": "BRAYDEN CASTILLE",
+   "orgClass": "Eagle Pins Boys",
+   "score": 314,
+   "twelves": 11
+  },
+  {
+   "place": 2,
+   "asaNumber": "73467",
+   "name": "JACOB WILLIAMS",
+   "orgClass": "Eagle Pins Boys",
+   "score": 301,
+   "twelves": 7
+  },
+  {
+   "place": 3,
+   "asaNumber": "71722",
+   "name": "ASA WHITT",
+   "orgClass": "Eagle Pins Boys",
+   "score": 294,
+   "twelves": 6
+  },
+  {
+   "place": 4,
+   "asaNumber": "72946",
+   "name": "GIDEON DILLING",
+   "orgClass": "Eagle Pins Boys",
+   "score": 267,
+   "twelves": 2
+  },
+  {
+   "place": 5,
+   "asaNumber": "71904",
+   "name": "CASEN KILGORE",
+   "orgClass": "Eagle Pins Boys",
+   "score": 244,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "67602",
+   "name": "LANEY MOORE",
+   "orgClass": "Eagle Pins Girls",
+   "score": 302,
+   "twelves": 4
+  },
+  {
+   "place": 2,
+   "asaNumber": "71201",
+   "name": "ZOEY EASLEY",
+   "orgClass": "Eagle Pins Girls",
+   "score": 265,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "67374",
+   "name": "TUFF MCCORMACK",
+   "orgClass": "Junior Eagle",
+   "score": 296,
+   "twelves": 2
+  },
+  {
+   "place": 2,
+   "asaNumber": "65067",
+   "name": "MILLICENT SCHLEIFER",
+   "orgClass": "Junior Eagle",
+   "score": 289,
+   "twelves": 3
+  },
+  {
+   "place": 3,
+   "asaNumber": "73351",
+   "name": "KELLYN BELL",
+   "orgClass": "Junior Eagle",
+   "score": 288,
+   "twelves": 4
+  },
+  {
+   "place": 1,
+   "asaNumber": "71397",
+   "name": "PHILLIP WHITTAKER",
+   "orgClass": "Known 40",
+   "score": 327,
+   "twelves": 16
+  },
+  {
+   "place": 2,
+   "asaNumber": "73500",
+   "name": "JAMES BROWN",
+   "orgClass": "Known 40",
+   "score": 318,
+   "twelves": 15
+  },
+  {
+   "place": 3,
+   "asaNumber": "65056",
+   "name": "JERRID SCHLEIFER",
+   "orgClass": "Known 40",
+   "score": 312,
+   "twelves": 10
+  },
+  {
+   "place": 4,
+   "asaNumber": "42537",
+   "name": "GARY SOROLA",
+   "orgClass": "Known 40",
+   "score": 312,
+   "twelves": 8
+  },
+  {
+   "place": 5,
+   "asaNumber": "67601",
+   "name": "GRANT MOORE",
+   "orgClass": "Known 40",
+   "score": 310,
+   "twelves": 8
+  },
+  {
+   "place": 6,
+   "asaNumber": "72452",
+   "name": "MICHAEL GIBSON",
+   "orgClass": "Known 40",
+   "score": 306,
+   "twelves": 9
+  },
+  {
+   "place": 7,
+   "asaNumber": "38823",
+   "name": "GAGE EHLERT",
+   "orgClass": "Known 40",
+   "score": 305,
+   "twelves": 9
+  },
+  {
+   "place": 8,
+   "asaNumber": "73760",
+   "name": "CLINT JOHNSON",
+   "orgClass": "Known 40",
+   "score": 304,
+   "twelves": 5
+  },
+  {
+   "place": 9,
+   "asaNumber": "52785",
+   "name": "JUSTIN SULAK",
+   "orgClass": "KNOWN 40",
+   "score": 297,
+   "twelves": 9
+  },
+  {
+   "place": 10,
+   "asaNumber": "54650",
+   "name": "CHRISTOPHER ROSSER",
+   "orgClass": "Known 40",
+   "score": 297,
+   "twelves": 4
+  },
+  {
+   "place": 11,
+   "asaNumber": "13773",
+   "name": "DANIEL EHLERT",
+   "orgClass": "Known 40",
+   "score": 296,
+   "twelves": 3
+  },
+  {
+   "place": 12,
+   "asaNumber": "52789",
+   "name": "DANIEL BARNES",
+   "orgClass": "Known 40",
+   "score": 275,
+   "twelves": 6
+  },
+  {
+   "place": 1,
+   "asaNumber": "62686",
+   "name": "CORBEN BRANCH",
+   "orgClass": "Known 45",
+   "score": 329,
+   "twelves": 18
+  },
+  {
+   "place": 2,
+   "asaNumber": "59553",
+   "name": "NOLAN GODFREY",
+   "orgClass": "Known 45",
+   "score": 312,
+   "twelves": 11
+  },
+  {
+   "place": 3,
+   "asaNumber": "55782",
+   "name": "CHRISTOPHER BECK",
+   "orgClass": "Known 45",
+   "score": 310,
+   "twelves": 8
+  },
+  {
+   "place": 4,
+   "asaNumber": "21447",
+   "name": "MICAH SMITH",
+   "orgClass": "Known 45",
+   "score": 309,
+   "twelves": 11
+  },
+  {
+   "place": 5,
+   "asaNumber": "54067",
+   "name": "STUART PORTER",
+   "orgClass": "Known 45",
+   "score": 305,
+   "twelves": 8
+  },
+  {
+   "place": 6,
+   "asaNumber": "67271",
+   "name": "SEAN KASSER",
+   "orgClass": "Known 45",
+   "score": 304,
+   "twelves": 14
+  },
+  {
+   "place": 7,
+   "asaNumber": "52134",
+   "name": "GARRETT PINLEY",
+   "orgClass": "Known 45",
+   "score": 304,
+   "twelves": 11
+  },
+  {
+   "place": 8,
+   "asaNumber": "58257",
+   "name": "CHRIS CLARK",
+   "orgClass": "Known 45",
+   "score": 290,
+   "twelves": 6
+  },
+  {
+   "place": 1,
+   "asaNumber": "63435",
+   "name": "JUDSON RILEY",
+   "orgClass": "Known 50",
+   "score": 319,
+   "twelves": 12
+  },
+  {
+   "place": 2,
+   "asaNumber": "65674",
+   "name": "RYAN THOMAS",
+   "orgClass": "Known 50",
+   "score": 308,
+   "twelves": 7
+  },
+  {
+   "place": 3,
+   "asaNumber": "63793",
+   "name": "PATRICK LEMANCZYK",
+   "orgClass": "Known 50",
+   "score": 306,
+   "twelves": 7
+  },
+  {
+   "place": 4,
+   "asaNumber": "61428",
+   "name": "BRYAN PADGETT",
+   "orgClass": "Known 50",
+   "score": 304,
+   "twelves": 7
+  },
+  {
+   "place": 5,
+   "asaNumber": "71638",
+   "name": "PAYTON MCBRIDE",
+   "orgClass": "Known 50",
+   "score": 300,
+   "twelves": 8
+  },
+  {
+   "place": 6,
+   "asaNumber": "69682",
+   "name": "BLAKE TAYLOR",
+   "orgClass": "Known 50",
+   "score": 284,
+   "twelves": 1
+  },
+  {
+   "place": 7,
+   "asaNumber": "68607",
+   "name": "ROY ADAMS",
+   "orgClass": "Known 50",
+   "score": 283,
+   "twelves": 6
+  },
+  {
+   "place": 8,
+   "asaNumber": "71661",
+   "name": "VICTOR TURNER",
+   "orgClass": "Known 50",
+   "score": 274,
+   "twelves": 4
+  },
+  {
+   "place": 9,
+   "asaNumber": "36981",
+   "name": "JAMES EHLERT",
+   "orgClass": "Known 50",
+   "score": 272,
+   "twelves": 7
+  },
+  {
+   "place": 1,
+   "asaNumber": "58285",
+   "name": "COLETON ANDERSON",
+   "orgClass": "Known Pro",
+   "score": 326,
+   "twelves": 16
+  },
+  {
+   "place": 2,
+   "asaNumber": "6525",
+   "name": "MICHAEL BRADEN",
+   "orgClass": "Known Pro",
+   "score": 322,
+   "twelves": 14
+  },
+  {
+   "place": 3,
+   "asaNumber": "46783",
+   "name": "CHRIS ELLENSOHN",
+   "orgClass": "Known Pro",
+   "score": 321,
+   "twelves": 15
+  },
+  {
+   "place": 4,
+   "asaNumber": "49396",
+   "name": "RENDYN BROOKS",
+   "orgClass": "Known Pro",
+   "score": 319,
+   "twelves": 13
+  },
+  {
+   "place": 5,
+   "asaNumber": "63378",
+   "name": "AARON DOMINEY",
+   "orgClass": "Known Pro",
+   "score": 314,
+   "twelves": 11
+  },
+  {
+   "place": 6,
+   "asaNumber": "55655",
+   "name": "NADJIA PROFFITT",
+   "orgClass": "Known Pro",
+   "score": 312,
+   "twelves": 8
+  },
+  {
+   "place": 7,
+   "asaNumber": "58047",
+   "name": "DEREK BEGNAUD",
+   "orgClass": "Known Pro",
+   "score": 311,
+   "twelves": 12
+  },
+  {
+   "place": 8,
+   "asaNumber": "67908",
+   "name": "KACEE UHLES",
+   "orgClass": "Known Pro",
+   "score": 300,
+   "twelves": 6
+  },
+  {
+   "place": 9,
+   "asaNumber": "67370",
+   "name": "NICK MCCORMACK",
+   "orgClass": "KNOWN PRO",
+   "score": 286,
+   "twelves": 6
+  },
+  {
+   "place": 1,
+   "asaNumber": "37090",
+   "name": "JOHN KIRKWOOD",
+   "orgClass": "Men's Hunter 45",
+   "score": 314,
+   "twelves": 11
+  },
+  {
+   "place": 1,
+   "asaNumber": "63275",
+   "name": "BLAKE MCPHAUL",
+   "orgClass": "Men's Hunter 45",
+   "score": 314,
+   "twelves": 11
+  },
+  {
+   "place": 3,
+   "asaNumber": "68815",
+   "name": "JULIAN CASTRUITA",
+   "orgClass": "Men's Hunter 45",
+   "score": 309,
+   "twelves": 11
+  },
+  {
+   "place": 4,
+   "asaNumber": "71381",
+   "name": "JACK BYROM",
+   "orgClass": "Men's Hunter 45",
+   "score": 300,
+   "twelves": 8
+  },
+  {
+   "place": 5,
+   "asaNumber": "68681",
+   "name": "NEIL PAUL",
+   "orgClass": "Men's Hunter 45",
+   "score": 300,
+   "twelves": 8
+  },
+  {
+   "place": 6,
+   "asaNumber": "71695",
+   "name": "KOREY RASURE",
+   "orgClass": "Men's Hunter 45",
+   "score": 298,
+   "twelves": 4
+  },
+  {
+   "place": 7,
+   "asaNumber": "73129",
+   "name": "AARON ROBERTS",
+   "orgClass": "Men's Hunter 45",
+   "score": 298,
+   "twelves": 3
+  },
+  {
+   "place": 8,
+   "asaNumber": "56553",
+   "name": "LARRY PILLOW",
+   "orgClass": "Men's Hunter 45",
+   "score": 294,
+   "twelves": 6
+  },
+  {
+   "place": 9,
+   "asaNumber": "63874",
+   "name": "KOBY SANCHEZ",
+   "orgClass": "Men's Hunter 45",
+   "score": 289,
+   "twelves": 6
+  },
+  {
+   "place": 10,
+   "asaNumber": "15303",
+   "name": "BLAKE KIDDER",
+   "orgClass": "Men's Hunter 45",
+   "score": 287,
+   "twelves": 7
+  },
+  {
+   "place": 11,
+   "asaNumber": "68606",
+   "name": "JOSH NUGENT",
+   "orgClass": "Men's Hunter 45",
+   "score": 284,
+   "twelves": 7
+  },
+  {
+   "place": 12,
+   "asaNumber": "73661",
+   "name": "BRANDON FEIST",
+   "orgClass": "Men's Hunter 45",
+   "score": 284,
+   "twelves": 4
+  },
+  {
+   "place": 13,
+   "asaNumber": "73465",
+   "name": "JOHNATHAN WILLIAMS",
+   "orgClass": "Men's Hunter 45",
+   "score": 284,
+   "twelves": 4
+  },
+  {
+   "place": 14,
+   "asaNumber": "68156",
+   "name": "AUSTIN DAILY",
+   "orgClass": "Men's Hunter 45",
+   "score": 283,
+   "twelves": 3
+  },
+  {
+   "place": 15,
+   "asaNumber": "63994",
+   "name": "BART HAMILTON",
+   "orgClass": "Men's Hunter 45",
+   "score": 281,
+   "twelves": 3
+  },
+  {
+   "place": 16,
+   "asaNumber": "72284",
+   "name": "JEFF MONAGHAN",
+   "orgClass": "Men's Hunter 45",
+   "score": 280,
+   "twelves": 6
+  },
+  {
+   "place": 17,
+   "asaNumber": "39116",
+   "name": "ANDREW SWAN",
+   "orgClass": "Men's Hunter 45",
+   "score": 279,
+   "twelves": 5
+  },
+  {
+   "place": 15,
+   "asaNumber": "16689",
+   "name": "JT LARKIN",
+   "orgClass": "Men's Hunter 45",
+   "score": 279,
+   "twelves": 3
+  },
+  {
+   "place": 19,
+   "asaNumber": "72034",
+   "name": "JACOB BELCHER",
+   "orgClass": "Men's Hunter 45",
+   "score": 277,
+   "twelves": 3
+  },
+  {
+   "place": 20,
+   "asaNumber": "73498",
+   "name": "CHRIS MORETT",
+   "orgClass": "Men's Hunter 45",
+   "score": 273,
+   "twelves": 5
+  },
+  {
+   "place": 21,
+   "asaNumber": "71644",
+   "name": "CODY KILGORE",
+   "orgClass": "Men's Hunter 45",
+   "score": 272,
+   "twelves": 2
+  },
+  {
+   "place": 22,
+   "asaNumber": "67975",
+   "name": "REAGAN HYDEN",
+   "orgClass": "Men's Hunter 45",
+   "score": 271,
+   "twelves": 3
+  },
+  {
+   "place": 23,
+   "asaNumber": "72063",
+   "name": "CLINT BYROM",
+   "orgClass": "Men's Hunter 45",
+   "score": 271,
+   "twelves": 3
+  },
+  {
+   "place": 24,
+   "asaNumber": "73728",
+   "name": "HUNTER SPECK",
+   "orgClass": "Men's Hunter 45",
+   "score": 262,
+   "twelves": 1
+  },
+  {
+   "place": 25,
+   "asaNumber": "73662",
+   "name": "BRYLEN FEIST",
+   "orgClass": "Men's Hunter 45",
+   "score": 258,
+   "twelves": 3
+  },
+  {
+   "place": 26,
+   "asaNumber": "42475",
+   "name": "JOSHUA HENDRIX",
+   "orgClass": "Men's Hunter 45",
+   "score": 245,
+   "twelves": 1
+  },
+  {
+   "place": 27,
+   "asaNumber": "65869",
+   "name": "ANTHONY PIERINO",
+   "orgClass": "Men's Hunter 45",
+   "score": 0,
+   "twelves": 0
+  },
+  {
+   "place": 1,
+   "asaNumber": "52532",
+   "name": "LOGAN WRINKLE",
+   "orgClass": "Men's Open 40",
+   "score": 316,
+   "twelves": 13
+  },
+  {
+   "place": 2,
+   "asaNumber": "66124",
+   "name": "KASE CHILES",
+   "orgClass": "Men's Open 40",
+   "score": 298,
+   "twelves": 4
+  },
+  {
+   "place": 3,
+   "asaNumber": "65643",
+   "name": "CHRISTOPHER SMITH",
+   "orgClass": "Men's Open 40",
+   "score": 279,
+   "twelves": 4
+  },
+  {
+   "place": 4,
+   "asaNumber": "65769",
+   "name": "BRYANT BUZZARD",
+   "orgClass": "Men's Open 40",
+   "score": 271,
+   "twelves": 3
+  },
+  {
+   "place": 5,
+   "asaNumber": "57899",
+   "name": "LUCAS PHILLIPS",
+   "orgClass": "Men's Open 40",
+   "score": 229,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "37986",
+   "name": "JUSTIN MAJOR",
+   "orgClass": "Men's Pins 30",
+   "score": 342,
+   "twelves": 22
+  },
+  {
+   "place": 2,
+   "asaNumber": "71073",
+   "name": "ROBERT WOODS",
+   "orgClass": "Men's Pins 30",
+   "score": 334,
+   "twelves": 18
+  },
+  {
+   "place": 3,
+   "asaNumber": "60393",
+   "name": "BRANNAN WOELFEL",
+   "orgClass": "Men's Pins 30",
+   "score": 332,
+   "twelves": 17
+  },
+  {
+   "place": 4,
+   "asaNumber": "69428",
+   "name": "GARRETT DAVIS",
+   "orgClass": "Men's Pins 30",
+   "score": 328,
+   "twelves": 15
+  },
+  {
+   "place": 5,
+   "asaNumber": "38260",
+   "name": "WILL TIMMERMAN",
+   "orgClass": "Men's Pins 30",
+   "score": 322,
+   "twelves": 14
+  },
+  {
+   "place": 6,
+   "asaNumber": "71778",
+   "name": "WYATT STOKER",
+   "orgClass": "Men's Pins 30",
+   "score": 320,
+   "twelves": 13
+  },
+  {
+   "place": 7,
+   "asaNumber": "73318",
+   "name": "DONALD MITCHELL",
+   "orgClass": "Men's Pins 30",
+   "score": 320,
+   "twelves": 12
+  },
+  {
+   "place": 8,
+   "asaNumber": "71804",
+   "name": "NATE TRAVELSTEAD",
+   "orgClass": "Men's Pins 30",
+   "score": 306,
+   "twelves": 6
+  },
+  {
+   "place": 9,
+   "asaNumber": "45990",
+   "name": "DARYL TURNER",
+   "orgClass": "Men's Pins 30",
+   "score": 296,
+   "twelves": 6
+  },
+  {
+   "place": 10,
+   "asaNumber": "39117",
+   "name": "CORY KIRKWOOD",
+   "orgClass": "Men's Pins 30",
+   "score": 290,
+   "twelves": 4
+  },
+  {
+   "place": 11,
+   "asaNumber": "64880",
+   "name": "JACOB LEWIS",
+   "orgClass": "Men's Pins 30",
+   "score": 285,
+   "twelves": 4
+  },
+  {
+   "place": 12,
+   "asaNumber": "73747",
+   "name": "RUSSELL BROMLEY",
+   "orgClass": "Men's Pins 30",
+   "score": 278,
+   "twelves": 3
+  },
+  {
+   "place": 13,
+   "asaNumber": "60196",
+   "name": "RYDER KALLUS",
+   "orgClass": "Men's Pins 30",
+   "score": 157,
+   "twelves": 0
+  },
+  {
+   "place": 1,
+   "asaNumber": "15598",
+   "name": "JASON TOBIN",
+   "orgClass": "Men's Pins 40",
+   "score": 306,
+   "twelves": 6
+  },
+  {
+   "place": 2,
+   "asaNumber": "68749",
+   "name": "CHRIS MYERS",
+   "orgClass": "Men's Pins 40",
+   "score": 252,
+   "twelves": 1
+  },
+  {
+   "place": 3,
+   "asaNumber": "71901",
+   "name": "JAY SAWYER",
+   "orgClass": "Men's Pins 40",
+   "score": 232,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "10023",
+   "name": "ENOCH PHETTEPLACE",
+   "orgClass": "Olympic Recurve",
+   "score": 298,
+   "twelves": 3
+  },
+  {
+   "place": 2,
+   "asaNumber": "62970",
+   "name": "BRADLEY BAKER",
+   "orgClass": "Olympic Recurve",
+   "score": 204,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "45747",
+   "name": "SETH PIPES",
+   "orgClass": "Open Pro",
+   "score": 292,
+   "twelves": 4
+  },
+  {
+   "place": 2,
+   "asaNumber": "41366",
+   "name": "SCOTT PAULK",
+   "orgClass": "Open Pro",
+   "score": 291,
+   "twelves": 2
+  },
+  {
+   "place": 3,
+   "asaNumber": "67907",
+   "name": "BRADLEY UHLES",
+   "orgClass": "Open Pro",
+   "score": 290,
+   "twelves": 6
+  },
+  {
+   "place": 4,
+   "asaNumber": "30130",
+   "name": "BRAD MARTIN",
+   "orgClass": "Open Pro",
+   "score": 288,
+   "twelves": 2
+  },
+  {
+   "place": 5,
+   "asaNumber": "46582",
+   "name": "RANDY DUREN",
+   "orgClass": "Open Pro",
+   "score": 286,
+   "twelves": 5
+  },
+  {
+   "place": 6,
+   "asaNumber": "51068",
+   "name": "BRYCE TALLEY",
+   "orgClass": "Open Pro",
+   "score": 271,
+   "twelves": 2
+  },
+  {
+   "place": 7,
+   "asaNumber": "38097",
+   "name": "RYDER JARAMILLO",
+   "orgClass": "Open Pro",
+   "score": 263,
+   "twelves": 3
+  },
+  {
+   "place": 8,
+   "asaNumber": "60324",
+   "name": "TIM YOHMAN",
+   "orgClass": "Open Pro",
+   "score": 0,
+   "twelves": 5
+  },
+  {
+   "place": 1,
+   "asaNumber": "22909",
+   "name": "DEREK STRAWN",
+   "orgClass": "Semi Pro",
+   "score": 262,
+   "twelves": 5
+  },
+  {
+   "place": 1,
+   "asaNumber": "34319",
+   "name": "NOLAN ROGAS",
+   "orgClass": "Senior Hunter 45",
+   "score": 296,
+   "twelves": 6
+  },
+  {
+   "place": 2,
+   "asaNumber": "66177",
+   "name": "HUGH SCHWARTZ",
+   "orgClass": "Senior Hunter 45",
+   "score": 291,
+   "twelves": 5
+  },
+  {
+   "place": 3,
+   "asaNumber": "73314",
+   "name": "JASON GILLILAND",
+   "orgClass": "Senior Hunter 45",
+   "score": 288,
+   "twelves": 7
+  },
+  {
+   "place": 4,
+   "asaNumber": "72127",
+   "name": "JOE PEDRASA",
+   "orgClass": "Senior Hunter 45",
+   "score": 287,
+   "twelves": 4
+  },
+  {
+   "place": 5,
+   "asaNumber": "24357",
+   "name": "AARON KRUMNOW",
+   "orgClass": "Senior Hunter 45",
+   "score": 277,
+   "twelves": 6
+  },
+  {
+   "place": 6,
+   "asaNumber": "41855",
+   "name": "CRAIG BLANKENSHIP",
+   "orgClass": "Senior Hunter 45",
+   "score": 273,
+   "twelves": 1
+  },
+  {
+   "place": 7,
+   "asaNumber": "13680",
+   "name": "SERGIO PORTALES",
+   "orgClass": "Senior Hunter 45",
+   "score": 269,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "29438",
+   "name": "SAMMY BEENE",
+   "orgClass": "Senior Legends",
+   "score": 309,
+   "twelves": 8
+  },
+  {
+   "place": 2,
+   "asaNumber": "35580",
+   "name": "DEAN MCPEAK",
+   "orgClass": "Senior Legends",
+   "score": 276,
+   "twelves": 5
+  },
+  {
+   "place": 3,
+   "asaNumber": "70782",
+   "name": "DALE FETZER",
+   "orgClass": "Senior Legends",
+   "score": 274,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "72518",
+   "name": "LYLE PROCTOR",
+   "orgClass": "Senior Pins",
+   "score": 289,
+   "twelves": 4
+  },
+  {
+   "place": 2,
+   "asaNumber": "64757",
+   "name": "PATRICK LEWIS",
+   "orgClass": "Senior Pins",
+   "score": 286,
+   "twelves": 6
+  },
+  {
+   "place": 3,
+   "asaNumber": "45304",
+   "name": "JEREMY BOYD",
+   "orgClass": "Senior Pins",
+   "score": 279,
+   "twelves": 4
+  },
+  {
+   "place": 4,
+   "asaNumber": "68848",
+   "name": "RUDY JUAREZ",
+   "orgClass": "Senior Pins",
+   "score": 242,
+   "twelves": 3
+  },
+  {
+   "place": 1,
+   "asaNumber": "49061",
+   "name": "LANCE LANGEHENNIG",
+   "orgClass": "Sr. Known 45",
+   "score": 314,
+   "twelves": 11
+  },
+  {
+   "place": 2,
+   "asaNumber": "59687",
+   "name": "SHERIDAN GODFREY",
+   "orgClass": "Sr. Known 45",
+   "score": 312,
+   "twelves": 9
+  },
+  {
+   "place": 3,
+   "asaNumber": "20321",
+   "name": "EDWARD HOLGUIN",
+   "orgClass": "Sr. Known 45",
+   "score": 312,
+   "twelves": 8
+  },
+  {
+   "place": 4,
+   "asaNumber": "66507",
+   "name": "JOSEPH BRITTIAN",
+   "orgClass": "Sr. Known 45",
+   "score": 311,
+   "twelves": 12
+  },
+  {
+   "place": 5,
+   "asaNumber": "61272",
+   "name": "JOSH CARTER",
+   "orgClass": "Sr. Known 45",
+   "score": 310,
+   "twelves": 12
+  },
+  {
+   "place": 6,
+   "asaNumber": "19086",
+   "name": "BOB LOFTIN",
+   "orgClass": "Sr. Known 45",
+   "score": 310,
+   "twelves": 9
+  },
+  {
+   "place": 7,
+   "asaNumber": "49266",
+   "name": "JAY GRIFFIN",
+   "orgClass": "Sr. Known 45",
+   "score": 307,
+   "twelves": 9
+  },
+  {
+   "place": 8,
+   "asaNumber": "63972",
+   "name": "WOODIE WHITE",
+   "orgClass": "Sr. Known 45",
+   "score": 302,
+   "twelves": 11
+  },
+  {
+   "place": 9,
+   "asaNumber": "26121",
+   "name": "BOBBY TAYLOR",
+   "orgClass": "Sr. Known 45",
+   "score": 300,
+   "twelves": 7
+  },
+  {
+   "place": 10,
+   "asaNumber": "55582",
+   "name": "CLYDE THOMPSON",
+   "orgClass": "Sr. Known 45",
+   "score": 293,
+   "twelves": 8
+  },
+  {
+   "place": 11,
+   "asaNumber": "29184",
+   "name": "MICHAEL DUNN",
+   "orgClass": "Sr. Known 45",
+   "score": 289,
+   "twelves": 6
+  },
+  {
+   "place": 12,
+   "asaNumber": "65666",
+   "name": "SETH PYLE",
+   "orgClass": "Sr. Known 45",
+   "score": 288,
+   "twelves": 2
+  },
+  {
+   "place": 13,
+   "asaNumber": "40819",
+   "name": "BEN CANTU JR",
+   "orgClass": "Sr. Known 45",
+   "score": 286,
+   "twelves": 3
+  },
+  {
+   "place": 14,
+   "asaNumber": "20952",
+   "name": "FRED CROSS",
+   "orgClass": "Sr. Known 45",
+   "score": 272,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "40016",
+   "name": "JON EARLEY",
+   "orgClass": "Sr. Known 50",
+   "score": 313,
+   "twelves": 13
+  },
+  {
+   "place": 2,
+   "asaNumber": "45173",
+   "name": "KENNETH SCHULZ",
+   "orgClass": "Sr. Known 50",
+   "score": 307,
+   "twelves": 12
+  },
+  {
+   "place": 3,
+   "asaNumber": "70575",
+   "name": "WENDEL SMITH",
+   "orgClass": "Sr. Known 50",
+   "score": 302,
+   "twelves": 5
+  },
+  {
+   "place": 4,
+   "asaNumber": "59613",
+   "name": "CHRIS RODRIGUEZ",
+   "orgClass": "Sr. Known 50",
+   "score": 299,
+   "twelves": 7
+  },
+  {
+   "place": 5,
+   "asaNumber": "44081",
+   "name": "ADRIAN WILSON",
+   "orgClass": "Sr. Known 50",
+   "score": 298,
+   "twelves": 7
+  },
+  {
+   "place": 6,
+   "asaNumber": "53604",
+   "name": "KIRK BONDS",
+   "orgClass": "Sr. Known 50",
+   "score": 296,
+   "twelves": 4
+  },
+  {
+   "place": 7,
+   "asaNumber": "31974",
+   "name": "AUBRY CHAUDOIN",
+   "orgClass": "Sr. Known 50",
+   "score": 292,
+   "twelves": 4
+  },
+  {
+   "place": 8,
+   "asaNumber": "12588",
+   "name": "TONY PIERINO",
+   "orgClass": "Sr. Known 50",
+   "score": 290,
+   "twelves": 4
+  },
+  {
+   "place": 9,
+   "asaNumber": "73579",
+   "name": "ADAM KORN",
+   "orgClass": "Sr. Known 50",
+   "score": 248,
+   "twelves": 1
+  },
+  {
+   "place": 10,
+   "asaNumber": "58954",
+   "name": "AARON THOMPSON",
+   "orgClass": "Sr. Known 50",
+   "score": 235,
+   "twelves": 4
+  },
+  {
+   "place": 1,
+   "asaNumber": "37216",
+   "name": "RICHARD PORTER",
+   "orgClass": "Sr. Master Known",
+   "score": 291,
+   "twelves": 9
+  },
+  {
+   "place": 2,
+   "asaNumber": "54370",
+   "name": "RONALD TURNER",
+   "orgClass": "Sr. Master Known",
+   "score": 291,
+   "twelves": 3
+  },
+  {
+   "place": 3,
+   "asaNumber": "57038",
+   "name": "STEPHEN KILPATRICK",
+   "orgClass": "Sr. Master Known",
+   "score": 281,
+   "twelves": 4
+  },
+  {
+   "place": 4,
+   "asaNumber": "15752",
+   "name": "WINFORD CROSS",
+   "orgClass": "Sr. Master Known",
+   "score": 281,
+   "twelves": 3
+  },
+  {
+   "place": 5,
+   "asaNumber": "62687",
+   "name": "PHILIP WEBB",
+   "orgClass": "Sr. Master Known",
+   "score": 277,
+   "twelves": 6
+  },
+  {
+   "place": 6,
+   "asaNumber": "44397",
+   "name": "LARRY GRAHAM",
+   "orgClass": "Sr. Master Known",
+   "score": 274,
+   "twelves": 7
+  },
+  {
+   "place": 7,
+   "asaNumber": "42539",
+   "name": "CHRIS KRUS",
+   "orgClass": "Sr. Master Known",
+   "score": 243,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "41209",
+   "name": "MIKE TALLENT",
+   "orgClass": "Sr. Open",
+   "score": 304,
+   "twelves": 7
+  },
+  {
+   "place": 2,
+   "asaNumber": "22906",
+   "name": "MAX STRAWN",
+   "orgClass": "Sr. Open",
+   "score": 289,
+   "twelves": 5
+  },
+  {
+   "place": 1,
+   "asaNumber": "56832",
+   "name": "JENNIFER LASYONE",
+   "orgClass": "Sr. Women's Known",
+   "score": 309,
+   "twelves": 10
+  },
+  {
+   "place": 2,
+   "asaNumber": "10024",
+   "name": "STACEY PHETTEPLACE",
+   "orgClass": "Sr. Women's Known",
+   "score": 309,
+   "twelves": 10
+  },
+  {
+   "place": 1,
+   "asaNumber": "10431",
+   "name": "MARTY SURBER",
+   "orgClass": "Super Senior Known",
+   "score": 324,
+   "twelves": 15
+  },
+  {
+   "place": 2,
+   "asaNumber": "13160",
+   "name": "MARVIN MULLEN",
+   "orgClass": "Super Senior Known",
+   "score": 314,
+   "twelves": 10
+  },
+  {
+   "place": 2,
+   "asaNumber": "25147",
+   "name": "MARK WHITE",
+   "orgClass": "Super Senior Known",
+   "score": 314,
+   "twelves": 10
+  },
+  {
+   "place": 4,
+   "asaNumber": "54410",
+   "name": "CURTIS KUHLMANN",
+   "orgClass": "Super Senior Known",
+   "score": 312,
+   "twelves": 8
+  },
+  {
+   "place": 5,
+   "asaNumber": "1521",
+   "name": "RAY MORALES",
+   "orgClass": "Super Senior Known",
+   "score": 310,
+   "twelves": 6
+  },
+  {
+   "place": 6,
+   "asaNumber": "2872",
+   "name": "TOBY RAGSDALE",
+   "orgClass": "Super Senior Known",
+   "score": 302,
+   "twelves": 3
+  },
+  {
+   "place": 7,
+   "asaNumber": "55647",
+   "name": "RICKY CAVITT",
+   "orgClass": "Super Senior Known",
+   "score": 300,
+   "twelves": 4
+  },
+  {
+   "place": 8,
+   "asaNumber": "70358",
+   "name": "EDDIE RAY",
+   "orgClass": "Super Senior Known",
+   "score": 298,
+   "twelves": 6
+  },
+  {
+   "place": 9,
+   "asaNumber": "56414",
+   "name": "RICKY HUNT",
+   "orgClass": "Super Senior Known",
+   "score": 294,
+   "twelves": 7
+  },
+  {
+   "place": 10,
+   "asaNumber": "38823",
+   "name": "CRAIG JAMESON",
+   "orgClass": "Super Senior Known",
+   "score": 294,
+   "twelves": 6
+  },
+  {
+   "place": 11,
+   "asaNumber": "43149",
+   "name": "BILL MITCHELL",
+   "orgClass": "Super Senior Known",
+   "score": 292,
+   "twelves": 8
+  },
+  {
+   "place": 12,
+   "asaNumber": "73369",
+   "name": "KEVIN FONTENOT",
+   "orgClass": "Super Senior Known",
+   "score": 281,
+   "twelves": 6
+  },
+  {
+   "place": 13,
+   "asaNumber": "43112",
+   "name": "RICKY GAY",
+   "orgClass": "Super Senior Known",
+   "score": 277,
+   "twelves": 3
+  },
+  {
+   "place": 14,
+   "asaNumber": "62288",
+   "name": "WES JANZEN",
+   "orgClass": "Super Senior Known",
+   "score": 272,
+   "twelves": 4
+  },
+  {
+   "place": 1,
+   "asaNumber": "39736",
+   "name": "JERRY BEAVIN",
+   "orgClass": "Super Senior Pins",
+   "score": 312,
+   "twelves": 8
+  },
+  {
+   "place": 2,
+   "asaNumber": "56626",
+   "name": "KENNETH DAVIS",
+   "orgClass": "Super Senior Pins",
+   "score": 310,
+   "twelves": 8
+  },
+  {
+   "place": 3,
+   "asaNumber": "45383",
+   "name": "LARRY BRISTER",
+   "orgClass": "Super Senior Pins",
+   "score": 302,
+   "twelves": 5
+  },
+  {
+   "place": 4,
+   "asaNumber": "37061",
+   "name": "MATT HAVEN",
+   "orgClass": "Super Senior Pins",
+   "score": 300,
+   "twelves": 6
+  },
+  {
+   "place": 5,
+   "asaNumber": "72907",
+   "name": "JOHNNY AINSWORTH",
+   "orgClass": "Super Senior Pins",
+   "score": 295,
+   "twelves": 8
+  },
+  {
+   "place": 6,
+   "asaNumber": "33079",
+   "name": "ROBERT FIESELER",
+   "orgClass": "Super Senior Pins",
+   "score": 289,
+   "twelves": 6
+  },
+  {
+   "place": 7,
+   "asaNumber": "72773",
+   "name": "CLINT BECK",
+   "orgClass": "Super Senior Pins",
+   "score": 288,
+   "twelves": 4
+  },
+  {
+   "place": 8,
+   "asaNumber": "57819",
+   "name": "STEVE JENKINS",
+   "orgClass": "Super Senior Pins",
+   "score": 263,
+   "twelves": 2
+  },
+  {
+   "place": 9,
+   "asaNumber": "72791",
+   "name": "LLOYD DEROUEN",
+   "orgClass": "Super Senior Pins",
+   "score": 0,
+   "twelves": 0
+  },
+  {
+   "place": 1,
+   "asaNumber": "51900",
+   "name": "DELANO CARNEIRO",
+   "orgClass": "Traditional",
+   "score": 296,
+   "twelves": 8
+  },
+  {
+   "place": 2,
+   "asaNumber": "63799",
+   "name": "COOPER COLLINS",
+   "orgClass": "Traditional",
+   "score": 296,
+   "twelves": 2
+  },
+  {
+   "place": 3,
+   "asaNumber": "45566",
+   "name": "DANIEL JONES",
+   "orgClass": "Traditional",
+   "score": 279,
+   "twelves": 2
+  },
+  {
+   "place": 4,
+   "asaNumber": "43209",
+   "name": "MIKE HEISLER",
+   "orgClass": "Traditional",
+   "score": 278,
+   "twelves": 4
+  },
+  {
+   "place": 5,
+   "asaNumber": "66019",
+   "name": "PAUL BATCHELDER",
+   "orgClass": "Traditional",
+   "score": 265,
+   "twelves": 2
+  },
+  {
+   "place": 6,
+   "asaNumber": "38766",
+   "name": "JULIE JONES",
+   "orgClass": "Traditional",
+   "score": 263,
+   "twelves": 2
+  },
+  {
+   "place": 7,
+   "asaNumber": "56565",
+   "name": "BELINDA HALE",
+   "orgClass": "Traditional",
+   "score": 239,
+   "twelves": 0
+  },
+  {
+   "place": 8,
+   "asaNumber": "68402",
+   "name": "DAVID STALBERGER",
+   "orgClass": "Traditional",
+   "score": 234,
+   "twelves": 1
+  },
+  {
+   "place": 9,
+   "asaNumber": "71380",
+   "name": "JOEL PALMER",
+   "orgClass": "Traditional",
+   "score": 221,
+   "twelves": 1
+  },
+  {
+   "place": 10,
+   "asaNumber": "60127",
+   "name": "JAMES DANFORD",
+   "orgClass": "Traditional",
+   "score": 203,
+   "twelves": 0
+  },
+  {
+   "place": 11,
+   "asaNumber": "71714",
+   "name": "PHILLIP BARNES",
+   "orgClass": "Traditional",
+   "score": 175,
+   "twelves": 0
+  },
+  {
+   "place": 12,
+   "asaNumber": "73315",
+   "name": "JESSICA GILLILAND",
+   "orgClass": "Traditional",
+   "score": 0,
+   "twelves": 0
+  },
+  {
+   "place": 1,
+   "asaNumber": "71654",
+   "name": "SHELBY PINLEY",
+   "orgClass": "W. Known 40",
+   "score": 322,
+   "twelves": 12
+  },
+  {
+   "place": 2,
+   "asaNumber": "64001",
+   "name": "BAYLIE WHITE",
+   "orgClass": "W. Known 40",
+   "score": 316,
+   "twelves": 10
+  },
+  {
+   "place": 3,
+   "asaNumber": "67952",
+   "name": "ELIZABETH RUIZ",
+   "orgClass": "W. Known 40",
+   "score": 314,
+   "twelves": 10
+  },
+  {
+   "place": 4,
+   "asaNumber": "63998",
+   "name": "JULIA MCCLAIN",
+   "orgClass": "W. Known 40",
+   "score": 304,
+   "twelves": 6
+  },
+  {
+   "place": 5,
+   "asaNumber": "58940",
+   "name": "CHELSEA CANTU",
+   "orgClass": "W. Known 40",
+   "score": 293,
+   "twelves": 5
+  },
+  {
+   "place": 6,
+   "asaNumber": "73126",
+   "name": "ASHLYNN HARRISON",
+   "orgClass": "W. Known 40",
+   "score": 289,
+   "twelves": 3
+  },
+  {
+   "place": 7,
+   "asaNumber": "31975",
+   "name": "MICHELLE CHAUDOIN",
+   "orgClass": "W. Known 40",
+   "score": 284,
+   "twelves": 4
+  },
+  {
+   "place": 8,
+   "asaNumber": "71790",
+   "name": "KYLIE ADAMS",
+   "orgClass": "W. Known 40",
+   "score": 279,
+   "twelves": 1
+  },
+  {
+   "place": 9,
+   "asaNumber": "71031",
+   "name": "MEGAN RAMBER",
+   "orgClass": "W. Known 40",
+   "score": 268,
+   "twelves": 1
+  },
+  {
+   "place": 10,
+   "asaNumber": "73563",
+   "name": "LAIRA STACY",
+   "orgClass": "W. Known 40",
+   "score": 256,
+   "twelves": 3
+  },
+  {
+   "place": 1,
+   "asaNumber": "72680",
+   "name": "KIMBERLY TAYLOR",
+   "orgClass": "W. Known 45",
+   "score": 300,
+   "twelves": 6
+  },
+  {
+   "place": 2,
+   "asaNumber": "65636",
+   "name": "NAILA JUAREZ",
+   "orgClass": "W. Known 45",
+   "score": 279,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "62299",
+   "name": "JEWEL BLAKEY",
+   "orgClass": "W. Open 45",
+   "score": 304,
+   "twelves": 11
+  },
+  {
+   "place": 1,
+   "asaNumber": "69663",
+   "name": "LILLY DILLON",
+   "orgClass": "W. Pins 30",
+   "score": 315,
+   "twelves": 13
+  },
+  {
+   "place": 2,
+   "asaNumber": "51539",
+   "name": "MARCEY HOUSE",
+   "orgClass": "W. Pins 30",
+   "score": 308,
+   "twelves": 7
+  },
+  {
+   "place": 3,
+   "asaNumber": "73062",
+   "name": "JODIE GOFF",
+   "orgClass": "W. Pins 30",
+   "score": 300,
+   "twelves": 6
+  },
+  {
+   "place": 4,
+   "asaNumber": "60352",
+   "name": "SUZI SANTOYO",
+   "orgClass": "W. Pins 30",
+   "score": 298,
+   "twelves": 3
+  },
+  {
+   "place": 5,
+   "asaNumber": "71518",
+   "name": "ELSIE SHEEHAN",
+   "orgClass": "W. Pins 30",
+   "score": 291,
+   "twelves": 7
+  },
+  {
+   "place": 6,
+   "asaNumber": "73324",
+   "name": "CHRISTINE MITCHELL",
+   "orgClass": "W. Pins 30",
+   "score": 262,
+   "twelves": 2
+  },
+  {
+   "place": 1,
+   "asaNumber": "67593",
+   "name": "AMANDA MOORE",
+   "orgClass": "W. Pins 40",
+   "score": 268,
+   "twelves": 2
+  },
+  {
+   "place": 2,
+   "asaNumber": "38259",
+   "name": "TERRA TIMMERMAN",
+   "orgClass": "W. Pins 40",
+   "score": 0,
+   "twelves": 0
+  },
+  {
+   "place": 1,
+   "asaNumber": "65066",
+   "name": "ADDISON SCHLEIFER",
+   "orgClass": "Young Adult Open Female",
+   "score": 334,
+   "twelves": 17
+  },
+  {
+   "place": 2,
+   "asaNumber": "69025",
+   "name": "KEELIE ELLENSOHN",
+   "orgClass": "Young Adult Open Female",
+   "score": 324,
+   "twelves": 14
+  },
+  {
+   "place": 3,
+   "asaNumber": "65065",
+   "name": "ELISE SCHLEIFER",
+   "orgClass": "Young Adult Open Female",
+   "score": 320,
+   "twelves": 12
+  },
+  {
+   "place": 4,
+   "asaNumber": "65021",
+   "name": "ELILIANA FARQUHAR",
+   "orgClass": "Young Adult Open Female",
+   "score": 308,
+   "twelves": 7
+  },
+  {
+   "place": 1,
+   "asaNumber": "67635",
+   "name": "MATTHAN ELLIS",
+   "orgClass": "Young Adult Open Male",
+   "score": 328,
+   "twelves": 16
+  },
+  {
+   "place": 2,
+   "asaNumber": "72953",
+   "name": "COLTON PAYNE",
+   "orgClass": "Young Adult Open Male",
+   "score": 314,
+   "twelves": 10
+  },
+  {
+   "place": 3,
+   "asaNumber": "69490",
+   "name": "ASHER WEITTENHILLER",
+   "orgClass": "Young Adult Open Male",
+   "score": 312,
+   "twelves": 8
+  },
+  {
+   "place": 4,
+   "asaNumber": "69448",
+   "name": "MASON TRAVELSTEAD",
+   "orgClass": "Young Adult Open Male",
+   "score": 309,
+   "twelves": 10
+  },
+  {
+   "place": 5,
+   "asaNumber": "58380",
+   "name": "CAIDEN ATZGER",
+   "orgClass": "Young Adult Open Male",
+   "score": 307,
+   "twelves": 8
+  },
+  {
+   "place": 6,
+   "asaNumber": "65458",
+   "name": "JOEY MILLER",
+   "orgClass": "Young Adult Open Male",
+   "score": 300,
+   "twelves": 3
+  },
+  {
+   "place": 7,
+   "asaNumber": "67736",
+   "name": "JACOB GOFF",
+   "orgClass": "Young Adult Open Male",
+   "score": 297,
+   "twelves": 9
+  },
+  {
+   "place": 8,
+   "asaNumber": "71877",
+   "name": "EIN MASTERS",
+   "orgClass": "Young Adult Open Male",
+   "score": 284,
+   "twelves": 7
+  },
+  {
+   "place": 9,
+   "asaNumber": "73385",
+   "name": "CHASE GILLILAND",
+   "orgClass": "Young Adult Open Male",
+   "score": 267,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "62973",
+   "name": "COLTON BAKER",
+   "orgClass": "Youth Barebow Recurve",
+   "score": 227,
+   "twelves": 0
+  },
+  {
+   "place": 1,
+   "asaNumber": "62972",
+   "name": "BAILEY BAKER",
+   "orgClass": "Youth Olympic Recurve",
+   "score": 171,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "72514",
+   "name": "REMINGTON WHITEHEAD",
+   "orgClass": "Youth Open Boys",
+   "score": 348,
+   "twelves": 24
+  },
+  {
+   "place": 2,
+   "asaNumber": "23349",
+   "name": "EVERETT PAWLIK",
+   "orgClass": "Youth Open Boys",
+   "score": 332,
+   "twelves": 18
+  },
+  {
+   "place": 3,
+   "asaNumber": "62982",
+   "name": "COLTEN MICHELS",
+   "orgClass": "Youth Open Boys",
+   "score": 324,
+   "twelves": 15
+  },
+  {
+   "place": 4,
+   "asaNumber": "64743",
+   "name": "KAYDON SHELL",
+   "orgClass": "Youth Open Boys",
+   "score": 314,
+   "twelves": 8
+  },
+  {
+   "place": 5,
+   "asaNumber": "71197",
+   "name": "STOCKTON DEROUEN",
+   "orgClass": "Youth Open Boys",
+   "score": 312,
+   "twelves": 9
+  },
+  {
+   "place": 1,
+   "asaNumber": "63628",
+   "name": "TAYLIN MYERS",
+   "orgClass": "Youth Open Girls",
+   "score": 334,
+   "twelves": 18
+  },
+  {
+   "place": 2,
+   "asaNumber": "69667",
+   "name": "RYLEIGH TELISCHAK",
+   "orgClass": "Youth Open Girls",
+   "score": 322,
+   "twelves": 12
+  },
+  {
+   "place": 3,
+   "asaNumber": "68412",
+   "name": "SOFIA DAILY",
+   "orgClass": "Youth Open Girls",
+   "score": 281,
+   "twelves": 4
+  },
+  {
+   "place": 1,
+   "asaNumber": "73018",
+   "name": "BOSS ROBERTSON",
+   "orgClass": "Youth Pins Boys",
+   "score": 302,
+   "twelves": 8
+  },
+  {
+   "place": 2,
+   "asaNumber": "66125",
+   "name": "TUCKER CHILES",
+   "orgClass": "Youth Pins Boys",
+   "score": 300,
+   "twelves": 3
+  },
+  {
+   "place": 3,
+   "asaNumber": "73577",
+   "name": "GRADY HARRELL",
+   "orgClass": "Youth Pins Boys",
+   "score": 279,
+   "twelves": 3
+  },
+  {
+   "place": 4,
+   "asaNumber": "72778",
+   "name": "JACKSON JUST",
+   "orgClass": "Youth Pins Boys",
+   "score": 260,
+   "twelves": 4
+  },
+  {
+   "place": 5,
+   "asaNumber": "71902",
+   "name": "BLAKE SAWYER",
+   "orgClass": "Youth Pins Boys",
+   "score": 232,
+   "twelves": 3
+  },
+  {
+   "place": 6,
+   "asaNumber": "72130",
+   "name": "ALEX FRIES",
+   "orgClass": "Youth Pins Boys",
+   "score": 207,
+   "twelves": 1
+  },
+  {
+   "place": 1,
+   "asaNumber": "72978",
+   "name": "KINLEY HARRIS",
+   "orgClass": "Youth Pins Girls",
+   "score": 290,
+   "twelves": 2
+  },
+  {
+   "place": 2,
+   "asaNumber": "67372",
+   "name": "SIERRA MCCORMACK",
+   "orgClass": "Youth Pins Girls",
+   "score": 284,
+   "twelves": 3
+  },
+  {
+   "place": 3,
+   "asaNumber": "64162",
+   "name": "EMERY ARENDT",
+   "orgClass": "Youth Pins Girls",
+   "score": 281,
+   "twelves": 4
+  },
+  {
+   "place": 4,
+   "asaNumber": "67373",
+   "name": "DAKOTA MCCORMACK",
+   "orgClass": "Youth Pins Girls",
+   "score": 274,
+   "twelves": 4
+  },
+  {
+   "place": 5,
+   "asaNumber": "73588",
+   "name": "AVERY PAYNE",
+   "orgClass": "Youth Pins Girls",
+   "score": 216,
+   "twelves": 2
+  }
+ ]
+}

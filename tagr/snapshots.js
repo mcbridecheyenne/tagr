@@ -35,4 +35,26 @@ function saveAsaSnapshot(asaLive, dir = ARCHIVE_DIR, now = () => new Date()) {
   return file;
 }
 
-module.exports = { loadAsaSnapshots, saveAsaSnapshot, ARCHIVE_DIR };
+// ---- The results of the Texas ASA State Championships ----
+//
+// Texas ASA publishes the results of each State Championship as a sheet of
+// its own. They are saved once, by scripts/save-asa-state.js, as
+// archive/asa-state-<year>.json: { year, source, savedAt, results }, with a
+// result being { place, asaNumber, name, orgClass, score, twelves }.
+
+const STATE_FILE = /^asa-state-(\d{4})\.json$/;
+
+function loadAsaStateResults(dir = ARCHIVE_DIR) {
+  if (!fs.existsSync(dir)) return [];
+  return fs.readdirSync(dir).filter(name => STATE_FILE.test(name)).sort()
+    .map(name => JSON.parse(fs.readFileSync(path.join(dir, name), 'utf8')));
+}
+
+function saveAsaStateResults({ year, source, results }, dir = ARCHIVE_DIR, now = () => new Date()) {
+  const file = path.join(dir, 'asa-state-' + year + '.json');
+  fs.mkdirSync(dir, { recursive: true });
+  fs.writeFileSync(file, JSON.stringify({ year, source, savedAt: now().toISOString(), results }, null, 1) + '\n');
+  return file;
+}
+
+module.exports = { loadAsaSnapshots, saveAsaSnapshot, loadAsaStateResults, saveAsaStateResults, ARCHIVE_DIR };

@@ -20,7 +20,7 @@ const engine = require('../tagr/engine');
 const { fetchText, savedPages } = require('../tagr/fetch');
 const { fingerprintOf } = require('../tagr/publish');
 const { runSiteJob, fetchPublished } = require('../tagr/site');
-const { loadAsaSnapshots, saveAsaSnapshot } = require('../tagr/snapshots');
+const { loadAsaSnapshots, saveAsaSnapshot, loadAsaStateResults } = require('../tagr/snapshots');
 
 const args = process.argv.slice(2);
 const valueOf = flag => (args.includes(flag) ? args[args.indexOf(flag) + 1] : null);
@@ -62,7 +62,7 @@ async function main() {
     scheduled,
     force,
     build: async () => {
-      const built = await engine.buildRankings({ fetchText: source, asaSnapshots: loadAsaSnapshots() });
+      const built = await engine.buildRankings({ fetchText: source, asaSnapshots: loadAsaSnapshots(), asaStateResults: loadAsaStateResults() });
       asaLive = built.asaLive;
       return built;
     },

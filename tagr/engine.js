@@ -367,9 +367,26 @@ function bestBy(entries, standing) {
 // them; a tab whose totals have all been cleared is worked out from its
 // scores. Until the State Championship has been shot the season is still
 // going, so nobody holds either title yet.
-function asaTitlesOf(year, tabs) {
-  if (!tabs.some(t => t.shooters.some(s => s.stateScore > 0))) return [];
+// `official` is the results of the year's State Championship, where the
+// project has them (archive/asa-state-<year>.json): then the State Champions
+// are the archers it places first, in every class that was shot, and the
+// STATE column, which the sheet fills for some classes only, is not used.
+function asaTitlesOf(year, tabs, official = null) {
+  if (!official && !tabs.some(t => t.shooters.some(s => s.stateScore > 0))) return [];
   const titles = [];
+  if (official) {
+    const classes = new Map();
+    for (const result of official.results) {
+      const tab = asaClassTab(result.orgClass);
+      const orgClass = tab ? tab.name : result.orgClass;
+      if (!classes.has(orgClass)) classes.set(orgClass, []);
+      classes.get(orgClass).push(result);
+    }
+    for (const [orgClass, results] of classes) {
+      const field = new Set(results.map(r => nameKey(r.name))).size;
+      for (const r of results.filter(r => r.place === 1)) titles.push({ name: r.name, org: 'TX ASA', orgClass, kind: 'state', season: String(year), field });
+    }
+  }
   for (const { tab, shooters } of tabs) {
     const award = (kind, { winners, field }) => {
       for (const s of winners) titles.push({ name: s.name, org: 'TX ASA', orgClass: tab.name, kind, season: String(year), field });
@@ -377,9 +394,63 @@ function asaTitlesOf(year, tabs) {
     const total = shooters.some(s => s.soyTotal > 0) ? s => s.soyTotal : s => s.soyWorkedOut || 0;
     const soy = bestBy(shooters, s => (total(s) > 0 ? [total(s)] : null));
     if (soy.field >= ASA_SOY_MIN_ARCHERS) award('soy', soy);
-    award('state', bestBy(shooters, s => (s.stateScore > 0 ? [s.stateScore] : null)));
+    if (!official) award('state', bestBy(shooters, s => (s.stateScore > 0 ? [s.stateScore] : null)));
   }
   return titles;
+}
+
+// The class of ASA_TABS a class name stands for, as Texas ASA writes it on
+// one sheet or another ("Sr. Known 45", "KNOWN 40"), or undefined.
+const ASA_CLASS_ALIASES = { 'youth barebow recurve': 'Youth Barebow' };
+function asaClassTab(name) {
+  const said = String(name || '').replace(/\s+/g, ' ').trim().toLowerCase();
+  const wanted = (ASA_CLASS_ALIASES[said] || said).toLowerCase();
+  return ASA_TABS.find(t => [t.name, t.archive, t.tab].some(n => n && n.toLowerCase() === wanted));
+}
+
+// Puts the results of a State Championship into the year's class tabs
+// ([{ tab, year, shooters }]): every archer who shot State gets the State
+// round, with or without a row on the Shooter of the Year sheet, and each
+// State round is marked as that class's Championship with the score that
+// placed the archer (the 12s break a tie on points). A class TAGR has no
+// distances for is passed over. Returns how many rounds were added.
+function addAsaStateResults(official, asaTabs) {
+  let added = 0;
+  for (const result of official.results) {
+    const tab = asaClassTab(result.orgClass);
+    if (!tab || !(result.score > 0) || result.score > ASA_ROUND_MAX) continue;
+    let classTab = asaTabs.find(t => t.year === official.year && t.tab === tab && t.shooters);
+    if (!classTab) {
+      classTab = { what: 'TX ASA ' + official.year + ', ' + tab.name, url: 'archive/asa-state-' + official.year + '.json', tab, year: official.year, shooters: [], note: 'from the State Championship results' };
+      asaTabs.push(classTab);
+    }
+    const eventKey = ['asa-state', official.year, tab.name].join(':');
+    const placing = result.score + (result.twelves || 0) / 10000;
+    const name = nameKey(result.name);
+    let archer = classTab.shooters.find(s => (result.asaNumber && s.asaNumber === result.asaNumber) || nameKey(s.name) === name);
+    if (!archer) {
+      archer = {
+        name: result.name, org: 'TX ASA', orgClass: tab.name, age: tab.age, knownDistance: tab.known || false, asaMaxYards: tab.maxYards || 40,
+        eventScores: [], eventNames: [], isState: [], eventKeys: [], fieldScores: [], maxPerRound: ASA_ROUND_MAX,
+        when: official.year, asaNumber: result.asaNumber || '', soyTotal: 0, soyWorkedOut: 0, stateScore: 0
+      };
+      classTab.shooters.push(archer);
+    }
+    let at = archer.isState.indexOf(true);
+    if (at === -1) {
+      at = archer.eventScores.length;
+      archer.eventScores.push(Math.floor(result.score));
+      archer.eventNames.push(official.year + ' STATE');
+      archer.isState.push(true);
+      archer.eventKeys.push(null);
+      archer.fieldScores.push(placing);
+      added++;
+    }
+    // Any other cell of the sheet's STATE columns is not a shoot of its own.
+    archer.eventKeys = archer.eventKeys.map((key, i) => (i === at ? eventKey : archer.isState[i] ? null : key));
+    archer.fieldScores[at] = placing;
+  }
+  return added;
 }
 
 // The TFAA titles of one season, from the entries on its page. In each
@@ -1253,7 +1324,8 @@ function gvizUrl(sheetId, query) {
 // publish. `pages` lists every page that was read and how many results it held.
 // `asaSnapshots` are the saved copies of the Texas ASA sheet. `asaLive` in the
 // answer is the sheet as it should be saved now: its year and its class tabs.
-async function readSources(fetchText, { asaSnapshots = [] } = {}) {
+// `asaStateResults` are the saved results of the Texas ASA State Championships.
+async function readSources(fetchText, { asaSnapshots = [], asaStateResults = [] } = {}) {
   const problems = [];
   const pages = [];
   let requests = 0;
@@ -1356,9 +1428,16 @@ async function readSources(fetchText, { asaSnapshots = [] } = {}) {
       newer.note = 'the same rows as the ' + older.year + ' sheet, so not counted twice';
     }
   }
+  // The State Championships the project has the results of, for the years ranked.
+  const asaYears = new Set(asaTabs.map(t => t.year));
+  for (const official of asaStateResults) {
+    if (!asaYears.has(official.year)) continue;
+    const added = addAsaStateResults(official, asaTabs);
+    pages.push({ what: 'TX ASA ' + official.year + ' State Championship', url: 'archive/asa-state-' + official.year + '.json', results: official.results.length, note: added + ' State rounds the sheet did not have' });
+  }
   const titles = [];
-  for (const year of new Set(asaTabs.map(t => t.year))) {
-    titles.push(...asaTitlesOf(year, asaTabs.filter(t => t.year === year)));
+  for (const year of asaYears) {
+    titles.push(...asaTitlesOf(year, asaTabs.filter(t => t.year === year && t.shooters), asaStateResults.find(o => o.year === year) || null));
   }
   const asaShooters = [];
   for (const t of asaTabs) {
@@ -1495,8 +1574,8 @@ async function readSources(fetchText, { asaSnapshots = [] } = {}) {
 
 // Reads the sources and works out the ranking.
 // Returns { result, problems, pages, requests }: `result` is what api/tgr.json holds.
-async function buildRankings({ fetchText, now = () => new Date(), asaSnapshots = [] }) {
-  const sources = await readSources(fetchText, { asaSnapshots });
+async function buildRankings({ fetchText, now = () => new Date(), asaSnapshots = [], asaStateResults = [] }) {
+  const sources = await readSources(fetchText, { asaSnapshots, asaStateResults });
   const result = computeRankings(sources);
   result.updatedAt = now().toISOString();
   return { result, problems: sources.problems, pages: sources.pages, requests: sources.requests, asaLive: sources.asaLive };
@@ -1516,6 +1595,8 @@ module.exports = {
   parseTfaaStateShoots,
   parseTfaaStateChampions,
   asaTitlesOf,
+  asaClassTab,
+  addAsaStateResults,
   sameAsaSeason,
   tfaaPageLayout,
   mapEquipmentClass,

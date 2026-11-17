@@ -1062,3 +1062,71 @@ test('an older page lists an age group twice, professionals first, without sayin
     ['Adult Male - Freestyle (FS)', 'Quillfeather, Avery', 2]
   ]);
 });
+
+// ---- The results of a Texas ASA State Championship ----
+
+const stateResults2026 = { year: 2026, source: 'made up', results: [
+  { place: 1, asaNumber: 'TX1070', name: 'CASEY STRINGWALKER', orgClass: 'Barebow Recurve', score: 280, twelves: 4 },
+  { place: 2, asaNumber: 'TX9001', name: 'NOT ON  THE SHEET', orgClass: 'Barebow Recurve', score: 253, twelves: 0 },
+  // The sheet writes classes its own way, and has one TAGR has no distances for.
+  { place: 1, asaNumber: 'TX1060', name: 'LEE GREYBEARD', orgClass: 'Sr. Known 50', score: 312, twelves: 9 },
+  { place: 1, asaNumber: 'TX1010', name: 'RILEY STABILIZER', orgClass: "MEN'S OPEN 45", score: 335, twelves: 12 },
+  { place: 1, asaNumber: 'TX9002', name: 'JEWEL OPEN', orgClass: 'W. Open 45', score: 304, twelves: 11 },
+  // Two archers placed first share the title.
+  { place: 1, asaNumber: 'TX9003', name: 'TIED ONE', orgClass: 'Known 45', score: 314, twelves: 11 },
+  { place: 1, asaNumber: 'TX9004', name: 'TIED TWO', orgClass: 'Known 45', score: 314, twelves: 11 },
+  { place: 3, asaNumber: 'TX1040', name: 'JORDAN FLETCHER', orgClass: 'Known 45', score: 300, twelves: 2 }
+] };
+
+test('a class is known by any of the names Texas ASA writes it with', () => {
+  const name = said => (engine.asaClassTab(said) || {}).name;
+  assert.strictEqual(name('Sr. Known 45'), 'Senior Known 45');
+  assert.strictEqual(name('KNOWN 40'), 'Known 40');
+  assert.strictEqual(name('Crossbow '), 'Crossbow');
+  assert.strictEqual(name("Sr. Women's Known "), "Senior Women's Known");
+  assert.strictEqual(name('Youth Barebow Recurve'), 'Youth Barebow');
+  assert.strictEqual(name('W. Open 45'), undefined);
+});
+
+test('with the results of the State Championship, the State Champions are the archers placed first', async () => {
+  const { titles } = await engine.readSources(fakeFetch(), { asaStateResults: [stateResults2026] });
+  assert.deepStrictEqual(titleLines(titles.filter(t => t.org === 'TX ASA' && t.season === '2026')), [
+    "2026 | TX ASA | soy | Men's Open 45 | RILEY STABILIZER",
+    // Casey has no State score on the Shooter of the Year sheet: the title comes from the results.
+    '2026 | TX ASA | state | Barebow Recurve | CASEY STRINGWALKER',
+    '2026 | TX ASA | state | Known 45 | TIED ONE',
+    '2026 | TX ASA | state | Known 45 | TIED TWO',
+    "2026 | TX ASA | state | Men's Open 45 | RILEY STABILIZER",
+    // The sheet's own STATE column gave Pat and Avery a title each: the results do not, so they hold none.
+    '2026 | TX ASA | state | Senior Known 50 | LEE GREYBEARD',
+    '2026 | TX ASA | state | W. Open 45 | JEWEL OPEN'
+  ]);
+  assert.strictEqual(titles.find(t => t.name === 'CASEY STRINGWALKER' && t.org === 'TX ASA').field, 2);
+  // A year without saved results still goes by the sheet's STATE column.
+  assert.ok(titles.some(t => t.org === 'TX ASA' && t.season === '2025' && t.kind === 'state'));
+});
+
+test('every archer who shot State gets the State round, on the sheet or not', async () => {
+  const plain = await build();
+  const { result, pages } = await engine.buildRankings({ fetchText: fakeFetch(), asaStateResults: [stateResults2026] });
+  assert.strictEqual(pages.find(p => p.what === 'TX ASA 2026 State Championship').note, '6 State rounds the sheet did not have');
+
+  // Casey is on the sheet with three qualifiers: the State round is added, and it beat the other archer of the class.
+  const casey = result.adult.find(r => r.name === 'Casey Stringwalker' && r.equipmentClass === 'Barebow');
+  const state = casey.rounds.find(x => x.event === '2026 STATE');
+  assert.deepStrictEqual([state.raw, state.field, state.beat], [280, 1, 1]);
+  assert.strictEqual(casey.events, plain.result.adult.find(r => r.name === 'Casey Stringwalker' && r.equipmentClass === 'Barebow').events + 1);
+  assert.ok(casey.titles.some(t => t.org === 'TX ASA' && t.kind === 'state' && t.bonus));
+
+  // An archer who is not on the sheet at all is ranked on the State round alone, provisionally.
+  const newcomer = result.adult.find(r => r.name === 'Not On The Sheet');
+  assert.deepStrictEqual([newcomer.events, newcomer.provisional, newcomer.orgClass], [1, true, 'Barebow Recurve']);
+
+  // Riley's State score is on the sheet already: it is not counted twice.
+  const riley = result.adult.find(r => r.name === 'Riley Stabilizer');
+  assert.strictEqual(riley.rounds.filter(x => x.event === '2026 STATE').length, 1);
+  assert.strictEqual(riley.events, plain.result.adult.find(r => r.name === 'Riley Stabilizer').events);
+
+  // A class TAGR has no distances for earns the title but no round.
+  assert.ok(!result.adult.some(r => r.name === 'Jewel Open'));
+});

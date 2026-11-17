@@ -30,6 +30,16 @@ Texas ASA keeps one Shooter of the Year sheet, clears it for each new season, an
 
 A class tab that has lost scores since the copy was saved is read from the copy, so a sheet cleared one tab at a time loses nothing. Do not delete the files in `archive/`: for a year the sheet no longer holds, they are the only copy there is.
 
+## The Texas ASA State Championship results
+
+Texas ASA publishes the results of each State Championship as a sheet of its own. The Shooter of the Year sheet has a State column too, but only for some classes, so the State Champions and the State scores of a year are read from those results once they are saved here:
+
+```
+node scripts/save-asa-state.js 2027 "https://docs.google.com/spreadsheets/d/<the sheet>/..." [tab id]
+```
+
+That writes `archive/asa-state-2027.json`. Commit it, and the next rebuild uses it. The 2026 results are saved. A year without a file goes by the sheet's State column.
+
 ## Working on it
 
 Needs Node 20 or newer.
@@ -54,4 +64,5 @@ npm run build   # build the site into site/ from the live sources
 | `pages/` | the rankings page, How TAGR Works, and the stylesheet |
 | `scripts/build-site.js` | what the Site workflow runs |
 | `scripts/check.js` | the live check |
+| `scripts/save-asa-state.js` | saves the results of a Texas ASA State Championship |
 | `test/` | the tests, and the made-up source pages they read |

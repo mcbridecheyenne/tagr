@@ -219,3 +219,16 @@ test('the copy in the project is the 2026 sheet, with its class tabs', () => {
   const copies = loadAsaSnapshots();
   assert.ok(copies.some(c => c.year === 2026 && Object.keys(c.tabs).length >= 40));
 });
+
+test('the results of a State Championship are saved by year and read back', () => {
+  const { loadAsaStateResults, saveAsaStateResults, loadAsaSnapshots } = require('../tagr/snapshots');
+  const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'tagr-archive-'));
+  const results = [{ place: 1, asaNumber: '1', name: 'A B', orgClass: 'Known 40', score: 327, twelves: 16 }];
+  const file = saveAsaStateResults({ year: 2026, source: 'a sheet', results }, dir, () => new Date('2026-11-17T12:00:00Z'));
+  assert.strictEqual(path.basename(file), 'asa-state-2026.json');
+  assert.deepStrictEqual(loadAsaStateResults(dir), [{ year: 2026, source: 'a sheet', savedAt: '2026-11-17T12:00:00.000Z', results }]);
+  // They are not taken for a copy of the Shooter of the Year sheet.
+  assert.deepStrictEqual(loadAsaSnapshots(dir), []);
+  // The project holds the 2026 Championship.
+  assert.ok(loadAsaStateResults().some(o => o.year === 2026 && o.results.length > 200));
+});

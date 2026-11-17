@@ -98,8 +98,14 @@ const adultAges = ['Adult Male','Adult Female','Senior Male','Senior Female','Si
 const difficultyWeights = { 'TX ASA': 1.05, 'TFAA Outdoor': 1.08, 'TFAA Indoor': 0.95 };
 // ASA Known distance classes are easier (rangefinders allowed) — reduce weight
 const KNOWN_DISTANCE_FACTOR = 0.95;
-// State Championship rounds count for more than a regular SYWAT round
-const STATE_ROUND_BONUS = 1.15;
+// A State Championship round counts for more than an ordinary round, by the
+// same amount in Texas ASA, TFAA Outdoor and TFAA Indoor.
+const STATE_ROUND_BONUS = 1.05;
+// A round counts in full in the newest season TAGR reads of its organization,
+// and for a little less each season before that.
+const RECENCY_WEIGHTS = [1, 0.95, 0.9];
+// The most a Texas ASA round can score: 30 targets, 12 each.
+const ASA_ROUND_MAX = 360;
 // TFAA rounds are scored against the NFAA national record for the archer's style, not
 // against the perfect score: tying the national record is worth 1000 (before weights and
 // bonuses) whatever the bow. These are the best adult records of men and women, amateur
@@ -107,8 +113,9 @@ const STATE_ROUND_BONUS = 1.15;
 // 2025): https://nfaausa.com/files/indoor-national-records-120825152848.pdf and
 // https://nfaausa.com/files/field-national-records-080725200516.pdf
 // indoor: the two-day 300 round total (out of 600); field and hunter: one 28-target round
-// (out of 560). BBC is NFAA's "Barebow" style. A style that is not listed here (MBH,
-// Genesis) is scored against the perfect score with its equipment bonus, like Texas ASA.
+// (out of 560). BBC is NFAA's "Barebow" style. TFAA's own styles meet the record of the
+// nearest NFAA style (RECORD_STYLE_FOR). Any other style that is not listed here is scored
+// against the perfect score with its equipment bonus.
 const NATIONAL_RECORDS = {
   FS: { indoor: 600, field: 560, hunter: 560 },
   BHFS: { indoor: 600, field: 554, hunter: 554 },
@@ -119,6 +126,10 @@ const NATIONAL_RECORDS = {
   TRAD: { indoor: 577, field: 476, hunter: 486 },
   LB: { indoor: 542, field: 376, hunter: 391 }
 };
+// TFAA styles NFAA keeps no record for, and the NFAA style whose record they meet:
+// Modern Bowhunter Freestyle is Bowhunter Freestyle with a longer stabilizer, and a
+// Genesis bow is shot with fingers and no sight, as Barebow is.
+const RECORD_STYLE_FOR = { MBH: 'BHFS', GEN: 'BBC' };
 const NATIONAL_RECORDS_STYLES = {
   FS: 'Freestyle', BHFS: 'Bowhunter Freestyle', FSL: 'Freestyle Limited', BBC: 'Barebow Compound',
   FSLR: 'Freestyle Limited Recurve, Olympic', BBR: 'Barebow Recurve', TRAD: 'Traditional', LB: 'Longbow'
@@ -135,6 +146,7 @@ const TITLE_BONUS_MIN_FIELD = 2;
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
+  recencyWeights: RECENCY_WEIGHTS, recordStyleFor: RECORD_STYLE_FOR,
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD
@@ -189,15 +201,19 @@ function parseAsaRows(res, tab, year) {
     if (!firstName && !lastName) continue;
     const eventScores = [];
     const eventNames = [];
+    const isState = [];
     const qualifiers = [];
     for (let j = 5; j < cells.length; j++) {
       if (cells[j] && cells[j].v) {
         const v = parseFloat(String(cells[j].f || cells[j].v));
-        if (!isNaN(v) && v > 0) {
+        // A score above the most a round can score is a slip of the keyboard.
+        if (!isNaN(v) && v > 0 && Math.floor(v) <= ASA_ROUND_MAX) {
+          // The unnamed column after STATE belongs to the State Championship too.
+          const state = stateCols.includes(j) || (stateCols.includes(j - 1) && !labelOf(j));
           eventScores.push(Math.floor(v));
           eventNames.push(eventNameFor(j));
-          // The unnamed column after STATE belongs to the State Championship too.
-          if (!stateCols.includes(j) && !(stateCols.includes(j - 1) && !labelOf(j))) qualifiers.push(v);
+          isState.push(state);
+          if (!state) qualifiers.push(v);
         }
       }
     }
@@ -209,8 +225,9 @@ function parseAsaRows(res, tab, year) {
       org: 'TX ASA', orgClass: tab.name, age: tab.age,
       knownDistance: tab.known || false,
       asaMaxYards: tab.maxYards || 40,
-      eventScores, eventNames, maxPerRound: 360,
+      eventScores, eventNames, isState, maxPerRound: ASA_ROUND_MAX,
       when: year || 0,
+      asaNumber: cells[0] && cells[0].v !== null && cells[0].v !== undefined ? String(cells[0].v).trim() : '',
       soyTotal: totalCol === -1 ? 0 : asaNumber(cells[totalCol]),
       soyWorkedOut: qualifiers.length >= 5 ? qualifiers.slice(0, 5).reduce((a, b) => a + b, 0) + stateScore : 0,
       stateScore
@@ -237,7 +254,7 @@ function bestBy(entries, standing) {
   for (const entry of entries) {
     const mine = standing(entry);
     if (!mine) continue;
-    names.add(normalizeName(entry.name).toLowerCase());
+    names.add(nameKey(entry.name));
     let cmp = best ? 0 : 1;
     for (let i = 0; best && cmp === 0 && i < mine.length; i++) cmp = mine[i] - best[i];
     if (cmp > 0) {
@@ -302,7 +319,7 @@ function tfaaTitlesOf(entries, org, season) {
       // An archer listed twice in a division holds the title once.
       const names = new Set();
       for (const w of winners) {
-        const key = normalizeName(w.name).toLowerCase();
+        const key = nameKey(w.name);
         if (names.has(key)) continue;
         names.add(key);
         titles.push({ name: w.name, org, orgClass, kind, season, field });
@@ -426,7 +443,7 @@ function parseTfaaPage(html, seasonLabel, kind) {
   const stateCounted = new Set();
   let repeatedState = 0;
   function isRepeat(entry, score) {
-    const key = [normalizeName(entry.name).toLowerCase(), entry.age, entry.style, score].join('|');
+    const key = [nameKey(entry.name), entry.age, entry.style, score].join('|');
     if (stateCounted.has(key)) {
       repeatedState++;
       return true;
@@ -594,7 +611,8 @@ function parseTfaaRecordsHtml(html, type) {
 // A SYWAT round can be a field or a hunter round, so it meets the average of the two.
 function nationalRecordFor(s, i, roundMax) {
   if (s.org !== 'TFAA Indoor' && s.org !== 'TFAA Outdoor') return null;
-  const style = ((s.orgClass || '').match(/\(([A-Z]+)\)\s*$/) || [])[1];
+  const code = ((s.orgClass || '').match(/\(([A-Z]+)\)\s*$/) || [])[1] || (/\bgenesis\b/i.test(s.orgClass || '') ? 'GEN' : '');
+  const style = RECORD_STYLE_FOR[code] || code;
   const record = style && NATIONAL_RECORDS[style];
   if (!record) return null;
   if (s.org === 'TFAA Indoor') return record.indoor * roundMax / (2 * TFAA_INDOOR_ROUND_MAX);
@@ -624,20 +642,71 @@ function mapEquipmentClass(orgClass, org) {
 
 // ---- NAME NORMALIZATION ----
 // TX ASA: "FIRST LAST" (all caps). TFAA: "Last, First"
+// One spelling for the things the sources write several ways: extra spaces,
+// curly apostrophes, and "Jr." or "II" with or without a full stop and before
+// or after the last name.
+const NAME_SUFFIXES = { jr: 'Jr', sr: 'Sr', ii: 'II', iii: 'III', iv: 'IV' };
 function normalizeName(name) {
-  let n = name.trim();
+  let n = name.replace(/[\u2018\u2019`]/g, "'").replace(/\s+/g, ' ').trim();
   if (n.includes(',')) {
     // Last, First -> First Last
     const parts = n.split(',').map(s => s.trim());
-    n = parts[1] + ' ' + parts[0];
+    n = (parts[1] + ' ' + parts[0]).trim();
   }
-  // Title case, preserving Mc/Mac capitalization
-  return n.replace(/\w\S*/g, w => {
-    let titled = w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
-    // Handle Mc prefix (McBride, McDonald, etc.)
-    if (titled.match(/^Mc[a-z]/)) titled = titled.slice(0,2) + titled.charAt(2).toUpperCase() + titled.slice(3);
-    return titled;
+  const words = [];
+  const suffixes = [];
+  n.split(' ').forEach((w, i) => {
+    const suffix = i > 0 ? NAME_SUFFIXES[w.replace(/\.$/, '').toLowerCase()] : undefined;
+    if (suffix) suffixes.push(suffix);
+    else words.push(w);
   });
+  // Title case, preserving Mc and O' capitalization
+  const titled = words.join(' ').replace(/\w\S*/g, w => {
+    let t = w.charAt(0).toUpperCase() + w.slice(1).toLowerCase();
+    // Handle Mc prefix (McBride, McDonald, etc.) and O'Brien
+    if (/^(Mc|O')[a-z]/.test(t)) t = t.slice(0, 2) + t.charAt(2).toUpperCase() + t.slice(3);
+    return t;
+  });
+  return [titled].concat(suffixes).join(' ');
+}
+
+// What two spellings of one archer's name have in common: "A.J. Grogan" and
+// "AJ GROGAN" are the same archer.
+function nameKey(name) {
+  return normalizeName(name).toLowerCase().replace(/\./g, '');
+}
+
+// Texas ASA rows carry the archer's ASA number, so one archer written two ways
+// ("KEN SCHULZ" and "KENNETH SCHULZ") can be put together. The sheets also
+// hold mistyped numbers, which put two different archers on one number, so
+// two spellings are taken for one archer only when they share the number and
+// the first or the last name. Returns name key → the spelling to use, which is
+// the one from the newest sheet.
+function asaNameAliases(asaShooters) {
+  const byNumber = new Map();
+  for (const s of asaShooters) {
+    if (!s.asaNumber) continue;
+    if (!byNumber.has(s.asaNumber)) byNumber.set(s.asaNumber, new Map());
+    const spellings = byNumber.get(s.asaNumber);
+    const key = nameKey(s.name);
+    const known = spellings.get(key);
+    if (!known || (s.when || 0) > known.when) spellings.set(key, { key, name: normalizeName(s.name), when: s.when || 0 });
+  }
+  const ends = key => {
+    const words = key.split(' ').filter((w, i) => i === 0 || !NAME_SUFFIXES[w]);
+    return [words[0], words[words.length - 1]];
+  };
+  const aliases = new Map();
+  for (const spellings of byNumber.values()) {
+    if (spellings.size < 2) continue;
+    const [newest, ...older] = [...spellings.values()].sort((a, b) => b.when - a.when);
+    const [first, last] = ends(newest.key);
+    for (const other of older) {
+      const [otherFirst, otherLast] = ends(other.key);
+      if (otherFirst === first || otherLast === last) aliases.set(other.key, newest.name);
+    }
+  }
+  return aliases;
 }
 
 // ---------------------------------------------------------------------------
@@ -650,7 +719,13 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   // Deduplicate records: for each (ageGroup + style + recordType + round), keep only the current holder
   // "Current" = the entry with the highest score; if tied, the most recent year
   // For outdoor, multiple rounds exist (Aggregate, Field, Hunter) — each is a separate record
-  const stateRecordHolders = new Set(); // normalized names of current record holders
+  // One archer under one name: spellings an ASA number ties together, then
+  // everything nameKey treats as the same.
+  const aliases = asaNameAliases(asaShooters);
+  const canonical = name => aliases.get(nameKey(name)) || normalizeName(name);
+  const keyOf = name => nameKey(canonical(name));
+
+  const stateRecordHolders = new Set(); // name keys of current record holders
   const recordMap = {};
   for (const rec of stateRecordDetails) {
     const key = rec.ageGroup + '||' + rec.style + '||' + rec.recordType;
@@ -660,10 +735,25 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   }
   const currentRecords = Object.values(recordMap);
   for (const rec of currentRecords) {
-    stateRecordHolders.add(rec.normalizedName.toLowerCase());
+    stateRecordHolders.add(keyOf(rec.name || rec.normalizedName));
   }
 
   const allShooters = [...asaShooters, ...tfaaShooters, ...tfaaIndoorShooters];
+
+  // The bar for a Texas ASA round: the best score anyone shot in the seasons
+  // read. Nobody shoots a perfect 3D round, so measuring against the perfect
+  // score kept every Texas ASA round well under a TFAA round, which is
+  // measured against the national record.
+  const asaBar = Math.max(0, ...asaShooters.map(s => Math.max(0, ...s.eventScores.filter(v => v <= ASA_ROUND_MAX)))) || ASA_ROUND_MAX;
+
+  // How many seasons back a round was shot, counting the seasons read of its
+  // own organization: 0 for the newest.
+  const seasons = {};
+  for (const s of allShooters) {
+    if (!seasons[s.org]) seasons[s.org] = new Set();
+    seasons[s.org].add(s.when || 0);
+  }
+  const seasonsBack = s => [...seasons[s.org]].filter(when => when > (s.when || 0)).length;
 
   // First pass: compute NPS for each entry
   const npsEntries = allShooters.map(s => {
@@ -677,17 +767,22 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       else if (s.asaMaxYards >= 40) w = w * 1.03;
       // 30 and below = 1.0 (no bonus)
     }
+    w = w * RECENCY_WEIGHTS[Math.min(seasonsBack(s), RECENCY_WEIGHTS.length - 1)];
     // For indoor: X count bonus — (xCount/60) * 0.05 adds up to 5% for perfect X count
     const npsScores = s.eventScores.map((score, i) => {
       const rmax = (s.roundMax && s.roundMax[i]) ? s.roundMax[i] : s.maxPerRound;
       const xcap = (s.xMax && s.xMax[i]) ? s.xMax[i] : 60;
       const record = nationalRecordFor(s, i, rmax);
-      let nps = (score / (record || rmax)) * 1000 * w;
+      const bar = record || (s.org === 'TX ASA' ? asaBar : rmax);
+      let nps = (score / bar) * 1000 * w;
       if (s.xCounts && s.xCounts[i] !== undefined) {
         const xBonus = (s.xCounts[i] / xcap) * 0.05;
         nps = nps * (1 + xBonus);
       }
-      if (s.isState && s.isState[i]) {
+      // A State Championship round, in any organization. Outdoors it is the
+      // field and the hunter half of the State total.
+      const kind = s.roundKinds && s.roundKinds[i];
+      if ((s.isState && s.isState[i]) || kind === 'field' || kind === 'hunter') {
         nps = nps * STATE_ROUND_BONUS;
       }
       // Equipment-specific bonuses based on restrictions, for rounds without a national
@@ -729,7 +824,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     const totalX = s.xCounts ? s.xCounts.reduce((a, b) => a + b, 0) : 0;
     const eqClass = mapEquipmentClass(s.orgClass, s.org);
     return {
-      normalizedName: normalizeName(s.name),
+      normalizedName: canonical(s.name),
       org: s.org, orgClass: s.orgClass, age: s.age, when: s.when || 0,
       equipmentClass: eqClass,
       npsScores: npsScores.map(n => n.nps),
@@ -744,7 +839,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   // Same person in different equipment classes gets separate rankings
   const mergedMap = {};
   for (const entry of npsEntries) {
-    const key = entry.normalizedName.toLowerCase() + '||' + entry.equipmentClass;
+    const key = nameKey(entry.normalizedName) + '||' + entry.equipmentClass;
     if (!mergedMap[key]) {
       mergedMap[key] = {
         name: entry.normalizedName,
@@ -756,6 +851,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
         allNPSWithOrg: [],
         totalX: 0,
         totalEvents: 0,
+        eventsByYear: {},
         bestScore: 0
       };
     }
@@ -766,6 +862,9 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     m.allNPSWithOrg.push(...entry.npsWithOrg);
     m.totalX += entry.totalX;
     m.totalEvents += entry.eventCount;
+    // A year is the indoor winter, then the outdoor and the Texas ASA season that follow it.
+    const year = Math.ceil(entry.when);
+    m.eventsByYear[year] = (m.eventsByYear[year] || 0) + entry.eventCount;
     if (entry.bestScore > m.bestScore) m.bestScore = entry.bestScore;
     m.ages.push({ age: entry.age, when: entry.when, tfaa: entry.org !== 'TX ASA' });
   }
@@ -785,7 +884,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   // Titles go to the archer's ranking in the equipment class they were won in.
   const titlesByKey = {};
   for (const t of titles) {
-    const key = normalizeName(t.name).toLowerCase() + '||' + mapEquipmentClass(t.orgClass, t.org);
+    const key = keyOf(t.name) + '||' + mapEquipmentClass(t.orgClass, t.org);
     if (!mergedMap[key]) continue;
     if (!titlesByKey[key]) titlesByKey[key] = [];
     titlesByKey[key].push({ kind: t.kind, org: t.org, season: t.season, orgClass: t.orgClass, field: t.field || 1, bonus: (t.field || 1) >= TITLE_BONUS_MIN_FIELD });
@@ -807,13 +906,16 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     while (top5.length < 5) top5.push(0);
     let avgNPS = Math.round(top5.reduce((a, b) => a + b, 0) / 5);
 
-    // Event count bonus (diminishing returns, rewards consistency)
+    // Event count bonus (diminishing returns, rewards consistency), on the
+    // events of the archer's busiest year, so that three quiet years do not
+    // add up to the bonus for one busy one.
     // 3 events = baseline 1.0×, scales up to 1.06× at 8+ events
+    const yearEvents = Math.max(...Object.values(m.eventsByYear));
     let eventBonus = 1.0;
-    if (totalEvents >= 8) eventBonus = 1.06;
-    else if (totalEvents >= 6) eventBonus = 1.05;
-    else if (totalEvents >= 5) eventBonus = 1.04;
-    else if (totalEvents >= 4) eventBonus = 1.02;
+    if (yearEvents >= 8) eventBonus = 1.06;
+    else if (yearEvents >= 6) eventBonus = 1.05;
+    else if (yearEvents >= 5) eventBonus = 1.04;
+    else if (yearEvents >= 4) eventBonus = 1.02;
 
     // Org diversity bonus — unique orgs in the top 5 scoring rounds
     // 1 org = 1.0×, 2 orgs = 1.03×, 3+ orgs = 1.05×
@@ -823,7 +925,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     else if (top5Orgs.size >= 2) orgBonus = 1.03;
 
     // Title bonus: one for Shooter of the Year, one for State Champion.
-    const myTitles = (titlesByKey[m.name.toLowerCase() + '||' + m.equipmentClass] || []).sort(titleOrder);
+    const myTitles = (titlesByKey[nameKey(m.name) + '||' + m.equipmentClass] || []).sort(titleOrder);
     const earns = kind => myTitles.some(t => t.kind === kind && t.bonus);
     const titleBonus = (earns('soy') ? SOY_TITLE_BONUS : 1) * (earns('state') ? STATE_TITLE_BONUS : 1);
 
@@ -853,13 +955,14 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       age: ageOf(m.ages),
       equipmentClass: m.equipmentClass,
       events: totalEvents,
+      yearEvents,
       bestScore: m.bestScore,
       totalX: m.totalX,
       npsScores: top5, avgNPS, bestNPS,
       rounds,
       multiOrg: orgsArr.length > 1,
       provisional,
-      stateRecord: stateRecordHolders.has(m.name.toLowerCase()),
+      stateRecord: stateRecordHolders.has(nameKey(m.name)),
       titles: myTitles,
       titleBonus: Math.round(titleBonus * 10000) / 10000
     };
@@ -873,8 +976,12 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
 
   // Build state records summary for API
   const stateRecordsByName = {};
+  // Keyed by the name the archer is ranked under, in lower case, which is how the site looks them up.
+  const rankedAs = {};
+  for (const r of rankings) rankedAs[nameKey(r.name)] = r.name;
   for (const rec of currentRecords) {
-    const key = rec.normalizedName.toLowerCase();
+    const name = rec.name || rec.normalizedName;
+    const key = (rankedAs[keyOf(name)] || canonical(name)).toLowerCase();
     if (!stateRecordsByName[key]) stateRecordsByName[key] = [];
     stateRecordsByName[key].push({
       type: rec.recordType, ageGroup: rec.ageGroup,
@@ -894,6 +1001,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       merged: allShooters.length - rankings.length,
       stateRecordHolders: stateRecordHolders.size,
       stateRecords: currentRecords.length,
+      asaBar,
       titleHolders: new Set(titled.map(r => r.name.toLowerCase())).size,
       soyTitles: titled.reduce((n, r) => n + r.titles.filter(t => t.kind === 'soy').length, 0),
       stateTitles: titled.reduce((n, r) => n + r.titles.filter(t => t.kind === 'state').length, 0)
@@ -1088,6 +1196,8 @@ module.exports = {
   tfaaPageLayout,
   mapEquipmentClass,
   normalizeName,
+  nameKey,
+  asaNameAliases,
   ASA_TABS,
   rules
 };

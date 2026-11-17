@@ -442,26 +442,40 @@ test('a TFAA round is scored against the national record for its style, with no 
   assert.deepStrictEqual(nationalRecords.LB, { indoor: 542, field: 376, hunter: 391 });
 
   // Tying the national field or hunter record is worth what a perfect Freestyle round is.
+  // The field and hunter rounds here are the two halves of State, which earn the State bonus.
+  const state = Math.round(1080 * 1.05);
   const [barebow] = rank([tfaaOutdoor('A B', 'Barebow Recurve (BBR)', [481, 496, 400], ['field', 'hunter', 'sywat'])]);
   const [freestyle] = rank([tfaaOutdoor('C D', 'Freestyle (FS)', [560, 560, 560], ['field', 'hunter', 'sywat'])]);
-  assert.deepStrictEqual(freestyle.rounds.map(r => r.nps), [1080, 1080, 1080]);
+  assert.deepStrictEqual(freestyle.rounds.map(r => r.nps), [state, state, 1080]);
   // A SYWAT round can be either, so it meets the average of the two records.
-  assert.deepStrictEqual(barebow.rounds.map(r => r.nps), [1080, 1080, Math.round(400 / ((481 + 496) / 2) * 1080)]);
+  assert.deepStrictEqual(barebow.rounds.map(r => r.nps), [state, state, Math.round(400 / ((481 + 496) / 2) * 1080)]);
 
   // Bowhunter Freestyle's 5% goes: its record is the bar now.
   const [bowhunter] = rank([tfaaOutdoor('E F', 'Bowhunter Freestyle (BHFS)', [554, 554, 554], ['field', 'hunter', 'sywat'])]);
-  assert.deepStrictEqual(bowhunter.rounds.map(r => r.nps), [1080, 1080, 1080]);
+  assert.deepStrictEqual(bowhunter.rounds.map(r => r.nps), [state, state, 1080]);
 
   // Indoors the record is the two-day total: a 583 State in barebow recurve counts as a 600 in Freestyle.
   const [indoorBarebow] = rank([tfaaIndoorState('G H', 'Barebow Recurve (BBR)', [583, 583, 583])]);
   const [indoorFreestyle] = rank([tfaaIndoorState('I J', 'Freestyle (FS)', [600, 600, 600])]);
   assert.strictEqual(indoorBarebow.bestNPS, indoorFreestyle.bestNPS);
-  assert.strictEqual(indoorFreestyle.bestNPS, Math.round(1000 * 0.95 * 1.15));
+  assert.strictEqual(indoorFreestyle.bestNPS, Math.round(1000 * 0.95 * 1.05));
 });
 
-test('a style without a national record, and every Texas ASA round, keeps the perfect score and the equipment bonus', () => {
-  const [mbh] = rank([tfaaOutdoor('A B', 'Modern Bowhunter Freestyle (MBH)', [560, 560, 560], ['field', 'hunter', 'sywat'])]);
-  assert.strictEqual(mbh.bestNPS, Math.round(1000 * 1.08 * 1.03));
+test('a TFAA style NFAA keeps no record for meets the record of the nearest NFAA style', () => {
+  assert.deepStrictEqual(engine.rules.recordStyleFor, { MBH: 'BHFS', GEN: 'BBC' });
+  const sywat = (style, score) => rank([tfaaOutdoor('A B', style, [score, score, score], ['sywat', 'sywat', 'sywat'])])[0].bestNPS;
+  // Modern Bowhunter Freestyle is measured as Bowhunter Freestyle is, with no bonus on top.
+  assert.strictEqual(sywat('Modern Bowhunter Freestyle (MBH)', 540), sywat('Bowhunter Freestyle (BHFS)', 540));
+  assert.strictEqual(sywat('Modern Bowhunter Freestyle (MBH)', 554), 1080);
+  // Genesis is measured as Barebow Compound is, with or without its code on the page.
+  assert.strictEqual(sywat('Genesis (GEN)', 400), sywat('Barebow Compound (BBC)', 400));
+  assert.strictEqual(sywat('Genesis', 400), sywat('Barebow Compound (BBC)', 400));
+});
+
+test('a style without a national record, and every Texas ASA round, keeps the equipment bonus', () => {
+  // Bowhunter Freestyle Limited has no record here: the perfect score, and the bowhunter's 5%.
+  const [limited] = rank([tfaaOutdoor('A B', 'Bowhunter Freestyle Limited (BHFSL)', [560, 560, 560], ['sywat', 'sywat', 'sywat'])]);
+  assert.strictEqual(limited.bestNPS, Math.round(1000 * 1.08 * 1.05));
   const [asaBarebow] = rank([asa('C D', [360, 360, 360], { orgClass: 'Barebow Recurve' })]);
   assert.strictEqual(asaBarebow.bestNPS, Math.round(1000 * 1.05 * 1.08));
   const [asaTraditional] = rank([asa('E F', [360, 360, 360], { orgClass: 'Traditional' })]);
@@ -472,6 +486,96 @@ test('names are matched across "FIRST LAST" and "Last, First" spellings', () => 
   assert.strictEqual(engine.normalizeName('MCARROW, DANA'), 'Dana McArrow');
   assert.strictEqual(engine.normalizeName('dana mcarrow'), 'Dana McArrow');
   assert.strictEqual(engine.normalizeName(' Quillfeather,  Avery '), 'Avery Quillfeather');
+});
+
+test('one archer written several ways is one name', () => {
+  // Extra spaces, curly apostrophes, and a suffix with or without its full stop, wherever it stands.
+  assert.strictEqual(engine.normalizeName('JOSH  NUGENT'), 'Josh Nugent');
+  assert.strictEqual(engine.normalizeName("O\u2019donohue, Savannah"), "Savannah O'Donohue");
+  for (const spelling of ['RAUL  REYES JR', 'Reyes Jr., Raul', 'Reyes, Raul Jr', 'Raul Jr. Reyes']) {
+    assert.strictEqual(engine.normalizeName(spelling), 'Raul Reyes Jr');
+  }
+  assert.strictEqual(engine.normalizeName('LARRY MITCHELL II'), 'Larry Mitchell II');
+  // A suffix keeps father and son apart.
+  assert.notStrictEqual(engine.nameKey('Raul Reyes Jr'), engine.nameKey('Raul Reyes'));
+  // Full stops do not: A.J. and AJ are one archer.
+  assert.strictEqual(engine.nameKey('A.J. GROGAN'), engine.nameKey('Grogan, AJ'));
+  const ranked = rank([asa('A.J.  GROGAN', [300, 300, 300]), asa('AJ GROGAN', [310, 310, 310])]);
+  assert.strictEqual(ranked.length, 1);
+  assert.strictEqual(ranked[0].events, 6);
+});
+
+test('two spellings on one ASA number are one archer when they share a first or last name', () => {
+  const row = (name, asaNumber, when) => ({ ...asa(name, [300, 300, 300]), asaNumber, when });
+  const tfaa = tfaaOutdoor('Schulz, Ken', 'Freestyle (FS)', [500, 500, 500], ['sywat', 'sywat', 'sywat']);
+  const ranked = rank([
+    row('KEN SCHULZ', '45173', 2025), row('KENNETH SCHULZ', '45173', 2026),
+    row('LISA HAMLIN', '64596', 2025), row('LISA LOPEZ', '64596', 2026),
+    // A mistyped number puts two different archers on it: they stay apart.
+    row('TYLER ROEBUCK', '65574', 2025), row('RYAN THOMAS', '65574', 2026),
+    tfaa
+  ]);
+  assert.deepStrictEqual(ranked.map(r => r.name).sort(), ['Kenneth Schulz', 'Lisa Lopez', 'Ryan Thomas', 'Tyler Roebuck']);
+  // The TFAA spelling follows the same archer, under the newest ASA spelling.
+  assert.strictEqual(ranked.find(r => r.name === 'Kenneth Schulz').org, 'TX ASA + TFAA Outdoor');
+});
+
+test('a Texas ASA round is measured against the best Texas ASA score in the seasons read', () => {
+  const ranked = rank([asa('A B', [340, 340, 340]), asa('C D', [170, 170, 170])]);
+  // 340 is the best anyone shot: it is worth what a perfect round used to be.
+  assert.deepStrictEqual(ranked.map(r => r.bestNPS), [1050, 525]);
+  const result = engine.computeRankings({ asaShooters: [asa('A B', [340, 300, 300])], tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [] });
+  assert.strictEqual(result.sources.asaBar, 340);
+});
+
+test('a Texas ASA score above the most a round can score is left out', () => {
+  const table = engine.parseGvizTable(sources.gviz(
+    ['ASA NUMBER', 'FIRST NAME', 'LAST NAME', 'TOTAL EVENTS', 'TOTAL SCORE', 'A', 'B', 'STATE'],
+    [[1, 'KOREY', 'TWELVES', '71695', 'Tyler', 3020, 302, 298]]
+  ));
+  const [archer] = engine.parseAsaRows(table, engine.ASA_TABS[0], 2026);
+  assert.deepStrictEqual(archer.eventScores, [302, 298]);
+  assert.deepStrictEqual(archer.isState, [false, true]);
+  assert.strictEqual(archer.asaNumber, '71695');
+});
+
+test('a State Championship round earns the same bonus in every organization', () => {
+  assert.strictEqual(engine.rules.stateRoundBonus, 1.05);
+  const [texasAsa] = rank([{ ...asa('A B', [360, 360, 360]), isState: [false, false, true] }]);
+  assert.deepStrictEqual(texasAsa.rounds.map(r => r.nps), [Math.round(1050 * 1.05), 1050, 1050]);
+  const [outdoor] = rank([tfaaOutdoor('C D', 'Freestyle (FS)', [560, 560, 560], ['sywat', 'field', 'hunter'])]);
+  assert.deepStrictEqual(outdoor.rounds.map(r => r.nps), [Math.round(1080 * 1.05), Math.round(1080 * 1.05), 1080]);
+  const [indoor] = rank([tfaaIndoorState('E F', 'Freestyle (FS)', [600, 600, 600])]);
+  assert.strictEqual(indoor.bestNPS, Math.round(950 * 1.05));
+});
+
+test('a round counts in full in the newest season of its organization, and for less each season before', () => {
+  assert.deepStrictEqual(engine.rules.recencyWeights, [1, 0.95, 0.9]);
+  const season = (name, when) => ({ ...asa(name, [360, 360, 360]), when });
+  const ranked = rank([season('New Er', 2026), season('Mid Dle', 2025), season('Old Er', 2024), season('Old Est', 2023)]);
+  const best = name => ranked.find(r => r.name === name).bestNPS;
+  assert.deepStrictEqual([best('New Er'), best('Mid Dle'), best('Old Er'), best('Old Est')], [1050, Math.round(1000 * (1.05 * 0.95)), 945, 945]);
+
+  // The seasons of another organization do not age this one's: its own newest season is full value.
+  const indoor = { ...tfaaIndoorState('In Door', 'Freestyle (FS)', [600, 600, 600]), when: 2024.5 };
+  const [only] = rank([indoor, season('New Er', 2026)]).filter(r => r.name === 'In Door');
+  assert.strictEqual(only.bestNPS, Math.round(950 * 1.05));
+});
+
+test('the event bonus goes by the events of the busiest year, not the three years together', () => {
+  const season = (when, n) => ({ ...asa('A B', Array(n).fill(360)), when });
+  // Three events a year for three years: nine events, but never more than three in a year.
+  const [steady] = rank([season(2024, 3), season(2025, 3), season(2026, 3)]);
+  assert.strictEqual(steady.events, 9);
+  assert.strictEqual(steady.yearEvents, 3);
+  assert.strictEqual(steady.avgNPS, Math.round((1050 * 3 + Math.round(1000 * (1.05 * 0.95)) * 2) / 5));
+  // Eight in one year earns the full 1.06.
+  const [busy] = rank([season(2026, 8)]);
+  assert.strictEqual(busy.avgNPS, Math.round(1050 * 1.06));
+  // The indoor winter belongs with the outdoor and Texas ASA season that follow it.
+  const indoor = { ...tfaaIndoorState('A B', 'Freestyle (FS)', [600, 600]), when: 2025.5 };
+  const [both] = rank([indoor, season(2026, 3)]);
+  assert.strictEqual(both.yearEvents, 5);
 });
 
 // ---- Titles: Shooter of the Year and State Champion ----

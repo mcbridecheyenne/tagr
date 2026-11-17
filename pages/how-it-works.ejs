@@ -36,6 +36,8 @@
   const barebowNps = Math.round(470 / barebowBar * 1000 * outdoorWeight);
   const freestyleNps = Math.round(540 / records.FS.field * 1000 * outdoorWeight);
   const pct = n => '+' + Math.round((n - 1) * 100) + '%';
+  const asaBarText = asaBar ? 'Right now that is ' + asaBar + ' of 360.' : '';
+  const recency = rules.recencyWeights;
 %>
 <section>
   <div class="tgr-exp">
@@ -45,7 +47,7 @@
     <h2>📊 The NPS Formula</h2>
     <p>Every score from every organization is converted to a <strong>Normalized Performance Score (NPS)</strong>:</p>
     <div class="formula-box">NPS = (Your Score ÷ The Bar) × 1000 × Org Weight × Bonuses</div>
-    <p><strong>The bar for a TFAA round is the national record for your style</strong>, from the NFAA (see <a href="#national-records" style="color:var(--accent-gold);">National Records</a> below). A round that ties the national record is worth 1000 before weights and bonuses, whatever bow you shoot, so great barebow, traditional and longbow shooting counts as much as great compound shooting. Texas ASA has no national records like that, so for a 3D round the bar is the perfect score, and <a href="#equipment-bonuses" style="color:var(--accent-gold);">equipment bonuses</a> make up for harder equipment.</p>
+    <p><strong>The bar for a TFAA round is the national record for your style</strong>, from the NFAA (see <a href="#national-records" style="color:var(--accent-gold);">National Records</a> below). A round that ties the national record is worth 1000 before weights and bonuses, whatever bow you shoot, so great barebow, traditional and longbow shooting counts as much as great compound shooting. Texas ASA has no national records like that, so <strong>the bar for a 3D round is the best score anyone shot in a Texas ASA class in the seasons TAGR reads</strong>. <%= asaBarText %> Nobody shoots a perfect 360, so measuring against it kept every 3D round well below a TFAA round. <a href="#equipment-bonuses" style="color:var(--accent-gold);">Equipment bonuses</a> make up for harder equipment.</p>
     <p>NPS is <strong>uncapped</strong> — equipment bonuses, yardage bonuses, and format multipliers stack naturally. Top archers in difficult equipment classes and long-distance formats will earn NPS well above 1000, which properly differentiates elite performers.</p>
 
     <h2>⚖️ Organization Difficulty Weights</h2>
@@ -88,22 +90,20 @@
     <ul>
       <li>An ordinary indoor round is out of 300, so its bar is half the two-day record. A State Indoor total meets the whole record.</li>
       <li>A SYWAT round can be a field or a hunter round, so its bar is the average of the two records. A State Outdoor total counts as one field and one hunter round, each against its own record.</li>
-      <li>BBC is NFAA's Barebow style. MBH and Genesis have no NFAA national record, so their rounds are scored against the perfect score with an equipment bonus, like Texas ASA rounds.</li>
+      <li>BBC is NFAA's Barebow style. NFAA keeps no record for two TFAA styles, so each meets the record of the nearest NFAA style: <strong>MBH</strong> (Modern Bowhunter Freestyle) meets the <%= rules.recordStyleFor.MBH %> record, and <strong>Genesis</strong> meets the <%= rules.recordStyleFor.GEN %> record. Like every style with a record, they get no equipment bonus.</li>
     </ul>
     <div class="example">
       <strong>Example:</strong> a barebow recurve archer shoots 470 on a SYWAT round. The bar is (<%= records.BBR.field %> + <%= records.BBR.hunter %>) ÷ 2 = <%= barebowBar %>, so NPS = 470 ÷ <%= barebowBar %> × 1000 × <%= outdoorWeight.toFixed(2) %> = <strong><%= barebowNps %></strong>. A freestyle archer needs about 540 of <%= records.FS.field %> to match it: 540 ÷ <%= records.FS.field %> × 1000 × <%= outdoorWeight.toFixed(2) %> = <strong><%= freestyleNps %></strong>.
     </div>
 
     <h2 id="equipment-bonuses">🏅 Equipment Bonuses</h2>
-    <p>Rounds without a national record (every Texas ASA round, and TFAA's MBH and Genesis) are scored against the perfect score, so harder equipment gets a bonus:</p>
+    <p>Texas ASA rounds are not scored against a record for their own equipment, so harder equipment gets a bonus:</p>
     <table class="weight-table">
       <thead><tr><th>Class</th><th>Bonus</th><th>Why</th></tr></thead>
       <tbody>
         <tr><td><strong>Barebow Recurve</strong>, Youth Barebow (ASA)</td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
         <tr><td><strong>Traditional</strong> (ASA)</td><td><strong>+11%</strong></td><td>Fingers + no sight, and no arrow rest (off the shelf) for an additional +3%</td></tr>
         <tr><td><strong>Olympic Recurve</strong> (ASA)</td><td><strong>+3%</strong></td><td>Finger release + sight</td></tr>
-        <tr><td><strong>Genesis</strong> (TFAA)</td><td><strong>+8%</strong></td><td>Fingers + no sight</td></tr>
-        <tr><td><strong>MBH</strong> (Modern Bowhunter, TFAA)</td><td><strong>+3%</strong></td><td>Fixed pins + 18" stabilizer limit</td></tr>
         <tr><td>Every other ASA class</td><td>Baseline</td><td>Compound with sight and release</td></tr>
       </tbody>
     </table>
@@ -111,10 +111,22 @@
     <h2>🏅 Other Bonuses</h2>
     <ul>
       <li><strong>X-Count Bonus (Indoor only)</strong> — Up to 5% extra for hitting more X rings. A 300-60X ranks higher than 300-0X. Formula: <code>NPS × (1 + xCount/60 × 0.05)</code></li>
-      <li><strong>State Championship (Indoor)</strong> — <%= stateBonus %>% bonus for State Championship rounds, reflecting higher level of competition</li>
+      <li><strong>State Championship</strong> — <%= stateBonus %>% bonus for a State Championship round, reflecting the higher level of competition. It is the same in Texas ASA, TFAA Outdoor and TFAA Indoor.</li>
       <li><strong>How State Championships count</strong> — The TFAA Indoor State total is one round scored out of 600. The TFAA Outdoor State total is the field and hunter rounds together, so it counts as two rounds. A State result counts once per season in each class.</li>
       <li><strong>Scores above the maximum</strong> — A TFAA Outdoor round is scored out of 560, and the two State rounds together out of 1120. A few listed scores are higher than that. They are left out of the rankings for now, until it is clear how they were scored.</li>
     </ul>
+
+    <h2 id="recency">🕒 Newer Rounds Count for More</h2>
+    <p>TAGR reads three seasons of each organization. A round counts in full in the newest season, and for a little less each season before:</p>
+    <table class="weight-table">
+      <thead><tr><th>Season</th><th>Weight</th></tr></thead>
+      <tbody>
+        <tr><td>Newest season of the organization</td><td><strong><%= times(recency[0]) %></strong></td></tr>
+        <tr><td>The season before</td><td><strong><%= times(recency[1]) %></strong></td></tr>
+        <tr><td>Two seasons back</td><td><strong><%= times(recency[2]) %></strong></td></tr>
+      </tbody>
+    </table>
+    <p>Each organization has its own newest season, so a Texas ASA archer is not marked down because the TFAA indoor season started later in the year.</p>
 
     <h2>📈 Your TAGR Score</h2>
     <div class="formula-box">TAGR = (Sum of Top 5 NPS ÷ 5) × Event Count Bonus × Org Diversity Bonus × Title Bonus</div>
@@ -124,11 +136,11 @@
     <p>You need at least <strong>3 events</strong> to get a full ranking. Archers with fewer than 3 events are shown as <strong style="color:#e74c3c;">PROVISIONAL</strong> — visible in the rankings but without a rank number.</p>
 
     <h2>🔄 Event Count Bonus</h2>
-    <p>Shooting more events earns a small bonus that rewards consistency and commitment:</p>
+    <p>Shooting more events earns a small bonus that rewards consistency and commitment. It goes by the events of your <strong>busiest year</strong>, not the three years added together. A year is the indoor winter and the outdoor and Texas ASA seasons that follow it.</p>
     <table class="weight-table">
-      <thead><tr><th>Events</th><th>Bonus</th></tr></thead>
+      <thead><tr><th>Events in your busiest year</th><th>Bonus</th></tr></thead>
       <tbody>
-        <tr><td>3 events</td><td>1.0× (baseline)</td></tr>
+        <tr><td>3 events or fewer</td><td>1.0× (baseline)</td></tr>
         <tr><td>4 events</td><td>1.02×</td></tr>
         <tr><td>5 events</td><td>1.04×</td></tr>
         <tr><td>6–7 events</td><td>1.05×</td></tr>
@@ -180,13 +192,13 @@
 
     <h2>💡 Example</h2>
     <div class="example">
-      <strong>Archer A</strong> shoots 6 ASA unknown distance events at 45 yards, scoring NPS: 850, 840, 830, 820, 810, 800<br>
+      <strong>Archer A</strong> shoots 6 ASA unknown distance events at 45 yards this year, scoring NPS: 850, 840, 830, 820, 810, 800<br>
       Top 5 average = (850 + 840 + 830 + 820 + 810) ÷ 5 = 830<br>
       Event bonus (6 events) = 1.05×<br>
       1 org = 1.0× diversity bonus<br>
       <strong>TAGR = 830 × 1.05 × 1.0 = 872</strong><br><br>
       
-      <strong>Archer B</strong> shoots 8 events across TX ASA + TFAA Outdoor + TFAA Indoor<br>
+      <strong>Archer B</strong> shoots 8 events in one year across TX ASA + TFAA Outdoor + TFAA Indoor<br>
       Top 5 NPS: 920, 910, 890, 880, 870 (from all 3 orgs)<br>
       Top 5 average = 894<br>
       Event bonus (8 events) = 1.06×<br>
@@ -216,7 +228,7 @@
       <li><span class="badge indoor">TFAA Indoor</span> — the <strong>3 most recent seasons</strong> with scores, read from texasfieldarchery.org</li>
       <li><em>TSAA — Coming soon</em></li>
     </ul>
-    <p>Rankings are rebuilt every Tuesday morning (Central time). Cross-organization names are automatically matched and merged (e.g., "SMITH, JOHN" from TFAA + "JOHN SMITH" from ASA = same archer).</p>
+    <p>Rankings are rebuilt every Tuesday morning (Central time). Cross-organization names are automatically matched and merged (e.g., "SMITH, JOHN" from TFAA + "JOHN SMITH" from ASA = same archer). Extra spaces, full stops and where "Jr." is written make no difference, and two spellings on the same ASA number (Ken and Kenneth) are one archer when they share a first or last name. Two different people with exactly the same name still cannot be told apart.</p>
     <p><strong>Adult or Youth</strong> goes by an archer's newest results: once they shoot a TFAA season in an adult age group, they move to the Adult list with all of their scores.</p>
 
     <a href="<%= links.rankings %>" class="back-link">← Back to Rankings</a>

@@ -20,31 +20,15 @@
    "bestScore": 598,
    "totalX": 558,
    "npsScores": [
-    1166,
-    1124,
     1100,
     1098,
-    1085
+    1094,
+    1055,
+    1051
    ],
-   "avgNPS": 1279,
-   "bestNPS": 1166,
+   "avgNPS": 1263,
+   "bestNPS": 1100,
    "rounds": [
-    {
-     "raw": 348,
-     "nps": 1166,
-     "org": "TX ASA",
-     "orgClass": "Open Pro",
-     "event": "2026 STATE",
-     "counted": true
-    },
-    {
-     "raw": 352,
-     "nps": 1124,
-     "org": "TX ASA",
-     "orgClass": "Open Pro",
-     "event": "2026 PARIS",
-     "counted": true
-    },
     {
      "raw": 543,
      "nps": 1100,
@@ -62,20 +46,20 @@
      "counted": true
     },
     {
-     "raw": 340,
-     "nps": 1085,
-     "org": "TX ASA",
-     "orgClass": "Open Pro",
-     "event": "2026 STEPHENVILLE",
+     "raw": 598,
+     "nps": 1094,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 State Indoor",
      "counted": true
     },
     {
-     "raw": 350,
-     "nps": 1067,
+     "raw": 348,
+     "nps": 1055,
      "org": "TX ASA",
-     "orgClass": "Known 50",
-     "event": "2026 STEPHENVILLE",
-     "counted": false
+     "orgClass": "Open Pro",
+     "event": "2026 STATE",
+     "counted": true
     },
     {
      "raw": 545,
@@ -83,22 +67,30 @@
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2026 SYWAT #2",
+     "counted": true
+    },
+    {
+     "raw": 300,
+     "nps": 1050,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #3",
      "counted": false
     },
     {
-     "raw": 344,
-     "nps": 1049,
-     "org": "TX ASA",
-     "orgClass": "Known 50",
-     "event": "2026 PARIS",
+     "raw": 300,
+     "nps": 1048,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #1",
      "counted": false
     },
     {
-     "raw": 345,
-     "nps": 1046,
-     "org": "TX ASA",
-     "orgClass": "Open Pro",
-     "event": "2025 Qualifier 1",
+     "raw": 299,
+     "nps": 1042,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #2",
      "counted": false
     },
     {
@@ -107,14 +99,6 @@
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2026 SYWAT #1",
-     "counted": false
-    },
-    {
-     "raw": 598,
-     "nps": 1040,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 State Indoor",
      "counted": false
     },
     {
@@ -142,27 +126,35 @@
      "counted": false
     },
     {
-     "raw": 339,
-     "nps": 1028,
+     "raw": 597,
+     "nps": 1037,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2024-2025 State Indoor",
+     "counted": false
+    },
+    {
+     "raw": 352,
+     "nps": 1017,
      "org": "TX ASA",
      "orgClass": "Open Pro",
-     "event": "2025 Qualifier 2",
+     "event": "2026 PARIS",
      "counted": false
     },
     {
      "raw": 300,
-     "nps": 998,
+     "nps": 997,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #3",
+     "event": "2024-2025 Indoor #2",
      "counted": false
     },
     {
      "raw": 300,
-     "nps": 996,
+     "nps": 995,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #1",
+     "event": "2024-2025 Indoor #1",
      "counted": false
     },
     {
@@ -174,14 +166,6 @@
      "counted": false
     },
     {
-     "raw": 299,
-     "nps": 990,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #2",
-     "counted": false
-    },
-    {
      "raw": 539,
      "nps": 988,
      "org": "TFAA Outdoor",
@@ -190,11 +174,19 @@
      "counted": false
     },
     {
-     "raw": 597,
-     "nps": 985,
+     "raw": 298,
+     "nps": 984,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2024-2025 State Indoor",
+     "event": "2024-2025 Indoor #3",
+     "counted": false
+    },
+    {
+     "raw": 340,
+     "nps": 982,
+     "org": "TX ASA",
+     "orgClass": "Open Pro",
+     "event": "2026 STEPHENVILLE",
      "counted": false
     },
     {
@@ -206,27 +198,35 @@
      "counted": false
     },
     {
-     "raw": 300,
-     "nps": 947,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2024-2025 Indoor #2",
+     "raw": 350,
+     "nps": 966,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2026 STEPHENVILLE",
      "counted": false
     },
     {
-     "raw": 300,
-     "nps": 945,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2024-2025 Indoor #1",
+     "raw": 344,
+     "nps": 949,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2026 PARIS",
      "counted": false
     },
     {
-     "raw": 298,
-     "nps": 935,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2024-2025 Indoor #3",
+     "raw": 345,
+     "nps": 946,
+     "org": "TX ASA",
+     "orgClass": "Open Pro",
+     "event": "2025 Qualifier 1",
+     "counted": false
+    },
+    {
+     "raw": 339,
+     "nps": 930,
+     "org": "TX ASA",
+     "orgClass": "Open Pro",
+     "event": "2025 Qualifier 2",
      "counted": false
     }
    ],
@@ -325,18 +325,26 @@
    "bestScore": 530,
    "totalX": 0,
    "npsScores": [
-    1124,
-    1103,
-    1087,
-    1055,
-    1039
+    1022,
+    1017,
+    997,
+    983,
+    966
    ],
-   "avgNPS": 1205,
-   "bestNPS": 1124,
+   "avgNPS": 1144,
+   "bestNPS": 1022,
    "rounds": [
     {
+     "raw": 530,
+     "nps": 1022,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2026 SYWAT #2",
+     "counted": true
+    },
+    {
      "raw": 335,
-     "nps": 1124,
+     "nps": 1017,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 STATE",
@@ -344,7 +352,7 @@
     },
     {
      "raw": 345,
-     "nps": 1103,
+     "nps": 997,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 KILGORE",
@@ -352,43 +360,11 @@
     },
     {
      "raw": 340,
-     "nps": 1087,
+     "nps": 983,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2026 BROWNWOOD",
      "counted": true
-    },
-    {
-     "raw": 330,
-     "nps": 1055,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 325,
-     "nps": 1039,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 320,
-     "nps": 1023,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 PARIS",
-     "counted": false
-    },
-    {
-     "raw": 530,
-     "nps": 1022,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2026 SYWAT #2",
-     "counted": false
     },
     {
      "raw": 501,
@@ -396,11 +372,35 @@
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2026 SYWAT #1",
+     "counted": true
+    },
+    {
+     "raw": 330,
+     "nps": 954,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 TEMPLE",
+     "counted": false
+    },
+    {
+     "raw": 325,
+     "nps": 940,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STEPHENVILLE",
+     "counted": false
+    },
+    {
+     "raw": 320,
+     "nps": 925,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 PARIS",
      "counted": false
     },
     {
      "raw": 315,
-     "nps": 956,
+     "nps": 865,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2025 Qualifier 2",
@@ -408,7 +408,7 @@
     },
     {
      "raw": 310,
-     "nps": 941,
+     "nps": 851,
      "org": "TX ASA",
      "orgClass": "Men's Open 45",
      "event": "2025 Qualifier 1",
@@ -454,37 +454,45 @@
    "bestScore": 590,
    "totalX": 219,
    "npsScores": [
-    1050,
+    1070,
+    1028,
+    1023,
     1017,
-    1016,
-    1013,
     1013
    ],
-   "avgNPS": 1137,
-   "bestNPS": 1050,
+   "avgNPS": 1125,
+   "bestNPS": 1070,
    "rounds": [
     {
-     "raw": 310,
-     "nps": 1050,
-     "org": "TX ASA",
-     "orgClass": "Men's Pins 30",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
      "raw": 590,
-     "nps": 1017,
+     "nps": 1070,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
      "event": "2025-2026 State Indoor",
      "counted": true
     },
     {
-     "raw": 300,
-     "nps": 1016,
-     "org": "TX ASA",
-     "orgClass": "Men's Pins 30",
-     "event": "2026 PARIS",
+     "raw": 297,
+     "nps": 1028,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
+     "event": "2025-2026 Indoor #2",
+     "counted": true
+    },
+    {
+     "raw": 296,
+     "nps": 1023,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
+     "event": "2025-2026 Indoor #1",
+     "counted": true
+    },
+    {
+     "raw": 295,
+     "nps": 1017,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
+     "event": "2025-2026 Indoor #3",
      "counted": true
     },
     {
@@ -501,7 +509,7 @@
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
      "event": "2026 State Outdoor (Hunter)",
-     "counted": true
+     "counted": false
     },
     {
      "raw": 505,
@@ -509,22 +517,6 @@
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
      "event": "2026 SYWAT #2",
-     "counted": false
-    },
-    {
-     "raw": 290,
-     "nps": 982,
-     "org": "TX ASA",
-     "orgClass": "Men's Pins 30",
-     "event": "2026 STEPHENVILLE",
-     "counted": false
-    },
-    {
-     "raw": 297,
-     "nps": 977,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
-     "event": "2025-2026 Indoor #2",
      "counted": false
     },
     {
@@ -536,14 +528,6 @@
      "counted": false
     },
     {
-     "raw": 296,
-     "nps": 972,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
-     "event": "2025-2026 Indoor #1",
-     "counted": false
-    },
-    {
      "raw": 498,
      "nps": 971,
      "org": "TFAA Outdoor",
@@ -552,11 +536,27 @@
      "counted": false
     },
     {
-     "raw": 295,
-     "nps": 966,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Bowhunter Freestyle (BHFS)",
-     "event": "2025-2026 Indoor #3",
+     "raw": 310,
+     "nps": 950,
+     "org": "TX ASA",
+     "orgClass": "Men's Pins 30",
+     "event": "2026 TEMPLE",
+     "counted": false
+    },
+    {
+     "raw": 300,
+     "nps": 919,
+     "org": "TX ASA",
+     "orgClass": "Men's Pins 30",
+     "event": "2026 PARIS",
+     "counted": false
+    },
+    {
+     "raw": 290,
+     "nps": 889,
+     "org": "TX ASA",
+     "orgClass": "Men's Pins 30",
+     "event": "2026 STEPHENVILLE",
      "counted": false
     }
    ],
@@ -617,29 +617,21 @@
    "bestScore": 580,
    "totalX": 151,
    "npsScores": [
-    1067,
-    1047,
+    1040,
     1029,
     1027,
-    1011
+    997,
+    991
    ],
-   "avgNPS": 1131,
-   "bestNPS": 1067,
+   "avgNPS": 1110,
+   "bestNPS": 1040,
    "rounds": [
     {
-     "raw": 315,
-     "nps": 1067,
-     "org": "TX ASA",
-     "orgClass": "Senior Known 50",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 309,
-     "nps": 1047,
-     "org": "TX ASA",
-     "orgClass": "Senior Known 50",
-     "event": "2026 STEPHENVILLE",
+     "raw": 580,
+     "nps": 1040,
+     "org": "TFAA Indoor",
+     "orgClass": "Master Senior Male - Freestyle (FS)",
+     "event": "2025-2026 State Indoor",
      "counted": true
     },
     {
@@ -659,20 +651,20 @@
      "counted": true
     },
     {
-     "raw": 299,
-     "nps": 1011,
-     "org": "TX ASA",
-     "orgClass": "Senior Known 50",
-     "event": "2025 State",
+     "raw": 291,
+     "nps": 997,
+     "org": "TFAA Indoor",
+     "orgClass": "Master Senior Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #3",
      "counted": true
     },
     {
-     "raw": 580,
-     "nps": 988,
+     "raw": 290,
+     "nps": 991,
      "org": "TFAA Indoor",
      "orgClass": "Master Senior Male - Freestyle (FS)",
-     "event": "2025-2026 State Indoor",
-     "counted": false
+     "event": "2025-2026 Indoor #1",
+     "counted": true
     },
     {
      "raw": 512,
@@ -691,14 +683,6 @@
      "counted": false
     },
     {
-     "raw": 305,
-     "nps": 982,
-     "org": "TX ASA",
-     "orgClass": "Senior Known 50",
-     "event": "2025 Qualifier 2",
-     "counted": false
-    },
-    {
      "raw": 509,
      "nps": 982,
      "org": "TFAA Outdoor",
@@ -707,11 +691,19 @@
      "counted": false
     },
     {
-     "raw": 300,
+     "raw": 288,
+     "nps": 982,
+     "org": "TFAA Indoor",
+     "orgClass": "Master Senior Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #2",
+     "counted": false
+    },
+    {
+     "raw": 315,
      "nps": 966,
      "org": "TX ASA",
      "orgClass": "Senior Known 50",
-     "event": "2025 Qualifier 1",
+     "event": "2026 PARIS",
      "counted": false
     },
     {
@@ -731,27 +723,11 @@
      "counted": false
     },
     {
-     "raw": 291,
+     "raw": 309,
      "nps": 947,
-     "org": "TFAA Indoor",
-     "orgClass": "Master Senior Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #3",
-     "counted": false
-    },
-    {
-     "raw": 290,
-     "nps": 941,
-     "org": "TFAA Indoor",
-     "orgClass": "Master Senior Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #1",
-     "counted": false
-    },
-    {
-     "raw": 288,
-     "nps": 933,
-     "org": "TFAA Indoor",
-     "orgClass": "Master Senior Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #2",
+     "org": "TX ASA",
+     "orgClass": "Senior Known 50",
+     "event": "2026 STEPHENVILLE",
      "counted": false
     },
     {
@@ -771,11 +747,35 @@
      "counted": false
     },
     {
+     "raw": 299,
+     "nps": 914,
+     "org": "TX ASA",
+     "orgClass": "Senior Known 50",
+     "event": "2025 State",
+     "counted": false
+    },
+    {
      "raw": 498,
      "nps": 912,
      "org": "TFAA Outdoor",
      "orgClass": "Master Senior Male - Freestyle (FS)",
      "event": "2025 SYWAT #2",
+     "counted": false
+    },
+    {
+     "raw": 305,
+     "nps": 888,
+     "org": "TX ASA",
+     "orgClass": "Senior Known 50",
+     "event": "2025 Qualifier 2",
+     "counted": false
+    },
+    {
+     "raw": 300,
+     "nps": 874,
+     "org": "TX ASA",
+     "orgClass": "Senior Known 50",
+     "event": "2025 Qualifier 1",
      "counted": false
     }
    ],
@@ -860,11 +860,11 @@
    "npsScores": [
     1053,
     1053,
-    1047,
-    1032,
-    1011
+    1027,
+    1003,
+    986
    ],
-   "avgNPS": 1124,
+   "avgNPS": 1107,
    "bestNPS": 1053,
    "rounds": [
     {
@@ -884,27 +884,11 @@
      "counted": true
     },
     {
-     "raw": 341,
-     "nps": 1047,
-     "org": "TX ASA",
-     "orgClass": "Known 45",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 336,
-     "nps": 1032,
-     "org": "TX ASA",
-     "orgClass": "Known 45",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 329,
-     "nps": 1011,
-     "org": "TX ASA",
-     "orgClass": "Known 45",
-     "event": "2026 TEMPLE",
+     "raw": 594,
+     "nps": 1027,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2024-2025 State Indoor",
      "counted": true
     },
     {
@@ -913,7 +897,15 @@
      "org": "TFAA Outdoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2026 SYWAT #1",
-     "counted": false
+     "counted": true
+    },
+    {
+     "raw": 299,
+     "nps": 986,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2024-2025 Indoor #3",
+     "counted": true
     },
     {
      "raw": 510,
@@ -924,24 +916,8 @@
      "counted": false
     },
     {
-     "raw": 594,
-     "nps": 976,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2024-2025 State Indoor",
-     "counted": false
-    },
-    {
-     "raw": 299,
-     "nps": 937,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2024-2025 Indoor #3",
-     "counted": false
-    },
-    {
      "raw": 297,
-     "nps": 927,
+     "nps": 976,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2024-2025 Indoor #1",
@@ -949,16 +925,127 @@
     },
     {
      "raw": 296,
-     "nps": 922,
+     "nps": 971,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2024-2025 Indoor #2",
+     "counted": false
+    },
+    {
+     "raw": 341,
+     "nps": 948,
+     "org": "TX ASA",
+     "orgClass": "Known 45",
+     "event": "2026 STEPHENVILLE",
+     "counted": false
+    },
+    {
+     "raw": 336,
+     "nps": 934,
+     "org": "TX ASA",
+     "orgClass": "Known 45",
+     "event": "2026 PARIS",
+     "counted": false
+    },
+    {
+     "raw": 329,
+     "nps": 914,
+     "org": "TX ASA",
+     "orgClass": "Known 45",
+     "event": "2026 TEMPLE",
      "counted": false
     }
    ],
    "multiOrg": true,
    "provisional": false,
    "stateRecord": true,
+   "titles": [],
+   "titleBonus": 1
+  },
+  {
+   "name": "Taylor Bolt",
+   "org": "TX ASA + TFAA Indoor",
+   "orgClass": "Crossbow",
+   "orgClasses": [
+    "Crossbow",
+    "Adult Male - Freestyle (FS)"
+   ],
+   "age": "adult",
+   "equipmentClass": "Compound",
+   "events": 7,
+   "yearEvents": 7,
+   "bestScore": 571,
+   "totalX": 233,
+   "npsScores": [
+    1049,
+    1019,
+    985,
+    967,
+    930
+   ],
+   "avgNPS": 1071,
+   "bestNPS": 1049,
+   "rounds": [
+    {
+     "raw": 571,
+     "nps": 1049,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 State Indoor",
+     "counted": true
+    },
+    {
+     "raw": 291,
+     "nps": 1019,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #2",
+     "counted": true
+    },
+    {
+     "raw": 288,
+     "nps": 985,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #1",
+     "counted": true
+    },
+    {
+     "raw": 285,
+     "nps": 967,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025-2026 Indoor #3",
+     "counted": true
+    },
+    {
+     "raw": 355,
+     "nps": 930,
+     "org": "TX ASA",
+     "orgClass": "Crossbow",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 350,
+     "nps": 916,
+     "org": "TX ASA",
+     "orgClass": "Crossbow",
+     "event": "2026 PARIS",
+     "counted": false
+    },
+    {
+     "raw": 349,
+     "nps": 914,
+     "org": "TX ASA",
+     "orgClass": "Crossbow",
+     "event": "2026 TEMPLE",
+     "counted": false
+    }
+   ],
+   "multiOrg": true,
+   "provisional": false,
+   "stateRecord": false,
    "titles": [],
    "titleBonus": 1
   },
@@ -978,37 +1065,21 @@
    "bestScore": 596,
    "totalX": 251,
    "npsScores": [
-    1027,
-    1027,
-    1027,
+    978,
     951,
-    951
+    951,
+    941,
+    934
    ],
-   "avgNPS": 1089,
-   "bestNPS": 1027,
+   "avgNPS": 1038,
+   "bestNPS": 978,
    "rounds": [
     {
-     "raw": 333,
-     "nps": 1027,
-     "org": "TX ASA",
-     "orgClass": "Known 40",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 333,
-     "nps": 1027,
-     "org": "TX ASA",
-     "orgClass": "Known 40",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 333,
-     "nps": 1027,
-     "org": "TX ASA",
-     "orgClass": "Known 40",
-     "event": "2026 TEMPLE",
+     "raw": 596,
+     "nps": 978,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Female - Freestyle (FS)",
+     "event": "2023-2024 State Indoor",
      "counted": true
     },
     {
@@ -1028,11 +1099,51 @@
      "counted": true
     },
     {
-     "raw": 596,
+     "raw": 300,
+     "nps": 941,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Female - Freestyle (FS)",
+     "event": "2023-2024 Indoor #3",
+     "counted": true
+    },
+    {
+     "raw": 299,
+     "nps": 934,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Female - Freestyle (FS)",
+     "event": "2023-2024 Indoor #1",
+     "counted": true
+    },
+    {
+     "raw": 333,
+     "nps": 930,
+     "org": "TX ASA",
+     "orgClass": "Known 40",
+     "event": "2026 PARIS",
+     "counted": false
+    },
+    {
+     "raw": 333,
+     "nps": 930,
+     "org": "TX ASA",
+     "orgClass": "Known 40",
+     "event": "2026 STEPHENVILLE",
+     "counted": false
+    },
+    {
+     "raw": 333,
+     "nps": 930,
+     "org": "TX ASA",
+     "orgClass": "Known 40",
+     "event": "2026 TEMPLE",
+     "counted": false
+    },
+    {
+     "raw": 298,
      "nps": 929,
      "org": "TFAA Indoor",
      "orgClass": "Adult Female - Freestyle (FS)",
-     "event": "2023-2024 State Indoor",
+     "event": "2023-2024 Indoor #2",
      "counted": false
     },
     {
@@ -1058,30 +1169,6 @@
      "orgClass": "Adult Female - Freestyle (FS)",
      "event": "2024 SYWAT #3",
      "counted": false
-    },
-    {
-     "raw": 300,
-     "nps": 894,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Female - Freestyle (FS)",
-     "event": "2023-2024 Indoor #3",
-     "counted": false
-    },
-    {
-     "raw": 299,
-     "nps": 887,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Female - Freestyle (FS)",
-     "event": "2023-2024 Indoor #1",
-     "counted": false
-    },
-    {
-     "raw": 298,
-     "nps": 883,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Female - Freestyle (FS)",
-     "event": "2023-2024 Indoor #2",
-     "counted": false
     }
    ],
    "multiOrg": true,
@@ -1117,436 +1204,6 @@
      "org": "TFAA Outdoor",
      "season": "2024",
      "orgClass": "Adult Female - Freestyle (FS)",
-     "field": 1,
-     "bonus": false
-    }
-   ],
-   "titleBonus": 1
-  },
-  {
-   "name": "Taylor Bolt",
-   "org": "TX ASA + TFAA Indoor",
-   "orgClass": "Crossbow",
-   "orgClasses": [
-    "Crossbow",
-    "Adult Male - Freestyle (FS)"
-   ],
-   "age": "adult",
-   "equipmentClass": "Compound",
-   "events": 7,
-   "yearEvents": 7,
-   "bestScore": 571,
-   "totalX": 233,
-   "npsScores": [
-    1027,
-    1013,
-    1010,
-    997,
-    968
-   ],
-   "avgNPS": 1085,
-   "bestNPS": 1027,
-   "rounds": [
-    {
-     "raw": 355,
-     "nps": 1027,
-     "org": "TX ASA",
-     "orgClass": "Crossbow",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 350,
-     "nps": 1013,
-     "org": "TX ASA",
-     "orgClass": "Crossbow",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 349,
-     "nps": 1010,
-     "org": "TX ASA",
-     "orgClass": "Crossbow",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 571,
-     "nps": 997,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 State Indoor",
-     "counted": true
-    },
-    {
-     "raw": 291,
-     "nps": 968,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #2",
-     "counted": true
-    },
-    {
-     "raw": 288,
-     "nps": 936,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #1",
-     "counted": false
-    },
-    {
-     "raw": 285,
-     "nps": 919,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025-2026 Indoor #3",
-     "counted": false
-    }
-   ],
-   "multiOrg": true,
-   "provisional": false,
-   "stateRecord": false,
-   "titles": [],
-   "titleBonus": 1
-  },
-  {
-   "name": "Chris Kisser",
-   "org": "TX ASA",
-   "orgClass": "Men's Open 45",
-   "orgClasses": [
-    "Men's Open 45"
-   ],
-   "age": "adult",
-   "equipmentClass": "Compound",
-   "events": 6,
-   "yearEvents": 6,
-   "bestScore": 325,
-   "totalX": 0,
-   "npsScores": [
-    1057,
-    1039,
-    1023,
-    991,
-    975
-   ],
-   "avgNPS": 1068,
-   "bestNPS": 1057,
-   "rounds": [
-    {
-     "raw": 315,
-     "nps": 1057,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 STATE",
-     "counted": true
-    },
-    {
-     "raw": 325,
-     "nps": 1039,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 KILGORE",
-     "counted": true
-    },
-    {
-     "raw": 320,
-     "nps": 1023,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 BROWNWOOD",
-     "counted": true
-    },
-    {
-     "raw": 310,
-     "nps": 991,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 305,
-     "nps": 975,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 300,
-     "nps": 959,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 PARIS",
-     "counted": false
-    }
-   ],
-   "multiOrg": false,
-   "provisional": false,
-   "stateRecord": false,
-   "titles": [],
-   "titleBonus": 1
-  },
-  {
-   "name": "Morgan Clicker",
-   "org": "TX ASA + TFAA Outdoor",
-   "orgClass": "Olympic Recurve",
-   "orgClasses": [
-    "Olympic Recurve",
-    "Adult Male - Freestyle Limited Recurve (FSLR)"
-   ],
-   "age": "adult",
-   "equipmentClass": "Olympic",
-   "events": 7,
-   "yearEvents": 7,
-   "bestScore": 450,
-   "totalX": 0,
-   "npsScores": [
-    1058,
-    1020,
-    958,
-    933,
-    920
-   ],
-   "avgNPS": 1058,
-   "bestNPS": 1058,
-   "rounds": [
-    {
-     "raw": 301,
-     "nps": 1058,
-     "org": "TX ASA",
-     "orgClass": "Olympic Recurve",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 290,
-     "nps": 1020,
-     "org": "TX ASA",
-     "orgClass": "Olympic Recurve",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 440,
-     "nps": 958,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
-     "event": "2026 State Outdoor (Field)",
-     "counted": true
-    },
-    {
-     "raw": 440,
-     "nps": 933,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
-     "event": "2026 State Outdoor (Hunter)",
-     "counted": true
-    },
-    {
-     "raw": 450,
-     "nps": 920,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
-     "event": "2026 SYWAT #3",
-     "counted": true
-    },
-    {
-     "raw": 445,
-     "nps": 910,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
-     "event": "2026 SYWAT #2",
-     "counted": false
-    },
-    {
-     "raw": 440,
-     "nps": 900,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
-     "event": "2026 SYWAT #1",
-     "counted": false
-    }
-   ],
-   "multiOrg": true,
-   "provisional": false,
-   "stateRecord": false,
-   "titles": [
-    {
-     "kind": "soy",
-     "org": "TFAA Outdoor",
-     "season": "2026",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
-     "field": 1,
-     "bonus": false
-    },
-    {
-     "kind": "state",
-     "org": "TFAA Outdoor",
-     "season": "2026",
-     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
-     "field": 1,
-     "bonus": false
-    }
-   ],
-   "titleBonus": 1
-  },
-  {
-   "name": "Casey Stringwalker",
-   "org": "TX ASA + TFAA Outdoor + TFAA Indoor",
-   "orgClass": "Barebow Recurve",
-   "orgClasses": [
-    "Barebow Recurve",
-    "Adult Male - Barebow Recurve (BBR)",
-    "Adult Male - Barebow Recurve (BBR)"
-   ],
-   "age": "adult",
-   "equipmentClass": "Barebow",
-   "events": 12,
-   "yearEvents": 12,
-   "bestScore": 480,
-   "totalX": 35,
-   "npsScores": [
-    1036,
-    999,
-    980,
-    908,
-    884
-   ],
-   "avgNPS": 1049,
-   "bestNPS": 1036,
-   "rounds": [
-    {
-     "raw": 280,
-     "nps": 1036,
-     "org": "TX ASA",
-     "orgClass": "Barebow Recurve",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 270,
-     "nps": 999,
-     "org": "TX ASA",
-     "orgClass": "Barebow Recurve",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 265,
-     "nps": 980,
-     "org": "TX ASA",
-     "orgClass": "Barebow Recurve",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 385,
-     "nps": 908,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2026 State Outdoor (Field)",
-     "counted": true
-    },
-    {
-     "raw": 400,
-     "nps": 884,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2026 SYWAT #2",
-     "counted": true
-    },
-    {
-     "raw": 385,
-     "nps": 880,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2026 State Outdoor (Hunter)",
-     "counted": false
-    },
-    {
-     "raw": 390,
-     "nps": 862,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2026 SYWAT #1",
-     "counted": false
-    },
-    {
-     "raw": 385,
-     "nps": 851,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2026 SYWAT #3",
-     "counted": false
-    },
-    {
-     "raw": 480,
-     "nps": 825,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2025-2026 State Indoor",
-     "counted": false
-    },
-    {
-     "raw": 250,
-     "nps": 822,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2025-2026 Indoor #1",
-     "counted": false
-    },
-    {
-     "raw": 245,
-     "nps": 804,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2025-2026 Indoor #2",
-     "counted": false
-    },
-    {
-     "raw": 240,
-     "nps": 785,
-     "org": "TFAA Indoor",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "event": "2025-2026 Indoor #3",
-     "counted": false
-    }
-   ],
-   "multiOrg": true,
-   "provisional": false,
-   "stateRecord": false,
-   "titles": [
-    {
-     "kind": "soy",
-     "org": "TFAA Indoor",
-     "season": "2025-2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "field": 1,
-     "bonus": false
-    },
-    {
-     "kind": "soy",
-     "org": "TFAA Outdoor",
-     "season": "2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "field": 1,
-     "bonus": false
-    },
-    {
-     "kind": "state",
-     "org": "TFAA Indoor",
-     "season": "2025-2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
-     "field": 1,
-     "bonus": false
-    },
-    {
-     "kind": "state",
-     "org": "TFAA Outdoor",
-     "season": "2026",
-     "orgClass": "Adult Male - Barebow Recurve (BBR)",
      "field": 1,
      "bonus": false
     }
@@ -1641,116 +1298,83 @@
    "titleBonus": 1
   },
   {
-   "name": "Pat O'Nock",
+   "name": "Morgan Clicker",
    "org": "TX ASA + TFAA Outdoor",
-   "orgClass": "Known 50",
+   "orgClass": "Olympic Recurve",
    "orgClasses": [
-    "Known 50",
-    "Known 50",
-    "Adult Male - Freestyle (FS)"
+    "Olympic Recurve",
+    "Adult Male - Freestyle Limited Recurve (FSLR)"
    ],
    "age": "adult",
-   "equipmentClass": "Compound",
-   "events": 11,
-   "yearEvents": 5,
-   "bestScore": 503,
+   "equipmentClass": "Olympic",
+   "events": 7,
+   "yearEvents": 7,
+   "bestScore": 450,
    "totalX": 0,
    "npsScores": [
-    982,
-    954,
-    945,
-    943,
-    943
+    958,
+    957,
+    933,
+    922,
+    920
    ],
-   "avgNPS": 1021,
-   "bestNPS": 982,
+   "avgNPS": 1014,
+   "bestNPS": 958,
    "rounds": [
     {
-     "raw": 322,
-     "nps": 982,
+     "raw": 440,
+     "nps": 958,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "event": "2026 State Outdoor (Field)",
+     "counted": true
+    },
+    {
+     "raw": 301,
+     "nps": 957,
      "org": "TX ASA",
-     "orgClass": "Known 50",
+     "orgClass": "Olympic Recurve",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 440,
+     "nps": 933,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "event": "2026 State Outdoor (Hunter)",
+     "counted": true
+    },
+    {
+     "raw": 290,
+     "nps": 922,
+     "org": "TX ASA",
+     "orgClass": "Olympic Recurve",
      "event": "2026 PARIS",
      "counted": true
     },
     {
-     "raw": 298,
-     "nps": 954,
-     "org": "TX ASA",
-     "orgClass": "Known 50",
-     "event": "2026 STATE",
+     "raw": 450,
+     "nps": 920,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "event": "2026 SYWAT #3",
      "counted": true
     },
     {
-     "raw": 310,
-     "nps": 945,
-     "org": "TX ASA",
-     "orgClass": "Known 50",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 490,
-     "nps": 943,
+     "raw": 445,
+     "nps": 910,
      "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025 State Outdoor (Field)",
-     "counted": true
-    },
-    {
-     "raw": 490,
-     "nps": 943,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025 State Outdoor (Hunter)",
-     "counted": true
-    },
-    {
-     "raw": 503,
-     "nps": 922,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025 SYWAT #2",
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "event": "2026 SYWAT #2",
      "counted": false
     },
     {
-     "raw": 300,
-     "nps": 915,
-     "org": "TX ASA",
-     "orgClass": "Known 50",
-     "event": "2026 STEPHENVILLE",
-     "counted": false
-    },
-    {
-     "raw": 499,
-     "nps": 914,
+     "raw": 440,
+     "nps": 900,
      "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025 SYWAT #1",
-     "counted": false
-    },
-    {
-     "raw": 488,
-     "nps": 894,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Freestyle (FS)",
-     "event": "2025 SYWAT #3",
-     "counted": false
-    },
-    {
-     "raw": 290,
-     "nps": 796,
-     "org": "TX ASA",
-     "orgClass": "Known 50",
-     "event": "2024 Qualifier 1",
-     "counted": false
-    },
-    {
-     "raw": 285,
-     "nps": 782,
-     "org": "TX ASA",
-     "orgClass": "Known 50",
-     "event": "2024 Qualifier 2",
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "event": "2026 SYWAT #1",
      "counted": false
     }
    ],
@@ -1759,10 +1383,179 @@
    "stateRecord": false,
    "titles": [
     {
-     "kind": "state",
-     "org": "TX ASA",
+     "kind": "soy",
+     "org": "TFAA Outdoor",
      "season": "2026",
-     "orgClass": "Known 50",
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "field": 1,
+     "bonus": false
+    },
+    {
+     "kind": "state",
+     "org": "TFAA Outdoor",
+     "season": "2026",
+     "orgClass": "Adult Male - Freestyle Limited Recurve (FSLR)",
+     "field": 1,
+     "bonus": false
+    }
+   ],
+   "titleBonus": 1
+  },
+  {
+   "name": "Casey Stringwalker",
+   "org": "TX ASA + TFAA Outdoor + TFAA Indoor",
+   "orgClass": "Barebow Recurve",
+   "orgClasses": [
+    "Barebow Recurve",
+    "Adult Male - Barebow Recurve (BBR)",
+    "Adult Male - Barebow Recurve (BBR)"
+   ],
+   "age": "adult",
+   "equipmentClass": "Barebow",
+   "events": 12,
+   "yearEvents": 12,
+   "bestScore": 480,
+   "totalX": 35,
+   "npsScores": [
+    937,
+    908,
+    904,
+    887,
+    884
+   ],
+   "avgNPS": 987,
+   "bestNPS": 937,
+   "rounds": [
+    {
+     "raw": 280,
+     "nps": 937,
+     "org": "TX ASA",
+     "orgClass": "Barebow Recurve",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
+     "raw": 385,
+     "nps": 908,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2026 State Outdoor (Field)",
+     "counted": true
+    },
+    {
+     "raw": 270,
+     "nps": 904,
+     "org": "TX ASA",
+     "orgClass": "Barebow Recurve",
+     "event": "2026 PARIS",
+     "counted": true
+    },
+    {
+     "raw": 265,
+     "nps": 887,
+     "org": "TX ASA",
+     "orgClass": "Barebow Recurve",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 400,
+     "nps": 884,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2026 SYWAT #2",
+     "counted": true
+    },
+    {
+     "raw": 385,
+     "nps": 880,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2026 State Outdoor (Hunter)",
+     "counted": false
+    },
+    {
+     "raw": 480,
+     "nps": 869,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2025-2026 State Indoor",
+     "counted": false
+    },
+    {
+     "raw": 250,
+     "nps": 865,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2025-2026 Indoor #1",
+     "counted": false
+    },
+    {
+     "raw": 390,
+     "nps": 862,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2026 SYWAT #1",
+     "counted": false
+    },
+    {
+     "raw": 385,
+     "nps": 851,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2026 SYWAT #3",
+     "counted": false
+    },
+    {
+     "raw": 245,
+     "nps": 846,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2025-2026 Indoor #2",
+     "counted": false
+    },
+    {
+     "raw": 240,
+     "nps": 827,
+     "org": "TFAA Indoor",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "event": "2025-2026 Indoor #3",
+     "counted": false
+    }
+   ],
+   "multiOrg": true,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": [
+    {
+     "kind": "soy",
+     "org": "TFAA Indoor",
+     "season": "2025-2026",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 1,
+     "bonus": false
+    },
+    {
+     "kind": "soy",
+     "org": "TFAA Outdoor",
+     "season": "2026",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 1,
+     "bonus": false
+    },
+    {
+     "kind": "state",
+     "org": "TFAA Indoor",
+     "season": "2025-2026",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
+     "field": 1,
+     "bonus": false
+    },
+    {
+     "kind": "state",
+     "org": "TFAA Outdoor",
+     "season": "2026",
+     "orgClass": "Adult Male - Barebow Recurve (BBR)",
      "field": 1,
      "bonus": false
     }
@@ -1785,34 +1578,18 @@
    "bestScore": 330,
    "totalX": 75,
    "npsScores": [
-    1053,
-    1015,
-    965,
-    945,
-    862
+    1016,
+    995,
+    953,
+    918,
+    780
    ],
-   "avgNPS": 1017,
-   "bestNPS": 1053,
+   "avgNPS": 979,
+   "bestNPS": 1016,
    "rounds": [
     {
-     "raw": 330,
-     "nps": 1053,
-     "org": "TX ASA",
-     "orgClass": "Open Pro",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 318,
-     "nps": 1015,
-     "org": "TX ASA",
-     "orgClass": "Open Pro",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
      "raw": 295,
-     "nps": 965,
+     "nps": 1016,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #1",
@@ -1820,15 +1597,31 @@
     },
     {
      "raw": 290,
-     "nps": 945,
+     "nps": 995,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #2",
      "counted": true
     },
     {
+     "raw": 330,
+     "nps": 953,
+     "org": "TX ASA",
+     "orgClass": "Open Pro",
+     "event": "2026 PARIS",
+     "counted": true
+    },
+    {
+     "raw": 318,
+     "nps": 918,
+     "org": "TX ASA",
+     "orgClass": "Open Pro",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
      "raw": 300,
-     "nps": 862,
+     "nps": 780,
      "org": "TX ASA",
      "orgClass": "Open Pro",
      "event": "2024 Qualifier 1",
@@ -1839,197 +1632,6 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
-  },
-  {
-   "name": "Alex Vane",
-   "org": "TX ASA",
-   "orgClass": "Men's Open 45",
-   "orgClasses": [
-    "Men's Open 45"
-   ],
-   "age": "adult",
-   "equipmentClass": "Compound",
-   "events": 5,
-   "yearEvents": 5,
-   "bestScore": 310,
-   "totalX": 0,
-   "npsScores": [
-    991,
-    975,
-    959,
-    943,
-    927
-   ],
-   "avgNPS": 997,
-   "bestNPS": 991,
-   "rounds": [
-    {
-     "raw": 310,
-     "nps": 991,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 KILGORE",
-     "counted": true
-    },
-    {
-     "raw": 305,
-     "nps": 975,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 BROWNWOOD",
-     "counted": true
-    },
-    {
-     "raw": 300,
-     "nps": 959,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 295,
-     "nps": 943,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 290,
-     "nps": 927,
-     "org": "TX ASA",
-     "orgClass": "Men's Open 45",
-     "event": "2026 PARIS",
-     "counted": true
-    }
-   ],
-   "multiOrg": false,
-   "provisional": false,
-   "stateRecord": false,
-   "titles": [],
-   "titleBonus": 1
-  },
-  {
-   "name": "Robin Shelfshooter",
-   "org": "TX ASA + TFAA Outdoor",
-   "orgClass": "Traditional",
-   "orgClasses": [
-    "Traditional",
-    "Traditional",
-    "Adult Male - Traditional (TRAD)"
-   ],
-   "age": "adult",
-   "equipmentClass": "Traditional",
-   "events": 9,
-   "yearEvents": 8,
-   "bestScore": 340,
-   "totalX": 0,
-   "npsScores": [
-    969,
-    925,
-    896,
-    888,
-    774
-   ],
-   "avgNPS": 972,
-   "bestNPS": 969,
-   "rounds": [
-    {
-     "raw": 262,
-     "nps": 969,
-     "org": "TX ASA",
-     "orgClass": "Traditional",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
-     "raw": 250,
-     "nps": 925,
-     "org": "TX ASA",
-     "orgClass": "Traditional",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 255,
-     "nps": 896,
-     "org": "TX ASA",
-     "orgClass": "Traditional",
-     "event": "2025 Qualifier 1",
-     "counted": true
-    },
-    {
-     "raw": 240,
-     "nps": 888,
-     "org": "TX ASA",
-     "orgClass": "Traditional",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 325,
-     "nps": 774,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Traditional (TRAD)",
-     "event": "2026 State Outdoor (Field)",
-     "counted": true
-    },
-    {
-     "raw": 340,
-     "nps": 763,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Traditional (TRAD)",
-     "event": "2026 SYWAT #2",
-     "counted": false
-    },
-    {
-     "raw": 325,
-     "nps": 758,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Traditional (TRAD)",
-     "event": "2026 State Outdoor (Hunter)",
-     "counted": false
-    },
-    {
-     "raw": 330,
-     "nps": 741,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Traditional (TRAD)",
-     "event": "2026 SYWAT #1",
-     "counted": false
-    },
-    {
-     "raw": 320,
-     "nps": 719,
-     "org": "TFAA Outdoor",
-     "orgClass": "Adult Male - Traditional (TRAD)",
-     "event": "2026 SYWAT #3",
-     "counted": false
-    }
-   ],
-   "multiOrg": true,
-   "provisional": false,
-   "stateRecord": false,
-   "titles": [
-    {
-     "kind": "soy",
-     "org": "TFAA Outdoor",
-     "season": "2026",
-     "orgClass": "Adult Male - Traditional (TRAD)",
-     "field": 1,
-     "bonus": false
-    },
-    {
-     "kind": "state",
-     "org": "TFAA Outdoor",
-     "season": "2026",
-     "orgClass": "Adult Male - Traditional (TRAD)",
-     "field": 1,
-     "bonus": false
-    }
-   ],
    "titleBonus": 1
   },
   {
@@ -2113,6 +1715,84 @@
    "titleBonus": 1
   },
   {
+   "name": "Chris Kisser",
+   "org": "TX ASA",
+   "orgClass": "Men's Open 45",
+   "orgClasses": [
+    "Men's Open 45"
+   ],
+   "age": "adult",
+   "equipmentClass": "Compound",
+   "events": 6,
+   "yearEvents": 6,
+   "bestScore": 325,
+   "totalX": 0,
+   "npsScores": [
+    956,
+    940,
+    925,
+    896,
+    882
+   ],
+   "avgNPS": 966,
+   "bestNPS": 956,
+   "rounds": [
+    {
+     "raw": 315,
+     "nps": 956,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STATE",
+     "counted": true
+    },
+    {
+     "raw": 325,
+     "nps": 940,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 KILGORE",
+     "counted": true
+    },
+    {
+     "raw": 320,
+     "nps": 925,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 BROWNWOOD",
+     "counted": true
+    },
+    {
+     "raw": 310,
+     "nps": 896,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
+     "raw": 305,
+     "nps": 882,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 300,
+     "nps": 867,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 PARIS",
+     "counted": false
+    }
+   ],
+   "multiOrg": false,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": [],
+   "titleBonus": 1
+  },
+  {
    "name": "Sight Limited",
    "org": "TFAA Outdoor",
    "orgClass": "Adult Male - Freestyle Limited (FSL)",
@@ -2193,6 +1873,135 @@
      "org": "TFAA Outdoor",
      "season": "2026",
      "orgClass": "Adult Male - Freestyle Limited (FSL)",
+     "field": 1,
+     "bonus": false
+    }
+   ],
+   "titleBonus": 1
+  },
+  {
+   "name": "Pat O'Nock",
+   "org": "TX ASA + TFAA Outdoor",
+   "orgClass": "Known 50",
+   "orgClasses": [
+    "Known 50",
+    "Known 50",
+    "Adult Male - Freestyle (FS)"
+   ],
+   "age": "adult",
+   "equipmentClass": "Compound",
+   "events": 11,
+   "yearEvents": 5,
+   "bestScore": 503,
+   "totalX": 0,
+   "npsScores": [
+    943,
+    943,
+    922,
+    914,
+    894
+   ],
+   "avgNPS": 960,
+   "bestNPS": 943,
+   "rounds": [
+    {
+     "raw": 490,
+     "nps": 943,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025 State Outdoor (Field)",
+     "counted": true
+    },
+    {
+     "raw": 490,
+     "nps": 943,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025 State Outdoor (Hunter)",
+     "counted": true
+    },
+    {
+     "raw": 503,
+     "nps": 922,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025 SYWAT #2",
+     "counted": true
+    },
+    {
+     "raw": 499,
+     "nps": 914,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025 SYWAT #1",
+     "counted": true
+    },
+    {
+     "raw": 488,
+     "nps": 894,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Freestyle (FS)",
+     "event": "2025 SYWAT #3",
+     "counted": true
+    },
+    {
+     "raw": 322,
+     "nps": 888,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2026 PARIS",
+     "counted": false
+    },
+    {
+     "raw": 298,
+     "nps": 863,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2026 STATE",
+     "counted": false
+    },
+    {
+     "raw": 310,
+     "nps": 855,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2026 TEMPLE",
+     "counted": false
+    },
+    {
+     "raw": 300,
+     "nps": 828,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2026 STEPHENVILLE",
+     "counted": false
+    },
+    {
+     "raw": 290,
+     "nps": 720,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2024 Qualifier 1",
+     "counted": false
+    },
+    {
+     "raw": 285,
+     "nps": 708,
+     "org": "TX ASA",
+     "orgClass": "Known 50",
+     "event": "2024 Qualifier 2",
+     "counted": false
+    }
+   ],
+   "multiOrg": true,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": [
+    {
+     "kind": "state",
+     "org": "TX ASA",
+     "season": "2026",
+     "orgClass": "Known 50",
      "field": 1,
      "bonus": false
     }
@@ -2367,6 +2176,197 @@
      "org": "TFAA Outdoor",
      "season": "2026",
      "orgClass": "Adult Male - Barebow Compound (BBC)",
+     "field": 1,
+     "bonus": false
+    }
+   ],
+   "titleBonus": 1
+  },
+  {
+   "name": "Alex Vane",
+   "org": "TX ASA",
+   "orgClass": "Men's Open 45",
+   "orgClasses": [
+    "Men's Open 45"
+   ],
+   "age": "adult",
+   "equipmentClass": "Compound",
+   "events": 5,
+   "yearEvents": 5,
+   "bestScore": 310,
+   "totalX": 0,
+   "npsScores": [
+    896,
+    882,
+    867,
+    853,
+    838
+   ],
+   "avgNPS": 902,
+   "bestNPS": 896,
+   "rounds": [
+    {
+     "raw": 310,
+     "nps": 896,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 KILGORE",
+     "counted": true
+    },
+    {
+     "raw": 305,
+     "nps": 882,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 BROWNWOOD",
+     "counted": true
+    },
+    {
+     "raw": 300,
+     "nps": 867,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
+     "raw": 295,
+     "nps": 853,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 290,
+     "nps": 838,
+     "org": "TX ASA",
+     "orgClass": "Men's Open 45",
+     "event": "2026 PARIS",
+     "counted": true
+    }
+   ],
+   "multiOrg": false,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": [],
+   "titleBonus": 1
+  },
+  {
+   "name": "Robin Shelfshooter",
+   "org": "TX ASA + TFAA Outdoor",
+   "orgClass": "Traditional",
+   "orgClasses": [
+    "Traditional",
+    "Traditional",
+    "Adult Male - Traditional (TRAD)"
+   ],
+   "age": "adult",
+   "equipmentClass": "Traditional",
+   "events": 9,
+   "yearEvents": 8,
+   "bestScore": 340,
+   "totalX": 0,
+   "npsScores": [
+    877,
+    837,
+    811,
+    803,
+    774
+   ],
+   "avgNPS": 895,
+   "bestNPS": 877,
+   "rounds": [
+    {
+     "raw": 262,
+     "nps": 877,
+     "org": "TX ASA",
+     "orgClass": "Traditional",
+     "event": "2026 STEPHENVILLE",
+     "counted": true
+    },
+    {
+     "raw": 250,
+     "nps": 837,
+     "org": "TX ASA",
+     "orgClass": "Traditional",
+     "event": "2026 PARIS",
+     "counted": true
+    },
+    {
+     "raw": 255,
+     "nps": 811,
+     "org": "TX ASA",
+     "orgClass": "Traditional",
+     "event": "2025 Qualifier 1",
+     "counted": true
+    },
+    {
+     "raw": 240,
+     "nps": 803,
+     "org": "TX ASA",
+     "orgClass": "Traditional",
+     "event": "2026 TEMPLE",
+     "counted": true
+    },
+    {
+     "raw": 325,
+     "nps": 774,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "event": "2026 State Outdoor (Field)",
+     "counted": true
+    },
+    {
+     "raw": 340,
+     "nps": 763,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "event": "2026 SYWAT #2",
+     "counted": false
+    },
+    {
+     "raw": 325,
+     "nps": 758,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "event": "2026 State Outdoor (Hunter)",
+     "counted": false
+    },
+    {
+     "raw": 330,
+     "nps": 741,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "event": "2026 SYWAT #1",
+     "counted": false
+    },
+    {
+     "raw": 320,
+     "nps": 719,
+     "org": "TFAA Outdoor",
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "event": "2026 SYWAT #3",
+     "counted": false
+    }
+   ],
+   "multiOrg": true,
+   "provisional": false,
+   "stateRecord": false,
+   "titles": [
+    {
+     "kind": "soy",
+     "org": "TFAA Outdoor",
+     "season": "2026",
+     "orgClass": "Adult Male - Traditional (TRAD)",
+     "field": 1,
+     "bonus": false
+    },
+    {
+     "kind": "state",
+     "org": "TFAA Outdoor",
+     "season": "2026",
+     "orgClass": "Adult Male - Traditional (TRAD)",
      "field": 1,
      "bonus": false
     }
@@ -2561,18 +2561,18 @@
    "bestScore": 300,
    "totalX": 172,
    "npsScores": [
-    997,
-    996,
-    990,
+    1049,
+    1048,
+    1042,
     0,
     0
    ],
-   "avgNPS": 597,
-   "bestNPS": 997,
+   "avgNPS": 628,
+   "bestNPS": 1049,
    "rounds": [
     {
      "raw": 300,
-     "nps": 997,
+     "nps": 1049,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #1",
@@ -2580,7 +2580,7 @@
     },
     {
      "raw": 300,
-     "nps": 996,
+     "nps": 1048,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #2",
@@ -2588,7 +2588,7 @@
     },
     {
      "raw": 299,
-     "nps": 990,
+     "nps": 1042,
      "org": "TFAA Indoor",
      "orgClass": "Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #3",
@@ -2615,18 +2615,18 @@
    "bestScore": 283,
    "totalX": 0,
    "npsScores": [
-    959,
-    952,
-    945,
+    867,
+    861,
+    855,
     0,
     0
    ],
-   "avgNPS": 571,
-   "bestNPS": 959,
+   "avgNPS": 517,
+   "bestNPS": 867,
    "rounds": [
     {
      "raw": 283,
-     "nps": 959,
+     "nps": 867,
      "org": "TX ASA",
      "orgClass": "Men's Pins 30",
      "event": "2026 TEMPLE",
@@ -2634,7 +2634,7 @@
     },
     {
      "raw": 281,
-     "nps": 952,
+     "nps": 861,
      "org": "TX ASA",
      "orgClass": "Men's Pins 30",
      "event": "2026 PARIS",
@@ -2642,7 +2642,7 @@
     },
     {
      "raw": 279,
-     "nps": 945,
+     "nps": 855,
      "org": "TX ASA",
      "orgClass": "Men's Pins 30",
      "event": "2026 STEPHENVILLE",
@@ -2669,18 +2669,18 @@
    "bestScore": 281,
    "totalX": 0,
    "npsScores": [
-    952,
-    945,
+    861,
+    855,
     0,
     0,
     0
    ],
-   "avgNPS": 379,
-   "bestNPS": 952,
+   "avgNPS": 343,
+   "bestNPS": 861,
    "rounds": [
     {
      "raw": 281,
-     "nps": 952,
+     "nps": 861,
      "org": "TX ASA",
      "orgClass": "Men's Pins 30",
      "event": "2026 STEPHENVILLE",
@@ -2688,7 +2688,7 @@
     },
     {
      "raw": 279,
-     "nps": 945,
+     "nps": 855,
      "org": "TX ASA",
      "orgClass": "Men's Pins 30",
      "event": "2026 TEMPLE",
@@ -2715,18 +2715,18 @@
    "bestScore": 280,
    "totalX": 0,
    "npsScores": [
-    948,
+    858,
     0,
     0,
     0,
     0
    ],
-   "avgNPS": 190,
-   "bestNPS": 948,
+   "avgNPS": 172,
+   "bestNPS": 858,
    "rounds": [
     {
      "raw": 280,
-     "nps": 948,
+     "nps": 858,
      "org": "TX ASA",
      "orgClass": "Men's Pins 30",
      "event": "2026 PARIS",
@@ -2758,50 +2758,26 @@
    "bestScore": 595,
    "totalX": 251,
    "npsScores": [
-    1031,
-    1027,
-    1012,
-    996,
-    988
+    1085,
+    1040,
+    1035,
+    1030,
+    972
    ],
-   "avgNPS": 1104,
-   "bestNPS": 1031,
+   "avgNPS": 1127,
+   "bestNPS": 1085,
    "rounds": [
     {
      "raw": 595,
-     "nps": 1031,
+     "nps": 1085,
      "org": "TFAA Indoor",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "event": "2025-2026 State Indoor",
      "counted": true
     },
     {
-     "raw": 330,
-     "nps": 1027,
-     "org": "TX ASA",
-     "orgClass": "Young Adult Open Male",
-     "event": "2026 PARIS",
-     "counted": true
-    },
-    {
-     "raw": 325,
-     "nps": 1012,
-     "org": "TX ASA",
-     "orgClass": "Young Adult Open Male",
-     "event": "2026 TEMPLE",
-     "counted": true
-    },
-    {
-     "raw": 320,
-     "nps": 996,
-     "org": "TX ASA",
-     "orgClass": "Young Adult Open Male",
-     "event": "2026 STEPHENVILLE",
-     "counted": true
-    },
-    {
      "raw": 299,
-     "nps": 988,
+     "nps": 1040,
      "org": "TFAA Indoor",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #3",
@@ -2809,19 +2785,19 @@
     },
     {
      "raw": 298,
-     "nps": 983,
+     "nps": 1035,
      "org": "TFAA Indoor",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #1",
-     "counted": false
+     "counted": true
     },
     {
      "raw": 297,
-     "nps": 978,
+     "nps": 1030,
      "org": "TFAA Indoor",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "event": "2025-2026 Indoor #2",
-     "counted": false
+     "counted": true
     },
     {
      "raw": 480,
@@ -2829,7 +2805,7 @@
      "org": "TFAA Outdoor",
      "orgClass": "Young Adult Male - Freestyle (FS)",
      "event": "2026 State Outdoor (Field)",
-     "counted": false
+     "counted": true
     },
     {
      "raw": 480,
@@ -2856,6 +2832,14 @@
      "counted": false
     },
     {
+     "raw": 330,
+     "nps": 930,
+     "org": "TX ASA",
+     "orgClass": "Young Adult Open Male",
+     "event": "2026 PARIS",
+     "counted": false
+    },
+    {
      "raw": 480,
      "nps": 926,
      "org": "TFAA Outdoor",
@@ -2864,8 +2848,24 @@
      "counted": false
     },
     {
+     "raw": 325,
+     "nps": 915,
+     "org": "TX ASA",
+     "orgClass": "Young Adult Open Male",
+     "event": "2026 TEMPLE",
+     "counted": false
+    },
+    {
+     "raw": 320,
+     "nps": 901,
+     "org": "TX ASA",
+     "orgClass": "Young Adult Open Male",
+     "event": "2026 STEPHENVILLE",
+     "counted": false
+    },
+    {
      "raw": 301,
-     "nps": 925,
+     "nps": 836,
      "org": "TX ASA",
      "orgClass": "Known 45",
      "event": "2026 PARIS",
@@ -2927,18 +2927,18 @@
    "bestScore": 310,
    "totalX": 6,
    "npsScores": [
-    948,
-    931,
+    857,
+    842,
     657,
     650,
     643
    ],
-   "avgNPS": 836,
-   "bestNPS": 948,
+   "avgNPS": 797,
+   "bestNPS": 857,
    "rounds": [
     {
      "raw": 285,
-     "nps": 948,
+     "nps": 857,
      "org": "TX ASA",
      "orgClass": "Junior Eagle",
      "event": "2026 STEPHENVILLE",
@@ -2946,7 +2946,7 @@
     },
     {
      "raw": 280,
-     "nps": 931,
+     "nps": 842,
      "org": "TX ASA",
      "orgClass": "Junior Eagle",
      "event": "2026 PARIS",
@@ -2994,7 +2994,7 @@
     },
     {
      "raw": 150,
-     "nps": 478,
+     "nps": 503,
      "org": "TFAA Indoor",
      "orgClass": "Cub Female - Genesis",
      "event": "2025-2026 Indoor #1",
@@ -3002,7 +3002,7 @@
     },
     {
      "raw": 270,
-     "nps": 452,
+     "nps": 475,
      "org": "TFAA Indoor",
      "orgClass": "Cub Female - Genesis",
      "event": "2025-2026 State Indoor",
@@ -3010,7 +3010,7 @@
     },
     {
      "raw": 140,
-     "nps": 446,
+     "nps": 469,
      "org": "TFAA Indoor",
      "orgClass": "Cub Female - Genesis",
      "event": "2025-2026 Indoor #2",
@@ -3018,7 +3018,7 @@
     },
     {
      "raw": 130,
-     "nps": 414,
+     "nps": 436,
      "org": "TFAA Indoor",
      "orgClass": "Cub Female - Genesis",
      "event": "2025-2026 Indoor #3",
@@ -3166,18 +3166,18 @@
    "bestScore": 210,
    "totalX": 0,
    "npsScores": [
-    754,
-    718,
     682,
-    614,
+    650,
+    617,
+    556,
     0
    ],
-   "avgNPS": 554,
-   "bestNPS": 754,
+   "avgNPS": 501,
+   "bestNPS": 682,
    "rounds": [
     {
      "raw": 210,
-     "nps": 754,
+     "nps": 682,
      "org": "TX ASA",
      "orgClass": "Youth Barebow",
      "event": "2026 STEPHENVILLE",
@@ -3185,7 +3185,7 @@
     },
     {
      "raw": 200,
-     "nps": 718,
+     "nps": 650,
      "org": "TX ASA",
      "orgClass": "Youth Barebow",
      "event": "2026 PARIS",
@@ -3193,7 +3193,7 @@
     },
     {
      "raw": 190,
-     "nps": 682,
+     "nps": 617,
      "org": "TX ASA",
      "orgClass": "Youth Barebow",
      "event": "2026 TEMPLE",
@@ -3201,7 +3201,7 @@
     },
     {
      "raw": 180,
-     "nps": 614,
+     "nps": 556,
      "org": "TX ASA",
      "orgClass": "Youth Barebow",
      "event": "2025 Qualifier 1",
@@ -3228,18 +3228,18 @@
    "bestScore": 262,
    "totalX": 0,
    "npsScores": [
-    897,
-    873,
-    853,
+    812,
+    790,
+    772,
     0,
     0
    ],
-   "avgNPS": 525,
-   "bestNPS": 897,
+   "avgNPS": 475,
+   "bestNPS": 812,
    "rounds": [
     {
      "raw": 262,
-     "nps": 897,
+     "nps": 812,
      "org": "TX ASA",
      "orgClass": "Youth Olympic Recurve",
      "event": "2026 STEPHENVILLE",
@@ -3247,7 +3247,7 @@
     },
     {
      "raw": 255,
-     "nps": 873,
+     "nps": 790,
      "org": "TX ASA",
      "orgClass": "Youth Olympic Recurve",
      "event": "2026 PARIS",
@@ -3255,7 +3255,7 @@
     },
     {
      "raw": 249,
-     "nps": 853,
+     "nps": 772,
      "org": "TX ASA",
      "orgClass": "Youth Olympic Recurve",
      "event": "2026 TEMPLE",

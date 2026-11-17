@@ -388,21 +388,21 @@ function asa(name, scores, { known = false, maxYards = 30, orgClass = "Men's Pin
 
 test('NPS is the share of the maximum score, times 1000, times the organization weight', () => {
   const [archer] = rank([asa('A B', [360, 180, 360])]);
-  assert.deepStrictEqual(archer.rounds.map(r => r.nps), [1050, 1050, 525]);
+  assert.deepStrictEqual(archer.rounds.map(r => r.nps), [950, 950, 475]);
 });
 
 test('known distance takes 5% off and longer maximum yardage adds a bonus', () => {
   const nps = options => rank([asa('A B', [360, 360, 360], options)])[0].bestNPS;
-  assert.strictEqual(nps({ known: true }), Math.round(1000 * (1.05 * 0.95)));
-  assert.strictEqual(nps({ maxYards: 40 }), Math.round(1000 * (1.05 * 1.03)));
-  assert.strictEqual(nps({ maxYards: 45 }), Math.round(1000 * (1.05 * 1.05)));
-  assert.strictEqual(nps({ maxYards: 50 }), Math.round(1000 * (1.05 * 1.07)));
+  assert.strictEqual(nps({ known: true }), Math.round(1000 * (0.95 * 0.95)));
+  assert.strictEqual(nps({ maxYards: 40 }), Math.round(1000 * (0.95 * 1.03)));
+  assert.strictEqual(nps({ maxYards: 45 }), Math.round(1000 * (0.95 * 1.05)));
+  assert.strictEqual(nps({ maxYards: 50 }), Math.round(1000 * (0.95 * 1.07)));
 });
 
 test('the TAGR score averages the best five rounds, counting missing rounds as zero', () => {
   const [three] = rank([asa('A B', [360, 360, 360])]);
-  assert.deepStrictEqual(three.npsScores, [1050, 1050, 1050, 0, 0]);
-  assert.strictEqual(three.avgNPS, 630);
+  assert.deepStrictEqual(three.npsScores, [950, 950, 950, 0, 0]);
+  assert.strictEqual(three.avgNPS, 570);
   assert.strictEqual(three.provisional, false);
 
   const [two] = rank([asa('A B', [360, 360])]);
@@ -410,7 +410,7 @@ test('the TAGR score averages the best five rounds, counting missing rounds as z
 
   // Seven rounds: only the best five count, and 6 to 7 events earn the 1.05 bonus.
   const [seven] = rank([asa('A B', [360, 360, 360, 360, 360, 90, 90])]);
-  assert.strictEqual(seven.avgNPS, Math.round(1050 * 1.05));
+  assert.strictEqual(seven.avgNPS, Math.round(950 * 1.05));
   assert.deepStrictEqual(seven.rounds.map(r => r.counted), [true, true, true, true, true, false, false]);
 });
 
@@ -420,8 +420,8 @@ test('the same archer in two organizations is merged and earns the cross-organiz
   assert.strictEqual(ranked.length, 1);
   assert.strictEqual(ranked[0].org, 'TX ASA + TFAA Outdoor');
   assert.strictEqual(ranked[0].multiOrg, true);
-  // Best five: 1080, 1080, 1050, 1050, 1050. Five events is 1.04, two organizations 1.03.
-  assert.strictEqual(ranked[0].avgNPS, Math.round(1062 * 1.04 * 1.03));
+  // Best five: 1080, 1080, 950, 950, 950. Five events is 1.04, two organizations 1.03.
+  assert.strictEqual(ranked[0].avgNPS, Math.round(1002 * 1.04 * 1.03));
 });
 
 function tfaaOutdoor(name, style, scores, roundKinds) {
@@ -458,7 +458,7 @@ test('a TFAA round is scored against the national record for its style, with no 
   const [indoorBarebow] = rank([tfaaIndoorState('G H', 'Barebow Recurve (BBR)', [583, 583, 583])]);
   const [indoorFreestyle] = rank([tfaaIndoorState('I J', 'Freestyle (FS)', [600, 600, 600])]);
   assert.strictEqual(indoorBarebow.bestNPS, indoorFreestyle.bestNPS);
-  assert.strictEqual(indoorFreestyle.bestNPS, Math.round(1000 * 0.95 * 1.05));
+  assert.strictEqual(indoorFreestyle.bestNPS, Math.round(1000 * 1.00 * 1.05));
 });
 
 test('a TFAA style NFAA keeps no record for meets the record of the nearest NFAA style', () => {
@@ -477,9 +477,9 @@ test('a style without a national record, and every Texas ASA round, keeps the eq
   const [limited] = rank([tfaaOutdoor('A B', 'Bowhunter Freestyle Limited (BHFSL)', [560, 560, 560], ['sywat', 'sywat', 'sywat'])]);
   assert.strictEqual(limited.bestNPS, Math.round(1000 * 1.08 * 1.05));
   const [asaBarebow] = rank([asa('C D', [360, 360, 360], { orgClass: 'Barebow Recurve' })]);
-  assert.strictEqual(asaBarebow.bestNPS, Math.round(1000 * 1.05 * 1.08));
+  assert.strictEqual(asaBarebow.bestNPS, Math.round(1000 * 0.95 * 1.08));
   const [asaTraditional] = rank([asa('E F', [360, 360, 360], { orgClass: 'Traditional' })]);
-  assert.strictEqual(asaTraditional.bestNPS, Math.round(1000 * 1.05 * 1.08 * 1.03));
+  assert.strictEqual(asaTraditional.bestNPS, Math.round(1000 * 0.95 * 1.08 * 1.03));
 });
 
 test('names are matched across "FIRST LAST" and "Last, First" spellings', () => {
@@ -527,14 +527,14 @@ test('a Texas ASA round is measured against the best score of its own class in t
     asa('E F', [320, 320, 160], { orgClass: "Men's Pins 40", maxYards: 30 })
   ]);
   const best = name => ranked.find(r => r.name === name).rounds.map(r => r.nps);
-  assert.deepStrictEqual(best('A B'), [1050, 1050, 1050]);
-  assert.deepStrictEqual(best('C D'), [525, 525, 525]);
-  assert.deepStrictEqual(best('E F'), [1050, 1050, 525]);
+  assert.deepStrictEqual(best('A B'), [950, 950, 950]);
+  assert.deepStrictEqual(best('C D'), [475, 475, 475]);
+  assert.deepStrictEqual(best('E F'), [950, 950, 475]);
 
   // No bar is under par: the best of a class nobody has shot well in is not worth a full 1000.
   const [low] = rank([asa('G H', [270, 270, 270], { orgClass: 'Traditional 30' })]);
   assert.strictEqual(engine.rules.asaPar, 300);
-  assert.strictEqual(low.bestNPS, Math.round(270 / 300 * 1000 * 1.05 * 1.08 * 1.03));
+  assert.strictEqual(low.bestNPS, Math.round(270 / 300 * 1000 * 0.95 * 1.08 * 1.03));
 
   const result = engine.computeRankings({ asaShooters: [asa('A B', [340, 300, 300]), asa('G H', [270, 270, 270], { orgClass: 'Traditional 30' })], tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [] });
   assert.deepStrictEqual(result.sources.asaBars, { "Men's Pins 30": 340, 'Traditional 30': 300 });
@@ -554,11 +554,11 @@ test('a Texas ASA score above the most a round can score is left out', () => {
 test('a State Championship round earns the same bonus in every organization', () => {
   assert.strictEqual(engine.rules.stateRoundBonus, 1.05);
   const [texasAsa] = rank([{ ...asa('A B', [360, 360, 360]), isState: [false, false, true] }]);
-  assert.deepStrictEqual(texasAsa.rounds.map(r => r.nps), [Math.round(1050 * 1.05), 1050, 1050]);
+  assert.deepStrictEqual(texasAsa.rounds.map(r => r.nps), [Math.round(950 * 1.05), 950, 950]);
   const [outdoor] = rank([tfaaOutdoor('C D', 'Freestyle (FS)', [560, 560, 560], ['sywat', 'field', 'hunter'])]);
   assert.deepStrictEqual(outdoor.rounds.map(r => r.nps), [Math.round(1080 * 1.05), Math.round(1080 * 1.05), 1080]);
   const [indoor] = rank([tfaaIndoorState('E F', 'Freestyle (FS)', [600, 600, 600])]);
-  assert.strictEqual(indoor.bestNPS, Math.round(950 * 1.05));
+  assert.strictEqual(indoor.bestNPS, Math.round(1000 * 1.05));
 });
 
 test('a round counts in full in the newest season of its organization, and for less each season before', () => {
@@ -566,12 +566,12 @@ test('a round counts in full in the newest season of its organization, and for l
   const season = (name, when) => ({ ...asa(name, [360, 360, 360]), when });
   const ranked = rank([season('New Er', 2026), season('Mid Dle', 2025), season('Old Er', 2024), season('Old Est', 2023)]);
   const best = name => ranked.find(r => r.name === name).bestNPS;
-  assert.deepStrictEqual([best('New Er'), best('Mid Dle'), best('Old Er'), best('Old Est')], [1050, Math.round(1000 * (1.05 * 0.95)), 945, 945]);
+  assert.deepStrictEqual([best('New Er'), best('Mid Dle'), best('Old Er'), best('Old Est')], [950, Math.round(1000 * (0.95 * 0.95)), 855, 855]);
 
   // The seasons of another organization do not age this one's: its own newest season is full value.
   const indoor = { ...tfaaIndoorState('In Door', 'Freestyle (FS)', [600, 600, 600]), when: 2024.5 };
   const [only] = rank([indoor, season('New Er', 2026)]).filter(r => r.name === 'In Door');
-  assert.strictEqual(only.bestNPS, Math.round(950 * 1.05));
+  assert.strictEqual(only.bestNPS, Math.round(1000 * 1.05));
 });
 
 test('the event bonus goes by the events of the busiest year, not the three years together', () => {
@@ -580,10 +580,10 @@ test('the event bonus goes by the events of the busiest year, not the three year
   const [steady] = rank([season(2024, 3), season(2025, 3), season(2026, 3)]);
   assert.strictEqual(steady.events, 9);
   assert.strictEqual(steady.yearEvents, 3);
-  assert.strictEqual(steady.avgNPS, Math.round((1050 * 3 + Math.round(1000 * (1.05 * 0.95)) * 2) / 5));
+  assert.strictEqual(steady.avgNPS, Math.round((950 * 3 + Math.round(1000 * (0.95 * 0.95)) * 2) / 5));
   // Eight in one year earns the full 1.06.
   const [busy] = rank([season(2026, 8)]);
-  assert.strictEqual(busy.avgNPS, Math.round(1050 * 1.06));
+  assert.strictEqual(busy.avgNPS, Math.round(950 * 1.06));
   // The indoor winter belongs with the outdoor and Texas ASA season that follow it.
   const indoor = { ...tfaaIndoorState('A B', 'Freestyle (FS)', [600, 600]), when: 2025.5 };
   const [both] = rank([indoor, season(2026, 3)]);
@@ -757,7 +757,7 @@ test('an archer who has moved up to an adult TFAA age group is ranked with the a
 
 test('equal TAGR scores are listed in the same order every time: better best round first, then by name', () => {
   const ranked = rank([asa('Zed Last', [360, 360, 360]), asa('Amy First', [360, 360, 360]), asa('Bo Peak', [360, 360, 360])]);
-  assert.deepStrictEqual(ranked.map(r => r.avgNPS), [630, 630, 630]);
+  assert.deepStrictEqual(ranked.map(r => r.avgNPS), [570, 570, 570]);
   assert.deepStrictEqual(ranked.map(r => r.name), ['Amy First', 'Bo Peak', 'Zed Last']);
 });
 
@@ -771,15 +771,15 @@ test('a Shooter of the Year and a State Champion each earn a bonus, once, for a 
     });
     return [result.adult[0].avgNPS, result.adult[0].titleBonus];
   };
-  assert.deepStrictEqual(score([]), [630, 1]);
-  assert.deepStrictEqual(score([['soy', '2026', 3]]), [Math.round(630 * 1.03), 1.03]);
-  assert.deepStrictEqual(score([['state', '2026', 2]]), [Math.round(630 * 1.02), 1.02]);
-  assert.deepStrictEqual(score([['soy', '2026', 3], ['state', '2026', 2]]), [Math.round(630 * 1.03 * 1.02), 1.0506]);
+  assert.deepStrictEqual(score([]), [570, 1]);
+  assert.deepStrictEqual(score([['soy', '2026', 3]]), [Math.round(570 * 1.03), 1.03]);
+  assert.deepStrictEqual(score([['state', '2026', 2]]), [Math.round(570 * 1.02), 1.02]);
+  assert.deepStrictEqual(score([['soy', '2026', 3], ['state', '2026', 2]]), [Math.round(570 * 1.03 * 1.02), 1.0506]);
   // Three Shooter of the Year titles are still one bonus.
-  assert.deepStrictEqual(score([['soy', '2026', 3], ['soy', '2025', 4], ['soy', '2024', 5]]), [Math.round(630 * 1.03), 1.03]);
+  assert.deepStrictEqual(score([['soy', '2026', 3], ['soy', '2025', 4], ['soy', '2024', 5]]), [Math.round(570 * 1.03), 1.03]);
   // The only archer in the class holds the title, without the bonus.
-  assert.deepStrictEqual(score([['state', '2026', 1]]), [630, 1]);
-  assert.deepStrictEqual(score([['state', '2026', 1], ['state', '2025', 2]]), [Math.round(630 * 1.02), 1.02]);
+  assert.deepStrictEqual(score([['state', '2026', 1]]), [570, 1]);
+  assert.deepStrictEqual(score([['state', '2026', 1], ['state', '2025', 2]]), [Math.round(570 * 1.02), 1.02]);
 });
 
 test('a title says how many archers were in the running for it', () => {

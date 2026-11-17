@@ -51,14 +51,14 @@
     <p>NPS is <strong>uncapped</strong> — equipment bonuses, yardage bonuses, and format multipliers stack naturally. Top archers in difficult equipment classes and long-distance formats will earn NPS well above 1000, which properly differentiates elite performers.</p>
 
     <h2>⚖️ Organization Difficulty Weights</h2>
-    <p>Different formats have different difficulty levels. Harder formats earn more NPS per point scored.</p>
+    <p>Different formats have different difficulty levels. Harder formats earn more NPS per point scored. The order is TFAA Outdoor, then TFAA Indoor, then Texas ASA.</p>
     <table class="weight-table">
       <thead><tr><th>Format</th><th>Weight</th><th>Why</th></tr></thead>
       <tbody>
-        <tr><td><span class="badge tfaa">TFAA Outdoor</span> Field Archery</td><td><strong><%= times(rules.weights['TFAA Outdoor']) %></strong></td><td>Hardest — varying terrain, elevation, longer distances</td></tr>
-        <tr><td><span class="badge asa">TX ASA</span> 3D Unknown Distance</td><td><strong><%= times(asaUnknown) %></strong></td><td>Must judge yardage by eye on 3D animal targets</td></tr>
+        <tr><td><span class="badge tfaa">TFAA Outdoor</span> Field Archery</td><td><strong><%= times(rules.weights['TFAA Outdoor']) %></strong></td><td>Hardest — varying terrain, elevation, distances out to 80 yards</td></tr>
+        <tr><td><span class="badge indoor">TFAA Indoor</span> 300 Round</td><td><strong><%= times(rules.weights['TFAA Indoor']) %></strong></td><td>20 yards and flat, but scored against a near-perfect national record, with X count on top</td></tr>
+        <tr><td><span class="badge asa">TX ASA</span> 3D Unknown Distance</td><td><strong><%= times(asaUnknown) %></strong></td><td>Scored against the best score of the class, not a national record</td></tr>
         <tr><td><span class="badge asa">TX ASA</span> 3D Known Distance</td><td><strong><%= times(asaKnown) %></strong></td><td>Rangefinders allowed — removes yardage estimation (<%= knownCut %>% less than unknown distance)</td></tr>
-        <tr><td><span class="badge indoor">TFAA Indoor</span> 300 Round</td><td><strong><%= times(rules.weights['TFAA Indoor']) %></strong></td><td>Controlled environment, 20 yards, flat — most forgiving</td></tr>
       </tbody>
     </table>
 

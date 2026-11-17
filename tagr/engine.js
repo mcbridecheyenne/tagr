@@ -94,8 +94,8 @@ const TFAA_RECORD_PAGES = [
 const adultAges = ['Adult Male','Adult Female','Senior Male','Senior Female','Silver Senior Male','Silver Senior Female','Master Senior Male','Master Senior Female'];
 
 // NPS = (score / max) * 1000 * difficulty_weight
-// Difficulty ranking: TFAA Outdoor (hardest) > ASA 3D > TFAA Indoor (easiest)
-const difficultyWeights = { 'TX ASA': 1.05, 'TFAA Outdoor': 1.08, 'TFAA Indoor': 0.95 };
+// Difficulty ranking: TFAA Outdoor (hardest) > TFAA Indoor > ASA 3D
+const difficultyWeights = { 'TFAA Outdoor': 1.08, 'TFAA Indoor': 1.00, 'TX ASA': 0.95 };
 // ASA Known distance classes are easier (rangefinders allowed) — reduce weight
 const KNOWN_DISTANCE_FACTOR = 0.95;
 // A State Championship round counts for more than an ordinary round, by the

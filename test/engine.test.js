@@ -520,12 +520,24 @@ test('two spellings on one ASA number are one archer when they share a first or 
   assert.strictEqual(ranked.find(r => r.name === 'Kenneth Schulz').org, 'TX ASA + TFAA Outdoor');
 });
 
-test('a Texas ASA round is measured against the best Texas ASA score in the seasons read', () => {
-  const ranked = rank([asa('A B', [340, 340, 340]), asa('C D', [170, 170, 170])]);
-  // 340 is the best anyone shot: it is worth what a perfect round used to be.
-  assert.deepStrictEqual(ranked.map(r => r.bestNPS), [1050, 525]);
-  const result = engine.computeRankings({ asaShooters: [asa('A B', [340, 300, 300])], tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [] });
-  assert.strictEqual(result.sources.asaBar, 340);
+test('a Texas ASA round is measured against the best score of its own class in the seasons read', () => {
+  const ranked = rank([
+    asa('A B', [340, 340, 340]), asa('C D', [170, 170, 170]),
+    // Another class has its own bar: its best score is worth as much as the first class's best.
+    asa('E F', [320, 320, 160], { orgClass: "Men's Pins 40", maxYards: 30 })
+  ]);
+  const best = name => ranked.find(r => r.name === name).rounds.map(r => r.nps);
+  assert.deepStrictEqual(best('A B'), [1050, 1050, 1050]);
+  assert.deepStrictEqual(best('C D'), [525, 525, 525]);
+  assert.deepStrictEqual(best('E F'), [1050, 1050, 525]);
+
+  // No bar is under par: the best of a class nobody has shot well in is not worth a full 1000.
+  const [low] = rank([asa('G H', [270, 270, 270], { orgClass: 'Traditional 30' })]);
+  assert.strictEqual(engine.rules.asaPar, 300);
+  assert.strictEqual(low.bestNPS, Math.round(270 / 300 * 1000 * 1.05 * 1.08 * 1.03));
+
+  const result = engine.computeRankings({ asaShooters: [asa('A B', [340, 300, 300]), asa('G H', [270, 270, 270], { orgClass: 'Traditional 30' })], tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [] });
+  assert.deepStrictEqual(result.sources.asaBars, { "Men's Pins 30": 340, 'Traditional 30': 300 });
 });
 
 test('a Texas ASA score above the most a round can score is left out', () => {

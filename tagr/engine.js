@@ -104,8 +104,10 @@ const STATE_ROUND_BONUS = 1.05;
 // A round counts in full in the newest season TAGR reads of its organization,
 // and for a little less each season before that.
 const RECENCY_WEIGHTS = [1, 0.95, 0.9];
-// The most a Texas ASA round can score: 30 targets, 12 each.
+// The most a Texas ASA round can score: 30 targets, 12 each. Par is a 10 on
+// every target, and no class's bar is set lower than that.
 const ASA_ROUND_MAX = 360;
+const ASA_PAR = 300;
 // TFAA rounds are scored against the NFAA national record for the archer's style, not
 // against the perfect score: tying the national record is worth 1000 (before weights and
 // bonuses) whatever the bow. These are the best adult records of men and women, amateur
@@ -146,7 +148,7 @@ const TITLE_BONUS_MIN_FIELD = 2;
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
-  recencyWeights: RECENCY_WEIGHTS, recordStyleFor: RECORD_STYLE_FOR,
+  recencyWeights: RECENCY_WEIGHTS, recordStyleFor: RECORD_STYLE_FOR, asaPar: ASA_PAR,
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD
@@ -740,11 +742,15 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
 
   const allShooters = [...asaShooters, ...tfaaShooters, ...tfaaIndoorShooters];
 
-  // The bar for a Texas ASA round: the best score anyone shot in the seasons
-  // read. Nobody shoots a perfect 3D round, so measuring against the perfect
-  // score kept every Texas ASA round well under a TFAA round, which is
-  // measured against the national record.
-  const asaBar = Math.max(0, ...asaShooters.map(s => Math.max(0, ...s.eventScores.filter(v => v <= ASA_ROUND_MAX)))) || ASA_ROUND_MAX;
+  // The bar for a Texas ASA round: the best score anyone shot in its class in
+  // the seasons read, and never less than par. Nobody shoots a perfect 3D
+  // round, so measuring against the perfect score kept every Texas ASA round
+  // well under a TFAA round, which is measured against the national record.
+  const asaBars = {};
+  for (const s of asaShooters) {
+    const best = Math.max(0, ...s.eventScores.filter(v => v <= ASA_ROUND_MAX));
+    asaBars[s.orgClass] = Math.max(asaBars[s.orgClass] || ASA_PAR, best);
+  }
 
   // How many seasons back a round was shot, counting the seasons read of its
   // own organization: 0 for the newest.
@@ -773,7 +779,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       const rmax = (s.roundMax && s.roundMax[i]) ? s.roundMax[i] : s.maxPerRound;
       const xcap = (s.xMax && s.xMax[i]) ? s.xMax[i] : 60;
       const record = nationalRecordFor(s, i, rmax);
-      const bar = record || (s.org === 'TX ASA' ? asaBar : rmax);
+      const bar = record || (s.org === 'TX ASA' ? asaBars[s.orgClass] : rmax);
       let nps = (score / bar) * 1000 * w;
       if (s.xCounts && s.xCounts[i] !== undefined) {
         const xBonus = (s.xCounts[i] / xcap) * 0.05;
@@ -1001,7 +1007,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       merged: allShooters.length - rankings.length,
       stateRecordHolders: stateRecordHolders.size,
       stateRecords: currentRecords.length,
-      asaBar,
+      asaBars,
       titleHolders: new Set(titled.map(r => r.name.toLowerCase())).size,
       soyTitles: titled.reduce((n, r) => n + r.titles.filter(t => t.kind === 'soy').length, 0),
       stateTitles: titled.reduce((n, r) => n + r.titles.filter(t => t.kind === 'state').length, 0)

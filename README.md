@@ -22,7 +22,7 @@ The site's **How TAGR Works** page explains it. Its weights and national records
 
 Shooters of the Year (🏆) and State Champions (⭐) are worked out from the same pages: the TOTAL SCORE and STATE columns of the Texas ASA sheets, and TFAA's SYWAT aggregate and State scores. They are shown beside the archer's name and add a bonus to the TAGR score (`SOY_TITLE_BONUS` and `STATE_TITLE_BONUS` in `tagr/engine.js`) when the title was won against at least one other archer.
 
-TFAA rounds are scored against the NFAA national record for each style (`NATIONAL_RECORDS` in `tagr/engine.js`), not against the perfect score. Texas ASA rounds are scored against the best Texas ASA score in the seasons read. When NFAA publishes new records, update them there, with the date of the list they come from, and run `UPDATE_GOLDEN=1 npm test`.
+TFAA rounds are scored against the NFAA national record for each style (`NATIONAL_RECORDS` in `tagr/engine.js`), not against the perfect score. Texas ASA rounds are scored against the best score of their own class in the seasons read. When NFAA publishes new records, update them there, with the date of the list they come from, and run `UPDATE_GOLDEN=1 npm test`.
 
 ## Working on it
 

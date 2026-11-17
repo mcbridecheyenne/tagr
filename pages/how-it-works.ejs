@@ -36,7 +36,7 @@
   const barebowNps = Math.round(470 / barebowBar * 1000 * outdoorWeight);
   const freestyleNps = Math.round(540 / records.FS.field * 1000 * outdoorWeight);
   const pct = n => '+' + Math.round((n - 1) * 100) + '%';
-  const asaBarText = asaBar ? 'Right now that is ' + asaBar + ' of 360.' : '';
+  const asaClasses = Object.keys(asaBars).sort((a, b) => asaBars[b] - asaBars[a] || a.localeCompare(b));
   const recency = rules.recencyWeights;
 %>
 <section>
@@ -47,7 +47,7 @@
     <h2>📊 The NPS Formula</h2>
     <p>Every score from every organization is converted to a <strong>Normalized Performance Score (NPS)</strong>:</p>
     <div class="formula-box">NPS = (Your Score ÷ The Bar) × 1000 × Org Weight × Bonuses</div>
-    <p><strong>The bar for a TFAA round is the national record for your style</strong>, from the NFAA (see <a href="#national-records" style="color:var(--accent-gold);">National Records</a> below). A round that ties the national record is worth 1000 before weights and bonuses, whatever bow you shoot, so great barebow, traditional and longbow shooting counts as much as great compound shooting. Texas ASA has no national records like that, so <strong>the bar for a 3D round is the best score anyone shot in a Texas ASA class in the seasons TAGR reads</strong>. <%= asaBarText %> Nobody shoots a perfect 360, so measuring against it kept every 3D round well below a TFAA round. <a href="#equipment-bonuses" style="color:var(--accent-gold);">Equipment bonuses</a> make up for harder equipment.</p>
+    <p><strong>The bar for a TFAA round is the national record for your style</strong>, from the NFAA (see <a href="#national-records" style="color:var(--accent-gold);">National Records</a> below). A round that ties the national record is worth 1000 before weights and bonuses, whatever bow you shoot, so great barebow, traditional and longbow shooting counts as much as great compound shooting. Texas ASA has no national records like that, so <strong>the bar for a 3D round is the best score anyone shot in the same class in the seasons TAGR reads</strong> (see <a href="#asa-bars" style="color:var(--accent-gold);">Texas ASA Class Bars</a> below). Nobody shoots a perfect 360, so measuring against it kept every 3D round well below a TFAA round. The distance weights and <a href="#equipment-bonuses" style="color:var(--accent-gold);">equipment bonuses</a> below make up for a harder class.</p>
     <p>NPS is <strong>uncapped</strong> — equipment bonuses, yardage bonuses, and format multipliers stack naturally. Top archers in difficult equipment classes and long-distance formats will earn NPS well above 1000, which properly differentiates elite performers.</p>
 
     <h2>⚖️ Organization Difficulty Weights</h2>
@@ -96,6 +96,16 @@
       <strong>Example:</strong> a barebow recurve archer shoots 470 on a SYWAT round. The bar is (<%= records.BBR.field %> + <%= records.BBR.hunter %>) ÷ 2 = <%= barebowBar %>, so NPS = 470 ÷ <%= barebowBar %> × 1000 × <%= outdoorWeight.toFixed(2) %> = <strong><%= barebowNps %></strong>. A freestyle archer needs about 540 of <%= records.FS.field %> to match it: 540 ÷ <%= records.FS.field %> × 1000 × <%= outdoorWeight.toFixed(2) %> = <strong><%= freestyleNps %></strong>.
     </div>
 
+    <h2 id="asa-bars">🎯 Texas ASA Class Bars</h2>
+    <p>Each Texas ASA class has its own bar: the best score shot in that class in the three seasons TAGR reads. Tying it is worth 1000 before weights and bonuses. No bar is set below <%= rules.asaPar %>, which is par (a 10 on every target), so a class that only a few archers shoot is not measured against a low score.</p>
+<% if (asaClasses.length > 0) { %>    <table class="weight-table">
+      <thead><tr><th>Class</th><th>Bar (of 360)</th></tr></thead>
+      <tbody>
+<% asaClasses.forEach(function (name) { %>        <tr><td><%= name %></td><td><%= asaBars[name] %></td></tr>
+<% }) %>      </tbody>
+    </table>
+    <p>The bars follow the results: a better score in a class raises that class's bar at the next rebuild.</p>
+<% } %>
     <h2 id="equipment-bonuses">🏅 Equipment Bonuses</h2>
     <p>Texas ASA rounds are not scored against a record for their own equipment, so harder equipment gets a bonus:</p>
     <table class="weight-table">

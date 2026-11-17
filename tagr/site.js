@@ -42,8 +42,8 @@ async function writeSite(outDir, standings) {
       api: page.toTop + STANDINGS_FILE,
       css: page.toTop + STYLESHEET_FILE
     };
-    // asaBar: the best Texas ASA score in these standings, which the pages quote.
-    const html = await ejs.renderFile(path.join(PAGES_DIR, page.template), { rules, links, asaBar: result.sources.asaBar || null });
+    // asaBars: the best score of each Texas ASA class in these standings, which the pages quote.
+    const html = await ejs.renderFile(path.join(PAGES_DIR, page.template), { rules, links, asaBars: result.sources.asaBars || {} });
     write(path.join(outDir, page.file), html);
   }
   write(path.join(outDir, STYLESHEET_FILE), fs.readFileSync(path.join(PAGES_DIR, STYLESHEET_FILE)));

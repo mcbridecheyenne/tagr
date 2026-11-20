@@ -170,17 +170,14 @@ const TITLE_BONUS_MIN_FIELD = 2;
 // bonus adds REPEAT_TITLE_BONUS, for up to REPEAT_TITLE_MAX further titles.
 const REPEAT_TITLE_BONUS = 0.01;
 const REPEAT_TITLE_MAX = 3;
-// A title is worth as much as the field it was won against. The field's strength
-// is the average standing of the other archers in the champion's division (1 for
-// the best-ranked archer of their class tab, 0 for an archer without a full ranking): at
-// State for a State Champion, over the whole season for a Shooter of the Year.
-// Each title is judged within its own class tab (age group and equipment
-// class): the field's standings are within that tab, and it is weighed against
-// the same tab's other fields for that kind of title in the organization,
-// every ranked season together, so Barebow is compared only with Barebow.
-// A title from an average field earns the full bonus, a weaker field less and a stronger field
-// more, up to TITLE_WEIGHT_MAX times the bonus.
+// Titles are weighed against the others of their kind won in the same broad class:
+// every State Champion (or every Shooter of the Year) in one equipment class, of
+// one organization and season, every age division and gender together (adults and
+// youth apart). The best score among them earns TITLE_WEIGHT_MAX times the bonus,
+// the lowest TITLE_WEIGHT_MIN times, and the rest in between by their score. A
+// title that is the only one of its kind in the class earns the plain bonus.
 const TITLE_WEIGHT_MAX = 1.5;
+const TITLE_WEIGHT_MIN = 0.5;
 // Rank by tournament type: each archer is also ranked against the archers of
 // their own class (age group and equipment class, as on the site's class tabs)
 // on one kind of tournament only. For Field, Indoor and 3D the score is the
@@ -222,7 +219,7 @@ const rules = {
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD,
-  repeatTitleBonus: REPEAT_TITLE_BONUS, repeatTitleMax: REPEAT_TITLE_MAX, titleWeightMax: TITLE_WEIGHT_MAX,
+  repeatTitleBonus: REPEAT_TITLE_BONUS, repeatTitleMax: REPEAT_TITLE_MAX, titleWeightMax: TITLE_WEIGHT_MAX, titleWeightMin: TITLE_WEIGHT_MIN,
   tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS,
   nineHundredYears: NINE_HUNDRED_YEARS, nineHundredMax: NINE_HUNDRED_MAX, nineHundredRecords: NINE_HUNDRED_RECORDS
 };
@@ -1420,18 +1417,6 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     if (i === 0 || r.avgNPS !== full[i - 1].avgNPS) place = i;
     standing[nameKey(r.name) + '||' + r.equipmentClass] = 1 - place / full.length;
   });
-  // The same within each class tab (age group and equipment class) on its own.
-  const classStanding = {};
-  const groupOf = {};
-  for (const r of full) groupOf[nameKey(r.name) + '||' + r.equipmentClass] = r.age + '|' + r.equipmentClass;
-  for (const group of new Set(Object.values(groupOf))) {
-    const members = full.filter(r => groupOf[nameKey(r.name) + '||' + r.equipmentClass] === group);
-    let at = 0;
-    members.forEach((r, i) => {
-      if (i === 0 || r.avgNPS !== members[i - 1].avgNPS) at = i;
-      classStanding[nameKey(r.name) + '||' + r.equipmentClass] = 1 - at / members.length;
-    });
-  }
 
   // Who shot each State Championship, in each class: archer → the score that placed them.
   const fieldOf = {};
@@ -1458,49 +1443,40 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       r.nps = Math.round(r.exact * (1 + r.fieldBonus));
     }
   }
-  // How strong the field of each title was: the average standing of the other
-  // archers in the champion's division. For a State title that is everybody who
-  // shot the division at State; for a Shooter of the Year, everybody with a score
-  // in the division that season. Standings are within the class tab, and each is
-  // weighed against the average field of the same kind of title, organization
-  // and class tab.
-  const averageStanding = (keys, of = classStanding) => keys.length === 0 ? 0 : keys.reduce((sum, k) => sum + (of[k] || 0), 0) / keys.length;
-  const seasonFieldOf = {};
+  // How each title compares with the other titles of its kind won in the same
+  // broad class (equipment class, adults and youth apart), organization and season:
+  // a State Champion by the NPS of their State score, a Shooter of the Year by
+  // the average NPS of their season in the division.
+  const seasonRoundsOf = {};
   for (const e of npsEntries) {
-    const group = [e.org, e.orgClass, Math.floor(e.when)].join('|');
-    if (!seasonFieldOf[group]) seasonFieldOf[group] = new Set();
-    seasonFieldOf[group].add(nameKey(e.normalizedName) + '||' + e.equipmentClass);
+    const id = [nameKey(e.normalizedName) + '||' + e.equipmentClass, e.org, e.orgClass, Math.floor(e.when)].join('|');
+    if (!seasonRoundsOf[id]) seasonRoundsOf[id] = { age: e.age, rounds: [] };
+    seasonRoundsOf[id].rounds.push(...e.npsWithOrg.filter(r => r.exact > 0));
   }
+  const average = list => list.reduce((sum, n) => sum + n, 0) / list.length;
   const weighed = [];
   for (const [key, list] of Object.entries(titlesByKey)) {
     for (const t of list) {
-      if (!t.bonus || !mergedMap[key]) continue;
+      if (!t.bonus) continue;
       const year = parseInt(t.season, 10);
-      if (t.kind === 'state') {
-        const prefix = t.org === 'TX ASA' ? 'asa-state:' + t.season + ':' : 'tfaa-state:' + t.org + ':' + t.season + ':';
-        const won = mergedMap[key].allNPSWithOrg.find(r => r.eventKey && r.eventKey.startsWith(prefix) && fieldOf[r.eventKey]
-          && Math.max(...fieldOf[r.eventKey].values()) === fieldOf[r.eventKey].get(key));
-        if (!won || fieldOf[won.eventKey].size < TITLE_BONUS_MIN_FIELD) continue;
-        const others = [...fieldOf[won.eventKey].keys()].filter(k => k !== key);
-        const group = groupOf[key] || mergedMap[key].equipmentClass;
-        weighed.push({ t, group: 'state|' + t.org + '|' + group, strength: averageStanding(others) });
-      } else {
-        const field = seasonFieldOf[[t.org, t.orgClass, year].join('|')];
-        if (!field || !field.has(key) || field.size < TITLE_BONUS_MIN_FIELD) continue;
-        const group = groupOf[key] || mergedMap[key].equipmentClass;
-        weighed.push({ t, group: 'soy|' + t.org + '|' + group, strength: averageStanding([...field].filter(k => k !== key)) });
-      }
+      const season = seasonRoundsOf[[key, t.org, t.orgClass, year].join('|')];
+      if (!season || season.rounds.length === 0) continue;
+      const rounds = t.kind === 'state' ? season.rounds.filter(r => r.eventKey) : season.rounds;
+      if (rounds.length === 0) continue;
+      const group = [t.kind, t.org, year, key.split('||')[1], season.age === 'youth' ? 'youth' : 'adult'].join('|');
+      weighed.push({ t, group, score: average(rounds.map(r => r.exact)) });
     }
   }
-  const averageOf = {};
   for (const group of new Set(weighed.map(x => x.group))) {
-    const fields = weighed.filter(x => x.group === group);
-    averageOf[group] = fields.reduce((sum, x) => sum + x.strength, 0) / fields.length;
-  }
-  for (const { t, group, strength } of weighed) {
-    const average = averageOf[group];
-    t.fieldStrength = Math.round(strength * 1000) / 1000;
-    t.weight = average > 0 ? Math.round(Math.min(TITLE_WEIGHT_MAX, strength / average) * 100) / 100 : 1;
+    const titlesOf = weighed.filter(x => x.group === group);
+    const best = Math.max(...titlesOf.map(x => x.score));
+    const worst = Math.min(...titlesOf.map(x => x.score));
+    for (const { t, score } of titlesOf) {
+      t.titleScore = Math.round(score);
+      t.of = titlesOf.length;
+      t.weight = best === worst ? 1
+        : Math.round((TITLE_WEIGHT_MIN + (TITLE_WEIGHT_MAX - TITLE_WEIGHT_MIN) * (score - worst) / (best - worst)) * 100) / 100;
+    }
   }
   const rankings = rankAll();
 

@@ -26,7 +26,7 @@
     1055,
     1052
    ],
-   "avgNPS": 1347,
+   "avgNPS": 1336,
    "bestNPS": 1115,
    "rounds": [
     {
@@ -317,8 +317,9 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.463,
-     "weight": 0.75
+     "titleScore": 1059,
+     "of": 1,
+     "weight": 1
     },
     {
      "kind": "soy",
@@ -337,8 +338,9 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.722,
-     "weight": 0.96
+     "titleScore": 1094,
+     "of": 1,
+     "weight": 1
     },
     {
      "kind": "state",
@@ -348,8 +350,9 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.778,
-     "weight": 1.33
+     "titleScore": 1099,
+     "of": 1,
+     "weight": 1
     },
     {
      "kind": "state",
@@ -368,8 +371,9 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.778,
-     "weight": 1.25
+     "titleScore": 1003,
+     "of": 1,
+     "weight": 1
     },
     {
      "kind": "soy",
@@ -379,7 +383,8 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.389,
+     "titleScore": 1007,
+     "of": 1,
      "weight": 1
     },
     {
@@ -390,8 +395,9 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.778,
-     "weight": 1.04
+     "titleScore": 1037,
+     "of": 1,
+     "weight": 1
     },
     {
      "kind": "state",
@@ -401,11 +407,12 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.389,
-     "weight": 0.67
+     "titleScore": 1038,
+     "of": 1,
+     "weight": 1
     }
    ],
-   "titleBonus": 1.1112,
+   "titleBonus": 1.1025,
    "typeRanks": {
     "900": {
      "score": 983,
@@ -416,16 +423,16 @@
      "year": 2025
     },
     "field": {
-     "score": 1163,
+     "score": 1160,
      "rounds": 10,
-     "titleBonus": 1.0643,
+     "titleBonus": 1.0609,
      "rank": 1,
      "of": 12
     },
     "indoor": {
-     "score": 1152,
+     "score": 1146,
      "rounds": 8,
-     "titleBonus": 1.0768,
+     "titleBonus": 1.0712,
      "rank": 1,
      "of": 8
     },
@@ -586,7 +593,8 @@
      "field": 3,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.306,
+     "titleScore": 969,
+     "of": 1,
      "weight": 1
     },
     {
@@ -597,7 +605,8 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.444,
+     "titleScore": 1017,
+     "of": 1,
      "weight": 1
     }
    ],

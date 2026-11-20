@@ -802,49 +802,41 @@ test('a Shooter of the Year and a State Champion each earn a bonus, and a little
   assert.deepStrictEqual(score([['state', '2026', 1], ['state', '2025', 2]]), [Math.round(570 * 1.02), 1.02]);
 });
 
-test('a State title is worth as much as the field it was won against', () => {
-  assert.strictEqual(engine.rules.titleWeightMax, 1.5);
-  // Two State divisions of the same Championship. Strong Win beat the best-ranked
-  // archer in Texas; Weak Win beat the lowest-ranked one.
-  const at = (name, shoot, elsewhere, eventKey) => ({
-    ...asa(name, [shoot, elsewhere, elsewhere]), when: 2026,
-    eventKeys: [eventKey, null, null], fieldScores: [shoot, elsewhere, elsewhere]
+test('titles are weighed against the other titles of their kind in the same broad class and season, by score', () => {
+  const { titleWeightMax, titleWeightMin } = engine.rules;
+  assert.deepStrictEqual([titleWeightMax, titleWeightMin], [1.5, 0.5]);
+  // Three State Champions of one season, in three Compound divisions; the State round is the first.
+  const champ = (name, shoot, orgClass) => ({
+    ...asa(name, [shoot, 300, 300], { orgClass }), when: 2026,
+    eventKeys: ['asa-state:2026:' + orgClass, null, null], fieldScores: [shoot, 300, 300]
   });
+  // A rival in each division, beaten at State; their 360 elsewhere sets every class's bar to 360.
+  const rival = (name, orgClass) => ({ ...asa(name, [100, 360, 100], { orgClass }), when: 2026,
+    eventKeys: ['asa-state:2026:' + orgClass, null, null], fieldScores: [100, 360, 100] });
+  const classes = ["Men's Pins 30", "Men's Pins 35", "Women's Pins 30"];
   const result = engine.computeRankings({
-    asaShooters: [
-      at('Strong Win', 350, 300, 'asa-state:2026:A'), at('Top Dog', 340, 360, 'asa-state:2026:A'),
-      at('Weak Win', 350, 300, 'asa-state:2026:B'), at('Low One', 200, 200, 'asa-state:2026:B')
-    ],
+    asaShooters: [champ('High Score', 350, classes[0]), champ('Mid Score', 325, classes[1]), champ('Low Score', 300, classes[2]),
+      ...classes.map((c, i) => rival('Rival ' + i, c))],
     tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
-    titles: ['Strong Win', 'Weak Win'].map(name => ({ kind: 'state', season: '2026', field: 2, org: 'TX ASA', orgClass: "Men's Pins 30", name }))
+    titles: [['High Score', classes[0]], ['Mid Score', classes[1]], ['Low Score', classes[2]]]
+      .map(([name, orgClass]) => ({ kind: 'state', season: '2026', field: 2, org: 'TX ASA', orgClass, name }))
   });
   const title = name => result.adult.find(r => r.name === name).titles[0];
-  // Standings: Top Dog 1, the two champions 0.75, Low One 0.25. The fields are
-  // 1 and 0.25 strong, 0.625 on average: weights 1.6 (held to 1.5) and 0.4.
-  assert.deepStrictEqual([title('Strong Win').fieldStrength, title('Strong Win').weight], [1, 1.5]);
-  assert.deepStrictEqual([title('Weak Win').fieldStrength, title('Weak Win').weight], [0.25, 0.4]);
-  assert.strictEqual(result.adult.find(r => r.name === 'Strong Win').titleBonus, 1.03);
-  assert.strictEqual(result.adult.find(r => r.name === 'Weak Win').titleBonus, 1.008);
-});
+  // The best State score earns 1.5 times the bonus and the lowest 0.5 times; the rest in between by score.
+  assert.strictEqual(title('High Score').weight, 1.5);
+  assert.strictEqual(title('Low Score').weight, 0.5);
+  assert.strictEqual(title('Mid Score').weight, 1);
+  assert.strictEqual(title('High Score').of, 3);
+  assert.strictEqual(result.adult.find(r => r.name === 'High Score').titleBonus, 1.03);
+  assert.strictEqual(result.adult.find(r => r.name === 'Low Score').titleBonus, 1.01);
 
-test('a Shooter of the Year is worth as much as the archers in the division that season', () => {
-  // Strong Soy shot the season with the best-ranked archer in Texas; Weak Soy with the lowest-ranked one.
-  const shooter = (name, scores, orgClass) => ({ ...asa(name, scores, { orgClass }), when: 2026 });
-  const result = engine.computeRankings({
-    asaShooters: [
-      shooter('Strong Soy', [300, 300, 300], "Men's Pins 30"), shooter('Top Dog', [360, 360, 360], "Men's Pins 30"),
-      shooter('Weak Soy', [300, 300, 300], "Men's Pins 35"), shooter('Low One', [200, 200, 200], "Men's Pins 35")
-    ],
+  // The only title of its kind in the class earns the plain bonus.
+  const alone = engine.computeRankings({
+    asaShooters: [champ('High Score', 350, classes[0]), rival('Rival 0', classes[0])],
     tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
-    titles: [['Strong Soy', "Men's Pins 30"], ['Weak Soy', "Men's Pins 35"]]
-      .map(([name, orgClass]) => ({ kind: 'soy', season: '2026', field: 2, org: 'TX ASA', orgClass, name }))
+    titles: [{ kind: 'state', season: '2026', field: 2, org: 'TX ASA', orgClass: classes[0], name: 'High Score' }]
   });
-  const archer = name => result.adult.find(r => r.name === name);
-  // The two classes have their own par, so the standings are Weak Soy 1, Top Dog 0.75,
-  // Strong Soy 0.5, Low One 0.25: fields 0.75 and 0.25 strong, weights 1.5 and 0.5.
-  assert.deepStrictEqual([archer('Strong Soy').titles[0].fieldStrength, archer('Weak Soy').titles[0].fieldStrength], [0.75, 0.25]);
-  assert.deepStrictEqual([archer('Strong Soy').titles[0].weight, archer('Weak Soy').titles[0].weight], [1.5, 0.5]);
-  assert.deepStrictEqual([archer('Strong Soy').titleBonus, archer('Weak Soy').titleBonus], [1.045, 1.015]);
+  assert.strictEqual(alone.adult.find(r => r.name === 'High Score').titleBonus, 1.02);
 });
 
 test('a title says how many archers were in the running for it', () => {

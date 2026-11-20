@@ -166,9 +166,10 @@ const FIELD_STANDING_POWER = 3;
 const SOY_TITLE_BONUS = 1.03;
 const STATE_TITLE_BONUS = 1.02;
 const TITLE_BONUS_MIN_FIELD = 2;
-// Rank by tournament type: each archer is also ranked against everybody in their
-// age group on one kind of tournament only, by the average of their best
-// TYPE_RANK_BEST rounds of it. TYPE_RANK_MIN_ROUNDS rounds are needed for a rank.
+// Rank by tournament type: each archer is also ranked against the archers of
+// their own class (age group and equipment class, as on the site's class tabs)
+// on one kind of tournament only, by the average of their best TYPE_RANK_BEST
+// rounds of it. TYPE_RANK_MIN_ROUNDS rounds are needed for a rank.
 // These ranks are shown beside the TAGR rank and do not change the TAGR score.
 const TOURNAMENT_TYPES = [
   { key: 'field', label: 'Field', org: 'TFAA Outdoor' },
@@ -189,10 +190,20 @@ const rules = {
 };
 
 // Gives every archer in one age group a `typeRanks` entry for each tournament
-// type they shot: { score, rounds, rank, of }. `rank` is null with fewer than
-// TYPE_RANK_MIN_ROUNDS rounds; `of` is how many archers have a rank of that type.
-// Equal scores share a rank.
+// type they shot: { score, rounds, rank, of }, ranked within their equipment
+// class. `rank` is null with fewer than TYPE_RANK_MIN_ROUNDS rounds; `of` is how
+// many archers of the class have a rank of that type. Equal scores share a rank.
 function addTypeRanks(list) {
+  const classes = new Map();
+  for (const r of list) {
+    if (!classes.has(r.equipmentClass)) classes.set(r.equipmentClass, []);
+    classes.get(r.equipmentClass).push(r);
+  }
+  for (const members of classes.values()) rankTypesWithin(members);
+  return list;
+}
+
+function rankTypesWithin(list) {
   for (const r of list) r.typeRanks = {};
   for (const type of TOURNAMENT_TYPES) {
     const entries = [];

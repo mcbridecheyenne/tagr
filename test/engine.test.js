@@ -1133,7 +1133,7 @@ test('every archer who shot State gets the State round, on the sheet or not', as
 
 // ---- Rank by tournament type ----
 
-test('every archer is ranked on Field, Indoor and 3D rounds on their own, within their age group', async () => {
+test('every archer is ranked on Field, Indoor and 3D rounds on their own, within their class', async () => {
   const { result } = await engine.buildRankings({ fetchText: fakeFetch() });
   const types = engine.rules.tournamentTypes;
   assert.deepStrictEqual(types.map(t => t.label), ['Field', 'Indoor', '3D']);
@@ -1143,8 +1143,9 @@ test('every archer is ranked on Field, Indoor and 3D rounds on their own, within
       const shot = list.filter(r => r.rounds.some(x => x.org === type.org));
       // Exactly the archers who shot that kind of tournament have an entry.
       assert.deepStrictEqual(list.filter(r => r.typeRanks[type.key]).map(r => r.name), shot.map(r => r.name));
-      const ranked = shot.filter(r => r.typeRanks[type.key].rank !== null);
       for (const r of shot) {
+        // Only the archers of the same class (age group and equipment class) are compared.
+        const ranked = shot.filter(o => o.equipmentClass === r.equipmentClass && o.typeRanks[type.key].rank !== null);
         const t = r.typeRanks[type.key];
         const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a).slice(0, engine.rules.typeRankBest);
         assert.strictEqual(t.score, Math.round(nps.reduce((s, n) => s + n, 0) / nps.length), r.name);

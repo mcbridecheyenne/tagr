@@ -190,7 +190,7 @@
     <p>This counts the unique organizations among your actual top 5 NPS rounds — not just orgs you've shot with overall.</p>
 
     <h2 id="tournament-types">📍 Ranking by Tournament Type</h2>
-    <p>Under each name is the archer's rank in each kind of tournament on its own: <%= rules.tournamentTypes.map(function (t) { return '<strong>' + t.label + '</strong> (' + t.org + ')'; }).join(', ') %>. It is worked out from that kind of round only, against every archer of the same age group (adult or youth) whatever their bow, so #1 Field is the best field archer in Texas.</p>
+    <p>Under each name is the archer's rank in each kind of tournament on its own: <%= rules.tournamentTypes.map(function (t) { return '<strong>' + t.label + '</strong> (' + t.org + ')'; }).join(', ') %>. It is worked out from that kind of round only, against the archers of the same <strong>class</strong>: the same age group (adult or youth) and the same equipment class (Compound, Barebow, Traditional, Olympic or Longbow), as on the class tabs. So #1 Field on a Barebow archer means the best adult or youth Barebow archer in field.</p>
     <ul>
       <li>The score for each type is the average of an archer's best <strong><%= rules.typeRankBest %></strong> rounds of it, using the same NPS as the TAGR score.</li>
       <li>An archer needs at least <strong><%= rules.typeRankMinRounds %></strong> rounds of a type for a rank in it. With fewer, the line shows how many rounds they have; with none, a dash.</li>

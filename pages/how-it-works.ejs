@@ -156,6 +156,7 @@
       </tbody>
     </table>
     <p>Each organization has its own newest season, so a Texas ASA archer is not marked down because the TFAA indoor season started later in the year.</p>
+    <p><strong>Fewer than three seasons?</strong> An archer who has shot fewer than three seasons of an organization has those seasons weighed as if they were the oldest: one season counts <strong><%= times(recency[2]) %></strong> however recent it is, and two seasons count <strong><%= times(recency[1]) %></strong> (the newer) and <strong><%= times(recency[2]) %></strong> (the older). From the third season on, the usual weights apply. This counts separately for Field, Indoor and 3D.</p>
 
     <h2>📈 Your TAGR Score</h2>
     <div class="formula-box">TAGR = (Sum of Top 5 NPS ÷ 5) × Event Count Bonus × Org Diversity Bonus × Title Bonus</div>
@@ -189,6 +190,15 @@
     </table>
     <p>This counts the unique organizations among your actual top 5 NPS rounds — not just orgs you've shot with overall.</p>
 
+    <h2 id="tournament-types">📍 Ranking by Tournament Type</h2>
+    <p>Under each name is the archer's rank in each kind of tournament on its own: <%= rules.tournamentTypes.map(function (t) { return '<strong>' + t.label + '</strong> (' + t.org + ')'; }).join(', ') %>. It is worked out from that kind of round only, against the archers of the same <strong>class</strong>: the same age group (adult or youth) and the same equipment class (Compound, Barebow, Traditional, Olympic or Longbow), as on the class tabs. So #1 Field on a Barebow archer means the best adult or youth Barebow archer in field.</p>
+    <ul>
+      <li>The score for each type is the average of an archer's best <strong><%= rules.typeRankBest %></strong> rounds of it, using the same NPS as the TAGR score.</li>
+      <li>An archer needs at least <strong><%= rules.typeRankMinRounds %></strong> rounds of a type for a rank in it. With fewer, the line shows how many rounds they have; with none, a dash.</li>
+      <li>Titles won in that kind of tournament add their bonus, worked out as for the TAGR score below: an Indoor Shooter of the Year raises the Indoor rank, a Texas ASA title the 3D rank.</li>
+      <li>These ranks do not change the TAGR score or the main ranking.</li>
+    </ul>
+
     <h2>👑 TFAA State Record Holders</h2>
     <p>Archers who hold a current TFAA state record (Indoor, Outdoor, or 900 Round) are identified with a 👑 crown badge next to their name. Hover the crown to see which record(s) they hold.</p>
     <p>Records are scraped from <a href="https://texasfieldarchery.org/records/indoor" style="color:var(--accent-gold);">texasfieldarchery.org</a> and matched by name. Only the <strong>current</strong> record holder matters — if scores are tied, the most recent year wins.</p>
@@ -201,12 +211,14 @@
       <tbody>
         <tr><td>🏆 Shooter of the Year</td><td><strong><%= times(rules.soyTitleBonus) %></strong> (<%= pct(rules.soyTitleBonus) %>)</td></tr>
         <tr><td>⭐ State Champion</td><td><strong><%= times(rules.stateTitleBonus) %></strong> (<%= pct(rules.stateTitleBonus) %>)</td></tr>
-        <tr><td>Both</td><td><strong><%= (rules.soyTitleBonus * rules.stateTitleBonus).toFixed(4) %>×</strong></td></tr>
+        <tr><td>Each further title of the same kind</td><td><strong>+<%= Math.round(rules.repeatTitleBonus * 100) %>%</strong>, for up to <%= rules.repeatTitleMax %> more</td></tr>
+        <tr><td>Both, one of each</td><td><strong><%= (rules.soyTitleBonus * rules.stateTitleBonus).toFixed(4) %>×</strong></td></tr>
       </tbody>
     </table>
     <ul>
       <li>Only a title from the three seasons TAGR ranks earns the bonus. Earlier titles are shown and counted beside your name, without a bonus.</li>
-      <li>Each bonus counts once, however many titles of that kind you hold.</li>
+      <li>A repeat title is worth more: two Shooter of the Year titles give <%= pct(rules.soyTitleBonus + rules.repeatTitleBonus) %>, three give <%= pct(rules.soyTitleBonus + 2 * rules.repeatTitleBonus) %>, and the most is <%= pct(rules.soyTitleBonus + rules.repeatTitleMax * rules.repeatTitleBonus) %> (State Champion likewise, from <%= pct(rules.stateTitleBonus) %>).</li>
+      <li>Each title is weighed against the other titles of its kind won in the same broad class and competition type that season: every State Champion in Barebow at TFAA Indoor State, for example, every age division and gender together (adults and youth apart). A State Champion counts by their State score, a Shooter of the Year by their season's scores, both as NPS so different bow styles compare fairly. The best score earns <%= rules.titleWeightMax %>× the bonus, the lowest <%= rules.titleWeightMin %>×, and the rest in between by their score. The only title of its kind in its class earns the plain bonus.</li>
       <li>A title earns the bonus only when it was won against somebody: at least <%= rules.titleBonusMinField %> archers were in the running for it. A title in a class of one still shows its icon.</li>
       <li>The bonus goes to your ranking in the equipment class the title was won in.</li>
     </ul>

@@ -116,6 +116,10 @@ const STATE_ROUND_BONUS = 1.05;
 // A round counts in full in the newest season TAGR reads of its organization,
 // and for a little less each season before that.
 const RECENCY_WEIGHTS = [1, 0.95, 0.9];
+// An archer with fewer seasons of an organization than TAGR reads (three) has
+// those seasons weighed as the oldest ones: one season counts like a season
+// three back (the last weight), two count like the two oldest seasons, the
+// newer of them the less discounted. With all three, the usual weights apply.
 // The most a Texas ASA round can score: 30 targets, 12 each. Par is a 10 on
 // every target, and no class's bar is set lower than that.
 const ASA_ROUND_MAX = 360;
@@ -166,6 +170,30 @@ const FIELD_STANDING_POWER = 3;
 const SOY_TITLE_BONUS = 1.03;
 const STATE_TITLE_BONUS = 1.02;
 const TITLE_BONUS_MIN_FIELD = 2;
+// A repeat title is worth more: each further title of the same kind that earns a
+// bonus adds REPEAT_TITLE_BONUS, for up to REPEAT_TITLE_MAX further titles.
+const REPEAT_TITLE_BONUS = 0.01;
+const REPEAT_TITLE_MAX = 3;
+// Titles are weighed against the others of their kind won in the same broad class:
+// every State Champion (or every Shooter of the Year) in one equipment class, of
+// one organization and season, every age division and gender together (adults and
+// youth apart). The best score among them earns TITLE_WEIGHT_MAX times the bonus,
+// the lowest TITLE_WEIGHT_MIN times, and the rest in between by their score. A
+// title that is the only one of its kind in the class earns the plain bonus.
+const TITLE_WEIGHT_MAX = 1.5;
+const TITLE_WEIGHT_MIN = 0.5;
+// Rank by tournament type: each archer is also ranked against the archers of
+// their own class (age group and equipment class, as on the site's class tabs)
+// on one kind of tournament only, by the average of their best TYPE_RANK_BEST
+// rounds of it. TYPE_RANK_MIN_ROUNDS rounds are needed for a rank.
+// These ranks are shown beside the TAGR rank and do not change the TAGR score.
+const TOURNAMENT_TYPES = [
+  { key: 'field', label: 'Field', org: 'TFAA Outdoor' },
+  { key: 'indoor', label: 'Indoor', org: 'TFAA Indoor' },
+  { key: '3d', label: '3D', org: 'TX ASA' }
+];
+const TYPE_RANK_BEST = 3;
+const TYPE_RANK_MIN_ROUNDS = 2;
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
@@ -173,8 +201,64 @@ const rules = {
   fieldBonusMax: FIELD_BONUS_MAX, fieldBeatTop: FIELD_BEAT_TOP, fieldStandingPower: FIELD_STANDING_POWER,
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
-  soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD
+  soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD,
+  repeatTitleBonus: REPEAT_TITLE_BONUS, repeatTitleMax: REPEAT_TITLE_MAX, titleWeightMax: TITLE_WEIGHT_MAX, titleWeightMin: TITLE_WEIGHT_MIN,
+  tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS
 };
+
+// The bonus a list of titles earns: Shooter of the Year and State Champion each
+// give their bonus for the first title of that kind that earns one, and
+// REPEAT_TITLE_BONUS more for each further one, up to REPEAT_TITLE_MAX of them.
+// Each title's part is scaled by its `weight` (the strength of the field it was
+// won against, 1 when unknown), the best-weighted title counting as the first.
+function titleBonusOf(titles) {
+  const factor = (kind, first) => {
+    const weights = titles.filter(t => t.kind === kind && t.bonus)
+      .map(t => (t.weight === undefined ? 1 : t.weight)).sort((a, b) => b - a);
+    if (weights.length === 0) return 1;
+    const repeats = weights.slice(1, 1 + REPEAT_TITLE_MAX).reduce((sum, w) => sum + w, 0);
+    return 1 + (first - 1) * weights[0] + REPEAT_TITLE_BONUS * repeats;
+  };
+  return factor('soy', SOY_TITLE_BONUS) * factor('state', STATE_TITLE_BONUS);
+}
+
+// Gives every archer in one age group a `typeRanks` entry for each tournament
+// type they shot: { score, rounds, titleBonus, rank, of }, ranked within their equipment
+// class. `rank` is null with fewer than TYPE_RANK_MIN_ROUNDS rounds; `of` is how
+// many archers of the class have a rank of that type. Equal scores share a rank.
+function addTypeRanks(list) {
+  const classes = new Map();
+  for (const r of list) {
+    if (!classes.has(r.equipmentClass)) classes.set(r.equipmentClass, []);
+    classes.get(r.equipmentClass).push(r);
+  }
+  for (const members of classes.values()) rankTypesWithin(members);
+  return list;
+}
+
+function rankTypesWithin(list) {
+  for (const r of list) r.typeRanks = {};
+  for (const type of TOURNAMENT_TYPES) {
+    const entries = [];
+    for (const r of list) {
+      const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a);
+      if (nps.length === 0) continue;
+      const best = nps.slice(0, TYPE_RANK_BEST);
+      // Titles won in this kind of tournament add their bonus, as on the TAGR score.
+      const titleBonus = Math.round(titleBonusOf((r.titles || []).filter(t => t.org === type.org)) * 10000) / 10000;
+      const score = Math.round(best.reduce((sum, n) => sum + n, 0) / best.length * titleBonus);
+      const entry = { score, rounds: nps.length, titleBonus, rank: null, of: 0 };
+      r.typeRanks[type.key] = entry;
+      if (nps.length >= TYPE_RANK_MIN_ROUNDS) entries.push(entry);
+    }
+    entries.sort((a, b) => b.score - a.score);
+    entries.forEach((e, i) => {
+      e.rank = i > 0 && e.score === entries[i - 1].score ? entries[i - 1].rank : i + 1;
+      e.of = entries.length;
+    });
+  }
+  return list;
+}
 
 // ---------------------------------------------------------------------------
 // Parsing
@@ -992,6 +1076,23 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     seasons[s.org].add(s.when || 0);
   }
   const seasonsBack = s => [...seasons[s.org]].filter(when => when > (s.when || 0)).length;
+  // The seasons each archer shot in each organization, newest first.
+  const archerOf = s => nameKey(canonical(s.name)) + '||' + mapEquipmentClass(s.orgClass, s.org) + '||' + s.org;
+  const seasonsShot = {};
+  for (const s of allShooters) {
+    if (!s.eventScores.some(v => v > 0)) continue;
+    const k = archerOf(s);
+    if (!seasonsShot[k]) seasonsShot[k] = new Set();
+    seasonsShot[k].add(s.when || 0);
+  }
+  const recencyOf = s => {
+    const back = seasonsBack(s);
+    const mine = [...(seasonsShot[archerOf(s)] || [])].sort((a, b) => b - a);
+    const needed = Math.min(RECENCY_WEIGHTS.length, seasons[s.org].size);
+    const at = mine.indexOf(s.when || 0);
+    const asIf = mine.length < needed && at >= 0 ? RECENCY_WEIGHTS.length - mine.length + at : 0;
+    return RECENCY_WEIGHTS[Math.min(Math.max(back, asIf), RECENCY_WEIGHTS.length - 1)];
+  };
 
   // First pass: compute NPS for each entry
   const npsEntries = allShooters.map(s => {
@@ -1005,7 +1106,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       else if (s.asaMaxYards >= 40) w = w * 1.03;
       // 30 and below = 1.0 (no bonus)
     }
-    w = w * RECENCY_WEIGHTS[Math.min(seasonsBack(s), RECENCY_WEIGHTS.length - 1)];
+    w = w * recencyOf(s);
     // For indoor: X count bonus — (xCount/60) * 0.05 adds up to 5% for perfect X count
     const npsScores = s.eventScores.map((score, i) => {
       const rmax = (s.roundMax && s.roundMax[i]) ? s.roundMax[i] : s.maxPerRound;
@@ -1183,8 +1284,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
 
     // Title bonus: one for Shooter of the Year, one for State Champion.
     const myTitles = (titlesByKey[nameKey(m.name) + '||' + m.equipmentClass] || []).sort(titleOrder);
-    const earns = kind => myTitles.some(t => t.kind === kind && t.bonus);
-    const titleBonus = (earns('soy') ? SOY_TITLE_BONUS : 1) * (earns('state') ? STATE_TITLE_BONUS : 1);
+    const titleBonus = titleBonusOf(myTitles);
 
     avgNPS = Math.round(avgNPS * eventBonus * orgBonus * titleBonus);
 
@@ -1266,6 +1366,41 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       r.nps = Math.round(r.exact * (1 + r.fieldBonus));
     }
   }
+  // How each title compares with the other titles of its kind won in the same
+  // broad class (equipment class, adults and youth apart), organization and season:
+  // a State Champion by the NPS of their State score, a Shooter of the Year by
+  // the average NPS of their season in the division.
+  const seasonRoundsOf = {};
+  for (const e of npsEntries) {
+    const id = [nameKey(e.normalizedName) + '||' + e.equipmentClass, e.org, e.orgClass, Math.floor(e.when)].join('|');
+    if (!seasonRoundsOf[id]) seasonRoundsOf[id] = { age: e.age, rounds: [] };
+    seasonRoundsOf[id].rounds.push(...e.npsWithOrg.filter(r => r.exact > 0));
+  }
+  const average = list => list.reduce((sum, n) => sum + n, 0) / list.length;
+  const weighed = [];
+  for (const [key, list] of Object.entries(titlesByKey)) {
+    for (const t of list) {
+      if (!t.bonus) continue;
+      const year = parseInt(t.season, 10);
+      const season = seasonRoundsOf[[key, t.org, t.orgClass, year].join('|')];
+      if (!season || season.rounds.length === 0) continue;
+      const rounds = t.kind === 'state' ? season.rounds.filter(r => r.eventKey) : season.rounds;
+      if (rounds.length === 0) continue;
+      const group = [t.kind, t.org, year, key.split('||')[1], season.age === 'youth' ? 'youth' : 'adult'].join('|');
+      weighed.push({ t, group, score: average(rounds.map(r => r.exact)) });
+    }
+  }
+  for (const group of new Set(weighed.map(x => x.group))) {
+    const titlesOf = weighed.filter(x => x.group === group);
+    const best = Math.max(...titlesOf.map(x => x.score));
+    const worst = Math.min(...titlesOf.map(x => x.score));
+    for (const { t, score } of titlesOf) {
+      t.titleScore = Math.round(score);
+      t.of = titlesOf.length;
+      t.weight = best === worst ? 1
+        : Math.round((TITLE_WEIGHT_MIN + (TITLE_WEIGHT_MAX - TITLE_WEIGHT_MIN) * (score - worst) / (best - worst)) * 100) / 100;
+    }
+  }
   const rankings = rankAll();
 
   // Best TAGR score first. Equal scores share a rank on the site; among them
@@ -1290,8 +1425,8 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   }
 
   return {
-    adult: rankings.filter(r => r.age === 'adult'),
-    youth: rankings.filter(r => r.age === 'youth'),
+    adult: addTypeRanks(rankings.filter(r => r.age === 'adult')),
+    youth: addTypeRanks(rankings.filter(r => r.age === 'youth')),
     sources: {
       txAsa: asaShooters.length,
       tfaa: tfaaShooters.length,

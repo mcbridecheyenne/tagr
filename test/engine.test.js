@@ -575,15 +575,32 @@ test('a State Championship round earns the same bonus in every organization', ()
 
 test('a round counts in full in the newest season of its organization, and for less each season before', () => {
   assert.deepStrictEqual(engine.rules.recencyWeights, [1, 0.95, 0.9]);
-  const season = (name, when) => ({ ...asa(name, [360, 360, 360]), when });
-  const ranked = rank([season('New Er', 2026), season('Mid Dle', 2025), season('Old Er', 2024), season('Old Est', 2023)]);
-  const best = name => ranked.find(r => r.name === name).bestNPS;
-  assert.deepStrictEqual([best('New Er'), best('Mid Dle'), best('Old Er'), best('Old Est')], [950, Math.round(1000 * (0.95 * 0.95)), 855, 855]);
+  // One archer who shot all three seasons: one round a season, each its own score.
+  const season = (when, score) => ({ ...asa('Al Ways', [score]), when });
+  const [always] = rank([season(2026, 300), season(2025, 330), season(2024, 360)]);
+  assert.deepStrictEqual(always.rounds.map(r => r.nps).sort((a, b) => a - b),
+    [Math.round(300 / 360 * 950), Math.round(330 / 360 * 950 * 0.95), Math.round(950 * 0.9)].sort((a, b) => a - b));
 
   // The seasons of another organization do not age this one's: its own newest season is full value.
   const indoor = { ...tfaaIndoorState('In Door', 'Freestyle (FS)', [600, 600, 600]), when: 2024.5 };
   const [only] = rank([indoor, season('New Er', 2026)]).filter(r => r.name === 'In Door');
   assert.strictEqual(only.bestNPS, Math.round(1000 * 1.05));
+});
+
+test('an archer with fewer than three seasons has them weighed as the oldest seasons', () => {
+  const season = (name, when) => ({ ...asa(name, [360, 360, 360]), when });
+  const ranked = rank([
+    season('Three Years', 2026), season('Three Years', 2025), season('Three Years', 2024),
+    season('Two Years', 2026), season('Two Years', 2025),
+    season('One Year', 2026)
+  ]);
+  const npsBySeason = name => ranked.find(r => r.name === name).rounds.map(r => r.nps).filter((n, i, all) => all.indexOf(n) === i);
+  // Three seasons: the usual 100%, 95%, 90%.
+  assert.deepStrictEqual(npsBySeason('Three Years'), [950, Math.round(950 * 0.95), Math.round(950 * 0.9)]);
+  // Two seasons: the newer counts like two seasons back (95%), the older like three (90%).
+  assert.deepStrictEqual(npsBySeason('Two Years'), [Math.round(950 * 0.95), Math.round(950 * 0.9)]);
+  // One season: like three seasons back (90%), however new.
+  assert.deepStrictEqual(npsBySeason('One Year'), [Math.round(950 * 0.9)]);
 });
 
 test('the event bonus goes by the events of the busiest year, not the three years together', () => {
@@ -773,9 +790,9 @@ test('equal TAGR scores are listed in the same order every time: better best rou
   assert.deepStrictEqual(ranked.map(r => r.name), ['Amy First', 'Bo Peak', 'Zed Last']);
 });
 
-test('a Shooter of the Year and a State Champion each earn a bonus, once, for a title won against somebody', () => {
-  const { soyTitleBonus, stateTitleBonus, titleBonusMinField } = engine.rules;
-  assert.deepStrictEqual([soyTitleBonus, stateTitleBonus, titleBonusMinField], [1.03, 1.02, 2]);
+test('a Shooter of the Year and a State Champion each earn a bonus, and a little more for each repeat, for a title won against somebody', () => {
+  const { soyTitleBonus, stateTitleBonus, titleBonusMinField, repeatTitleBonus, repeatTitleMax } = engine.rules;
+  assert.deepStrictEqual([soyTitleBonus, stateTitleBonus, titleBonusMinField, repeatTitleBonus, repeatTitleMax], [1.03, 1.02, 2, 0.01, 3]);
   const score = titles => {
     const result = engine.computeRankings({
       asaShooters: [asa('A B', [360, 360, 360])], tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
@@ -787,11 +804,54 @@ test('a Shooter of the Year and a State Champion each earn a bonus, once, for a 
   assert.deepStrictEqual(score([['soy', '2026', 3]]), [Math.round(570 * 1.03), 1.03]);
   assert.deepStrictEqual(score([['state', '2026', 2]]), [Math.round(570 * 1.02), 1.02]);
   assert.deepStrictEqual(score([['soy', '2026', 3], ['state', '2026', 2]]), [Math.round(570 * 1.03 * 1.02), 1.0506]);
-  // Three Shooter of the Year titles are still one bonus.
-  assert.deepStrictEqual(score([['soy', '2026', 3], ['soy', '2025', 4], ['soy', '2024', 5]]), [Math.round(570 * 1.03), 1.03]);
+  // Each further Shooter of the Year adds 1%: three titles are worth 5%.
+  assert.deepStrictEqual(score([['soy', '2026', 3], ['soy', '2025', 4], ['soy', '2024', 5]]), [Math.round(570 * 1.05), 1.05]);
+  // Up to three further titles: five are worth 6%, the same as four.
+  const soys = n => Array.from({ length: n }, (_, i) => ['soy', String(2026 - i), 3]);
+  assert.deepStrictEqual(score(soys(4)), [Math.round(570 * 1.06), 1.06]);
+  assert.deepStrictEqual(score(soys(5)), [Math.round(570 * 1.06), 1.06]);
+  // Two State Champion titles and one Shooter of the Year.
+  assert.deepStrictEqual(score([['state', '2026', 2], ['state', '2025', 2], ['soy', '2026', 3]]), [Math.round(570 * 1.03 * 1.03), 1.0609]);
   // The only archer in the class holds the title, without the bonus.
   assert.deepStrictEqual(score([['state', '2026', 1]]), [570, 1]);
   assert.deepStrictEqual(score([['state', '2026', 1], ['state', '2025', 2]]), [Math.round(570 * 1.02), 1.02]);
+});
+
+test('titles are weighed against the other titles of their kind in the same broad class and season, by score', () => {
+  const { titleWeightMax, titleWeightMin } = engine.rules;
+  assert.deepStrictEqual([titleWeightMax, titleWeightMin], [1.5, 0.5]);
+  // Three State Champions of one season, in three Compound divisions; the State round is the first.
+  const champ = (name, shoot, orgClass) => ({
+    ...asa(name, [shoot, 300, 300], { orgClass }), when: 2026,
+    eventKeys: ['asa-state:2026:' + orgClass, null, null], fieldScores: [shoot, 300, 300]
+  });
+  // A rival in each division, beaten at State; their 360 elsewhere sets every class's bar to 360.
+  const rival = (name, orgClass) => ({ ...asa(name, [100, 360, 100], { orgClass }), when: 2026,
+    eventKeys: ['asa-state:2026:' + orgClass, null, null], fieldScores: [100, 360, 100] });
+  const classes = ["Men's Pins 30", "Men's Pins 35", "Women's Pins 30"];
+  const result = engine.computeRankings({
+    asaShooters: [champ('High Score', 350, classes[0]), champ('Mid Score', 325, classes[1]), champ('Low Score', 300, classes[2]),
+      ...classes.map((c, i) => rival('Rival ' + i, c))],
+    tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
+    titles: [['High Score', classes[0]], ['Mid Score', classes[1]], ['Low Score', classes[2]]]
+      .map(([name, orgClass]) => ({ kind: 'state', season: '2026', field: 2, org: 'TX ASA', orgClass, name }))
+  });
+  const title = name => result.adult.find(r => r.name === name).titles[0];
+  // The best State score earns 1.5 times the bonus and the lowest 0.5 times; the rest in between by score.
+  assert.strictEqual(title('High Score').weight, 1.5);
+  assert.strictEqual(title('Low Score').weight, 0.5);
+  assert.strictEqual(title('Mid Score').weight, 1);
+  assert.strictEqual(title('High Score').of, 3);
+  assert.strictEqual(result.adult.find(r => r.name === 'High Score').titleBonus, 1.03);
+  assert.strictEqual(result.adult.find(r => r.name === 'Low Score').titleBonus, 1.01);
+
+  // The only title of its kind in the class earns the plain bonus.
+  const alone = engine.computeRankings({
+    asaShooters: [champ('High Score', 350, classes[0]), rival('Rival 0', classes[0])],
+    tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
+    titles: [{ kind: 'state', season: '2026', field: 2, org: 'TX ASA', orgClass: classes[0], name: 'High Score' }]
+  });
+  assert.strictEqual(alone.adult.find(r => r.name === 'High Score').titleBonus, 1.02);
 });
 
 test('a title says how many archers were in the running for it', () => {
@@ -1129,4 +1189,34 @@ test('every archer who shot State gets the State round, on the sheet or not', as
 
   // A class TAGR has no distances for earns the title but no round.
   assert.ok(!result.adult.some(r => r.name === 'Jewel Open'));
+});
+
+// ---- Rank by tournament type ----
+
+test('every archer is ranked on Field, Indoor and 3D rounds on their own, within their class', async () => {
+  const { result } = await engine.buildRankings({ fetchText: fakeFetch() });
+  const types = engine.rules.tournamentTypes;
+  assert.deepStrictEqual(types.map(t => t.label), ['Field', 'Indoor', '3D']);
+  for (const age of ['adult', 'youth']) {
+    const list = result[age];
+    for (const type of types) {
+      const shot = list.filter(r => r.rounds.some(x => x.org === type.org));
+      // Exactly the archers who shot that kind of tournament have an entry.
+      assert.deepStrictEqual(list.filter(r => r.typeRanks[type.key]).map(r => r.name), shot.map(r => r.name));
+      for (const r of shot) {
+        // Only the archers of the same class (age group and equipment class) are compared.
+        const ranked = shot.filter(o => o.equipmentClass === r.equipmentClass && o.typeRanks[type.key].rank !== null);
+        const t = r.typeRanks[type.key];
+        const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a).slice(0, engine.rules.typeRankBest);
+        assert.strictEqual(t.score, Math.round(nps.reduce((s, n) => s + n, 0) / nps.length * t.titleBonus), r.name);
+        assert.strictEqual(t.rank === null, t.rounds < engine.rules.typeRankMinRounds, r.name);
+        if (t.rank === null) continue;
+        // The rank is one more than the number of archers with a better score, so equal scores share it.
+        assert.strictEqual(t.rank, 1 + ranked.filter(o => o.typeRanks[type.key].score > t.score).length, r.name);
+        assert.strictEqual(t.of, ranked.length);
+      }
+    }
+  }
+  // The TAGR score itself does not change.
+  assert.strictEqual(result.adult[0].avgNPS, golden.adult[0].avgNPS);
 });

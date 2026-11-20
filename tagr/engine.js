@@ -170,6 +170,14 @@ const TITLE_BONUS_MIN_FIELD = 2;
 // bonus adds REPEAT_TITLE_BONUS, for up to REPEAT_TITLE_MAX further titles.
 const REPEAT_TITLE_BONUS = 0.01;
 const REPEAT_TITLE_MAX = 3;
+// A State title is worth as much as the field it was won against. The field's
+// strength is the average standing of the other archers in the champion's State
+// division (1 for the best-ranked archer in Texas, 0 for an archer without a full
+// ranking), and it is weighed against the average State division of that
+// organization and season, every class and age together. A title from an
+// average field earns the full bonus, a weaker field less and a stronger field
+// more, up to STATE_TITLE_WEIGHT_MAX times the bonus.
+const STATE_TITLE_WEIGHT_MAX = 1.5;
 // Rank by tournament type: each archer is also ranked against the archers of
 // their own class (age group and equipment class, as on the site's class tabs)
 // on one kind of tournament only, by the average of their best TYPE_RANK_BEST
@@ -190,17 +198,22 @@ const rules = {
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD,
-  repeatTitleBonus: REPEAT_TITLE_BONUS, repeatTitleMax: REPEAT_TITLE_MAX,
+  repeatTitleBonus: REPEAT_TITLE_BONUS, repeatTitleMax: REPEAT_TITLE_MAX, stateTitleWeightMax: STATE_TITLE_WEIGHT_MAX,
   tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS
 };
 
 // The bonus a list of titles earns: Shooter of the Year and State Champion each
 // give their bonus for the first title of that kind that earns one, and
 // REPEAT_TITLE_BONUS more for each further one, up to REPEAT_TITLE_MAX of them.
+// Each title's part is scaled by its `weight` (the strength of the field it was
+// won against, 1 when unknown), the best-weighted title counting as the first.
 function titleBonusOf(titles) {
   const factor = (kind, first) => {
-    const n = titles.filter(t => t.kind === kind && t.bonus).length;
-    return n === 0 ? 1 : first + REPEAT_TITLE_BONUS * Math.min(n - 1, REPEAT_TITLE_MAX);
+    const weights = titles.filter(t => t.kind === kind && t.bonus)
+      .map(t => (t.weight === undefined ? 1 : t.weight)).sort((a, b) => b - a);
+    if (weights.length === 0) return 1;
+    const repeats = weights.slice(1, 1 + REPEAT_TITLE_MAX).reduce((sum, w) => sum + w, 0);
+    return 1 + (first - 1) * weights[0] + REPEAT_TITLE_BONUS * repeats;
   };
   return factor('soy', SOY_TITLE_BONUS) * factor('state', STATE_TITLE_BONUS);
 }
@@ -1331,6 +1344,32 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       r.fieldBonus = Math.round(Math.min(FIELD_BONUS_MAX, earned) * 10000) / 10000;
       r.nps = Math.round(r.exact * (1 + r.fieldBonus));
     }
+  }
+  // How strong the field of each State title was, against the average State
+  // division of the same organization and season.
+  const strengthOf = eventKey => {
+    const others = [...fieldOf[eventKey]].sort((a, b) => b[1] - a[1]).slice(1);
+    return others.length === 0 ? 0 : others.reduce((sum, [archer]) => sum + (standing[archer] || 0), 0) / others.length;
+  };
+  const stateTitles = [];
+  for (const [key, list] of Object.entries(titlesByKey)) {
+    for (const t of list) {
+      if (t.kind !== 'state' || !t.bonus || !mergedMap[key]) continue;
+      const prefix = t.org === 'TX ASA' ? 'asa-state:' + t.season + ':' : 'tfaa-state:' + t.org + ':' + t.season + ':';
+      const won = mergedMap[key].allNPSWithOrg.find(r => r.eventKey && r.eventKey.startsWith(prefix) && fieldOf[r.eventKey]
+        && Math.max(...fieldOf[r.eventKey].values()) === fieldOf[r.eventKey].get(key));
+      if (won && fieldOf[won.eventKey].size >= TITLE_BONUS_MIN_FIELD) stateTitles.push({ t, prefix, strength: strengthOf(won.eventKey) });
+    }
+  }
+  const averageOf = {};
+  for (const prefix of new Set(stateTitles.map(x => x.prefix))) {
+    const fields = stateTitles.filter(x => x.prefix === prefix);
+    averageOf[prefix] = fields.reduce((sum, x) => sum + x.strength, 0) / fields.length;
+  }
+  for (const { t, prefix, strength } of stateTitles) {
+    const average = averageOf[prefix];
+    t.fieldStrength = Math.round(strength * 1000) / 1000;
+    t.weight = average > 0 ? Math.round(Math.min(STATE_TITLE_WEIGHT_MAX, strength / average) * 100) / 100 : 1;
   }
   const rankings = rankAll();
 

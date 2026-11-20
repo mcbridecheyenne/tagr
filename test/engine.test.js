@@ -800,6 +800,31 @@ test('a Shooter of the Year and a State Champion each earn a bonus, and a little
   assert.deepStrictEqual(score([['state', '2026', 1], ['state', '2025', 2]]), [Math.round(570 * 1.02), 1.02]);
 });
 
+test('a State title is worth as much as the field it was won against', () => {
+  assert.strictEqual(engine.rules.stateTitleWeightMax, 1.5);
+  // Two State divisions of the same Championship. Strong Win beat the best-ranked
+  // archer in Texas; Weak Win beat the lowest-ranked one.
+  const at = (name, shoot, elsewhere, eventKey) => ({
+    ...asa(name, [shoot, elsewhere, elsewhere]), when: 2026,
+    eventKeys: [eventKey, null, null], fieldScores: [shoot, elsewhere, elsewhere]
+  });
+  const result = engine.computeRankings({
+    asaShooters: [
+      at('Strong Win', 350, 300, 'asa-state:2026:A'), at('Top Dog', 340, 360, 'asa-state:2026:A'),
+      at('Weak Win', 350, 300, 'asa-state:2026:B'), at('Low One', 200, 200, 'asa-state:2026:B')
+    ],
+    tfaaShooters: [], tfaaIndoorShooters: [], stateRecordDetails: [],
+    titles: ['Strong Win', 'Weak Win'].map(name => ({ kind: 'state', season: '2026', field: 2, org: 'TX ASA', orgClass: "Men's Pins 30", name }))
+  });
+  const title = name => result.adult.find(r => r.name === name).titles[0];
+  // Standings: Top Dog 1, the two champions 0.75, Low One 0.25. The fields are
+  // 1 and 0.25 strong, 0.625 on average: weights 1.6 (held to 1.5) and 0.4.
+  assert.deepStrictEqual([title('Strong Win').fieldStrength, title('Strong Win').weight], [1, 1.5]);
+  assert.deepStrictEqual([title('Weak Win').fieldStrength, title('Weak Win').weight], [0.25, 0.4]);
+  assert.strictEqual(result.adult.find(r => r.name === 'Strong Win').titleBonus, 1.03);
+  assert.strictEqual(result.adult.find(r => r.name === 'Weak Win').titleBonus, 1.008);
+});
+
 test('a title says how many archers were in the running for it', () => {
   const page = outdoorPage([freestyle('Adult Male', [
     [1, 'Quillfeather, Avery', 540, 545, 538, 1085, 2708],

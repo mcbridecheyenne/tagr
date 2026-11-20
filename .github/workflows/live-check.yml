@@ -32,10 +32,3 @@ jobs:
           path: tagr-pages
           retention-days: 3
           if-no-files-found: ignore
-      # TEMPORARY (removed before merge): print the pages so they can be replayed offline.
-      - if: always()
-        run: |
-          echo "=====PAGES-BEGIN====="
-          tar -czf - tagr-pages | base64 -w 0
-          echo
-          echo "=====PAGES-END====="

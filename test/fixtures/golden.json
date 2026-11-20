@@ -405,19 +405,19 @@
      "score": 1093,
      "rounds": 10,
      "rank": 1,
-     "of": 17
+     "of": 12
     },
     "indoor": {
      "score": 1070,
      "rounds": 8,
      "rank": 1,
-     "of": 9
+     "of": 8
     },
     "3d": {
      "score": 1018,
      "rounds": 7,
      "rank": 1,
-     "of": 16
+     "of": 13
     }
    }
   },
@@ -594,13 +594,13 @@
      "score": 994,
      "rounds": 2,
      "rank": 6,
-     "of": 17
+     "of": 12
     },
     "3d": {
      "score": 1000,
      "rounds": 8,
      "rank": 2,
-     "of": 16
+     "of": 13
     }
    }
   },
@@ -809,19 +809,19 @@
      "score": 1003,
      "rounds": 5,
      "rank": 4,
-     "of": 17
+     "of": 12
     },
     "indoor": {
      "score": 1040,
      "rounds": 4,
      "rank": 3,
-     "of": 9
+     "of": 8
     },
     "3d": {
      "score": 919,
      "rounds": 3,
-     "rank": 9,
-     "of": 16
+     "rank": 8,
+     "of": 13
     }
    }
   },
@@ -1144,19 +1144,19 @@
      "score": 1014,
      "rounds": 10,
      "rank": 3,
-     "of": 17
+     "of": 12
     },
     "indoor": {
      "score": 1009,
      "rounds": 4,
      "rank": 5,
-     "of": 9
+     "of": 8
     },
     "3d": {
      "score": 942,
      "rounds": 5,
      "rank": 3,
-     "of": 16
+     "of": 13
     }
    }
   },
@@ -1317,19 +1317,19 @@
      "score": 1036,
      "rounds": 4,
      "rank": 2,
-     "of": 17
+     "of": 12
     },
     "indoor": {
      "score": 996,
      "rounds": 4,
      "rank": 7,
-     "of": 9
+     "of": 8
     },
     "3d": {
      "score": 932,
      "rounds": 3,
-     "rank": 6,
-     "of": 16
+     "rank": 5,
+     "of": 13
     }
    }
   },
@@ -1445,13 +1445,13 @@
      "score": 1018,
      "rounds": 4,
      "rank": 4,
-     "of": 9
+     "of": 8
     },
     "3d": {
      "score": 920,
      "rounds": 3,
-     "rank": 8,
-     "of": 16
+     "rank": 7,
+     "of": 13
     }
    }
   },
@@ -1660,19 +1660,19 @@
      "score": 938,
      "rounds": 5,
      "rank": 8,
-     "of": 17
+     "of": 12
     },
     "indoor": {
      "score": 951,
      "rounds": 4,
      "rank": 8,
-     "of": 9
+     "of": 8
     },
     "3d": {
      "score": 930,
      "rounds": 3,
-     "rank": 7,
-     "of": 16
+     "rank": 6,
+     "of": 13
     }
    }
   },
@@ -1784,7 +1784,7 @@
      "score": 1001,
      "rounds": 5,
      "rank": 5,
-     "of": 17
+     "of": 12
     }
    }
   },
@@ -1918,14 +1918,14 @@
     "field": {
      "score": 937,
      "rounds": 5,
-     "rank": 9,
-     "of": 17
+     "rank": 1,
+     "of": 1
     },
     "3d": {
      "score": 940,
      "rounds": 2,
-     "rank": 4,
-     "of": 16
+     "rank": 1,
+     "of": 1
     }
    }
   },
@@ -2150,20 +2150,20 @@
     "field": {
      "score": 891,
      "rounds": 5,
-     "rank": 13,
-     "of": 17
+     "rank": 1,
+     "of": 2
     },
     "indoor": {
      "score": 860,
      "rounds": 4,
-     "rank": 9,
-     "of": 9
+     "rank": 1,
+     "of": 1
     },
     "3d": {
      "score": 909,
      "rounds": 3,
-     "rank": 10,
-     "of": 16
+     "rank": 1,
+     "of": 1
     }
    }
   },
@@ -2258,13 +2258,13 @@
      "score": 1006,
      "rounds": 2,
      "rank": 6,
-     "of": 9
+     "of": 8
     },
     "3d": {
      "score": 884,
      "rounds": 3,
-     "rank": 11,
-     "of": 16
+     "rank": 9,
+     "of": 13
     }
    }
   },
@@ -2368,7 +2368,7 @@
      "score": 947,
      "rounds": 5,
      "rank": 7,
-     "of": 17
+     "of": 12
     }
    }
   },
@@ -2472,7 +2472,7 @@
      "score": 940,
      "rounds": 6,
      "rank": 4,
-     "of": 16
+     "of": 13
     }
    }
   },
@@ -2583,8 +2583,8 @@
     "field": {
      "score": 936,
      "rounds": 5,
-     "rank": 10,
-     "of": 17
+     "rank": 9,
+     "of": 12
     }
    }
   },
@@ -2754,14 +2754,14 @@
     "field": {
      "score": 936,
      "rounds": 5,
-     "rank": 10,
-     "of": 17
+     "rank": 9,
+     "of": 12
     },
     "3d": {
      "score": 869,
      "rounds": 6,
-     "rank": 13,
-     "of": 16
+     "rank": 11,
+     "of": 13
     }
    }
   },
@@ -2872,8 +2872,8 @@
     "field": {
      "score": 907,
      "rounds": 5,
-     "rank": 12,
-     "of": 17
+     "rank": 11,
+     "of": 12
     }
    }
   },
@@ -2984,8 +2984,8 @@
     "field": {
      "score": 886,
      "rounds": 5,
-     "rank": 14,
-     "of": 17
+     "rank": 12,
+     "of": 12
     }
    }
   },
@@ -3077,8 +3077,8 @@
     "3d": {
      "score": 882,
      "rounds": 5,
-     "rank": 12,
-     "of": 16
+     "rank": 10,
+     "of": 13
     }
    }
   },
@@ -3244,14 +3244,14 @@
     "field": {
      "score": 765,
      "rounds": 5,
-     "rank": 15,
-     "of": 17
+     "rank": 1,
+     "of": 1
     },
     "3d": {
      "score": 842,
      "rounds": 4,
-     "rank": 16,
-     "of": 16
+     "rank": 1,
+     "of": 1
     }
    }
   },
@@ -3362,8 +3362,8 @@
     "field": {
      "score": 759,
      "rounds": 5,
-     "rank": 16,
-     "of": 17
+     "rank": 2,
+     "of": 2
     }
    }
   },
@@ -3492,8 +3492,8 @@
     "field": {
      "score": 737,
      "rounds": 5,
-     "rank": 17,
-     "of": 17
+     "rank": 1,
+     "of": 1
     }
    }
   },
@@ -3564,7 +3564,7 @@
      "score": 1046,
      "rounds": 3,
      "rank": 2,
-     "of": 9
+     "of": 8
     }
    }
   },
@@ -3634,8 +3634,8 @@
     "3d": {
      "score": 861,
      "rounds": 3,
-     "rank": 14,
-     "of": 16
+     "rank": 12,
+     "of": 13
     }
    }
   },
@@ -3694,8 +3694,8 @@
     "3d": {
      "score": 858,
      "rounds": 2,
-     "rank": 15,
-     "of": 16
+     "rank": 13,
+     "of": 13
     }
    }
   },
@@ -3979,7 +3979,7 @@
      "score": 915,
      "rounds": 4,
      "rank": 1,
-     "of": 4
+     "of": 2
     }
    }
   },
@@ -4189,7 +4189,7 @@
      "score": 850,
      "rounds": 2,
      "rank": 2,
-     "of": 4
+     "of": 2
     }
    }
   },
@@ -4391,8 +4391,8 @@
     "3d": {
      "score": 650,
      "rounds": 4,
-     "rank": 4,
-     "of": 4
+     "rank": 1,
+     "of": 1
     }
    }
   },
@@ -4462,8 +4462,8 @@
     "3d": {
      "score": 791,
      "rounds": 3,
-     "rank": 3,
-     "of": 4
+     "rank": 1,
+     "of": 1
     }
    }
   }

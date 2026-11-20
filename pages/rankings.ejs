@@ -268,13 +268,13 @@ function holdsTitle(r, kind) {
   return (r.titles || []).some(function(t) { return !kind || t.kind === kind; });
 }
 
-// Rank by tournament type: Field, Indoor, 3D and 900, each against everybody in the age group.
+// Rank by tournament type: Field, Indoor, 3D and 900, each within the archer's class (age group and equipment class).
 var TOURNAMENT_TYPES = <%- JSON.stringify(rules.tournamentTypes.map(function (t) { return { key: t.key, label: t.label, min: t.min }; })) %>;
 
 function typeRankText(t, type) {
   if (!t) return null;
   if (t.rank === null) return { short: t.rounds + ' round', long: t.rounds + ' round, ' + type.min + ' needed for a rank' };
-  var long = '#' + t.rank + ' of ' + t.of;
+  var long = '#' + t.rank + ' of ' + t.of + ' in class';
   if (type.key === '900') long += ' (best 900: ' + t.best + ' in ' + t.year + ')';
   return { short: '#' + t.rank, long: long };
 }

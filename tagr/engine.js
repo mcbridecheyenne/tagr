@@ -166,9 +166,10 @@ const FIELD_STANDING_POWER = 3;
 const SOY_TITLE_BONUS = 1.03;
 const STATE_TITLE_BONUS = 1.02;
 const TITLE_BONUS_MIN_FIELD = 2;
-// Rank by tournament type: each archer is also ranked against everybody in their
-// age group on one kind of tournament only. For Field, Indoor and 3D the score is
-// the average of their best `best` rounds of it, and `min` rounds are needed for a
+// Rank by tournament type: each archer is also ranked against the archers of
+// their own class (age group and equipment class, as on the site's class tabs)
+// on one kind of tournament only. For Field, Indoor and 3D the score is the
+// average of their best `best` rounds of it, and `min` rounds are needed for a
 // rank. These ranks are shown beside the TAGR rank and do not change the TAGR score.
 const TYPE_RANK_BEST = 3;
 const TYPE_RANK_MIN_ROUNDS = 2;
@@ -211,21 +212,47 @@ const rules = {
 };
 
 // Gives every archer in one age group a `typeRanks` entry for each tournament
-// type they shot: { score, rounds, rank, of }. `rank` is null with fewer than
-// the type's `min` rounds; `of` is how many archers have a rank of that type.
-// Equal scores share a rank.
+// type they shot: { score, rounds, rank, of }, ranked within their equipment
+// class. `rank` is null with fewer than the type's `min` rounds; `of` is how
+// many archers of the class have a rank of that type. Equal scores share a rank.
 // `nineHundred` is every 900 Round archer of the age group, ranked or not on
 // TAGR: [{ key, equipmentClass, score, rounds, best, year }]. The 900 rank is
-// among all of them in the same bow class, and an archer on the list gets theirs
-// (with `best`, the 900 score, and its `year`).
+// among all of them in the same equipment class, and an archer on the list gets
+// theirs (with `best`, the 900 score, and its `year`).
 function addTypeRanks(list, nineHundred = []) {
-  const rankEntries = entries => {
-    entries.sort((a, b) => b.score - a.score);
-    entries.forEach((e, i) => {
-      e.rank = i > 0 && e.score === entries[i - 1].score ? entries[i - 1].rank : i + 1;
-      e.of = entries.length;
-    });
-  };
+  const classes = new Map();
+  for (const r of list) {
+    if (!classes.has(r.equipmentClass)) classes.set(r.equipmentClass, []);
+    classes.get(r.equipmentClass).push(r);
+  }
+  for (const members of classes.values()) rankTypesWithin(members);
+
+  const pool = nineHundred.map(e => ({ ...e, rank: null, of: 0 }));
+  const pools = new Map();
+  for (const e of pool) {
+    if (!pools.has(e.equipmentClass)) pools.set(e.equipmentClass, []);
+    pools.get(e.equipmentClass).push(e);
+  }
+  for (const entries of pools.values()) rankEntries(entries);
+  const byKey = new Map(pool.map(e => [e.key + '||' + e.equipmentClass, e]));
+  for (const r of list) {
+    const e = byKey.get(nameKey(r.name) + '||' + r.equipmentClass);
+    if (e) r.typeRanks['900'] = { score: e.score, rounds: e.rounds, rank: e.rank, of: e.of, best: e.best, year: e.year };
+  }
+  return list;
+}
+
+// Best score first; equal scores share a rank.
+function rankEntries(entries) {
+  entries.sort((a, b) => b.score - a.score);
+  entries.forEach((e, i) => {
+    e.rank = i > 0 && e.score === entries[i - 1].score ? entries[i - 1].rank : i + 1;
+    e.of = entries.length;
+  });
+}
+
+// Field, Indoor and 3D ranks among the archers of one class.
+function rankTypesWithin(list) {
   for (const r of list) r.typeRanks = {};
   for (const type of TOURNAMENT_TYPES) {
     if (type.key === '900') continue;
@@ -241,21 +268,6 @@ function addTypeRanks(list, nineHundred = []) {
     }
     rankEntries(entries);
   }
-  // The 900 rank is within the bow class (Compound, Barebow, Olympic,
-  // Traditional, Longbow), as Cheyenne asked.
-  const pool = nineHundred.map(e => ({ ...e, rank: null, of: 0 }));
-  const classes = new Map();
-  for (const e of pool) {
-    if (!classes.has(e.equipmentClass)) classes.set(e.equipmentClass, []);
-    classes.get(e.equipmentClass).push(e);
-  }
-  for (const entries of classes.values()) rankEntries(entries);
-  const byKey = new Map(pool.map(e => [e.key + '||' + e.equipmentClass, e]));
-  for (const r of list) {
-    const e = byKey.get(nameKey(r.name) + '||' + r.equipmentClass);
-    if (e) r.typeRanks['900'] = { score: e.score, rounds: e.rounds, rank: e.rank, of: e.of, best: e.best, year: e.year };
-  }
-  return list;
 }
 
 // ---------------------------------------------------------------------------

@@ -154,11 +154,12 @@ async function main() {
   }
 
   for (const [label, list] of [['adult', result.adult], ['youth', result.youth]]) {
-    const ranked = list.filter(r => r.typeRanks && r.typeRanks['900']).sort((a, b) => a.typeRanks['900'].rank - b.typeRanks['900'].rank);
-    console.log('\n900 rank, ' + label + ': ' + ranked.length + ' on TAGR have one' + (ranked[0] ? ', of ' + ranked[0].typeRanks['900'].of + ' who shot a State 900' : ''));
-    ranked.slice(0, 15).forEach(r => {
+    const ranked = list.filter(r => r.typeRanks && r.typeRanks['900'])
+      .sort((a, b) => a.equipmentClass.localeCompare(b.equipmentClass) || a.typeRanks['900'].rank - b.typeRanks['900'].rank);
+    console.log('\n900 rank, ' + label + ': ' + ranked.length + ' on TAGR have one; the top 3 of each class');
+    ranked.filter(r => r.typeRanks['900'].rank <= 3).forEach(r => {
       const t = r.typeRanks['900'];
-      console.log('  #' + String(t.rank).padEnd(3) + String(t.score).padStart(5) + '  ' + r.name + '  (' + r.equipmentClass + ', ' + t.best + ' in ' + t.year + ')');
+      console.log('  ' + r.equipmentClass.padEnd(12) + '#' + t.rank + ' of ' + String(t.of).padEnd(4) + String(t.score).padStart(5) + '  ' + r.name + '  (' + t.best + ' in ' + t.year + ')');
     });
   }
 

@@ -577,15 +577,32 @@ test('a State Championship round earns the same bonus in every organization', ()
 
 test('a round counts in full in the newest season of its organization, and for less each season before', () => {
   assert.deepStrictEqual(engine.rules.recencyWeights, [1, 0.95, 0.9]);
-  const season = (name, when) => ({ ...asa(name, [360, 360, 360]), when });
-  const ranked = rank([season('New Er', 2026), season('Mid Dle', 2025), season('Old Er', 2024), season('Old Est', 2023)]);
-  const best = name => ranked.find(r => r.name === name).bestNPS;
-  assert.deepStrictEqual([best('New Er'), best('Mid Dle'), best('Old Er'), best('Old Est')], [950, Math.round(1000 * (0.95 * 0.95)), 855, 855]);
+  // One archer who shot all three seasons: one round a season, each its own score.
+  const season = (when, score) => ({ ...asa('Al Ways', [score]), when });
+  const [always] = rank([season(2026, 300), season(2025, 330), season(2024, 360)]);
+  assert.deepStrictEqual(always.rounds.map(r => r.nps).sort((a, b) => a - b),
+    [Math.round(300 / 360 * 950), Math.round(330 / 360 * 950 * 0.95), Math.round(950 * 0.9)].sort((a, b) => a - b));
 
   // The seasons of another organization do not age this one's: its own newest season is full value.
   const indoor = { ...tfaaIndoorState('In Door', 'Freestyle (FS)', [600, 600, 600]), when: 2024.5 };
   const [only] = rank([indoor, season('New Er', 2026)]).filter(r => r.name === 'In Door');
   assert.strictEqual(only.bestNPS, Math.round(1000 * 1.05));
+});
+
+test('an archer with fewer than three seasons has them weighed as the oldest seasons', () => {
+  const season = (name, when) => ({ ...asa(name, [360, 360, 360]), when });
+  const ranked = rank([
+    season('Three Years', 2026), season('Three Years', 2025), season('Three Years', 2024),
+    season('Two Years', 2026), season('Two Years', 2025),
+    season('One Year', 2026)
+  ]);
+  const npsBySeason = name => ranked.find(r => r.name === name).rounds.map(r => r.nps).filter((n, i, all) => all.indexOf(n) === i);
+  // Three seasons: the usual 100%, 95%, 90%.
+  assert.deepStrictEqual(npsBySeason('Three Years'), [950, Math.round(950 * 0.95), Math.round(950 * 0.9)]);
+  // Two seasons: the newer counts like two seasons back (95%), the older like three (90%).
+  assert.deepStrictEqual(npsBySeason('Two Years'), [Math.round(950 * 0.95), Math.round(950 * 0.9)]);
+  // One season: like three seasons back (90%), however new.
+  assert.deepStrictEqual(npsBySeason('One Year'), [Math.round(950 * 0.9)]);
 });
 
 test('the event bonus goes by the events of the busiest year, not the three years together', () => {

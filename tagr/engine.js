@@ -116,6 +116,10 @@ const STATE_ROUND_BONUS = 1.05;
 // A round counts in full in the newest season TAGR reads of its organization,
 // and for a little less each season before that.
 const RECENCY_WEIGHTS = [1, 0.95, 0.9];
+// An archer with fewer seasons of an organization than TAGR reads (three) has
+// those seasons weighed as the oldest ones: one season counts like a season
+// three back (the last weight), two count like the two oldest seasons, the
+// newer of them the less discounted. With all three, the usual weights apply.
 // The most a Texas ASA round can score: 30 targets, 12 each. Par is a 10 on
 // every target, and no class's bar is set lower than that.
 const ASA_ROUND_MAX = 360;
@@ -1170,6 +1174,23 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     seasons[s.org].add(s.when || 0);
   }
   const seasonsBack = s => [...seasons[s.org]].filter(when => when > (s.when || 0)).length;
+  // The seasons each archer shot in each organization, newest first.
+  const archerOf = s => nameKey(canonical(s.name)) + '||' + mapEquipmentClass(s.orgClass, s.org) + '||' + s.org;
+  const seasonsShot = {};
+  for (const s of allShooters) {
+    if (!s.eventScores.some(v => v > 0)) continue;
+    const k = archerOf(s);
+    if (!seasonsShot[k]) seasonsShot[k] = new Set();
+    seasonsShot[k].add(s.when || 0);
+  }
+  const recencyOf = s => {
+    const back = seasonsBack(s);
+    const mine = [...(seasonsShot[archerOf(s)] || [])].sort((a, b) => b - a);
+    const needed = Math.min(RECENCY_WEIGHTS.length, seasons[s.org].size);
+    const at = mine.indexOf(s.when || 0);
+    const asIf = mine.length < needed && at >= 0 ? RECENCY_WEIGHTS.length - mine.length + at : 0;
+    return RECENCY_WEIGHTS[Math.min(Math.max(back, asIf), RECENCY_WEIGHTS.length - 1)];
+  };
 
   // First pass: compute NPS for each entry
   const npsEntries = allShooters.map(s => {
@@ -1183,7 +1204,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       else if (s.asaMaxYards >= 40) w = w * 1.03;
       // 30 and below = 1.0 (no bonus)
     }
-    w = w * RECENCY_WEIGHTS[Math.min(seasonsBack(s), RECENCY_WEIGHTS.length - 1)];
+    w = w * recencyOf(s);
     // For indoor: X count bonus — (xCount/60) * 0.05 adds up to 5% for perfect X count
     const npsScores = s.eventScores.map((score, i) => {
       const rmax = (s.roundMax && s.roundMax[i]) ? s.roundMax[i] : s.maxPerRound;

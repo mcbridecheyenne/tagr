@@ -166,6 +166,10 @@ const FIELD_STANDING_POWER = 3;
 const SOY_TITLE_BONUS = 1.03;
 const STATE_TITLE_BONUS = 1.02;
 const TITLE_BONUS_MIN_FIELD = 2;
+// A repeat title is worth more: each further title of the same kind that earns a
+// bonus adds REPEAT_TITLE_BONUS, for up to REPEAT_TITLE_MAX further titles.
+const REPEAT_TITLE_BONUS = 0.01;
+const REPEAT_TITLE_MAX = 3;
 // Rank by tournament type: each archer is also ranked against the archers of
 // their own class (age group and equipment class, as on the site's class tabs)
 // on one kind of tournament only, by the average of their best TYPE_RANK_BEST
@@ -186,11 +190,23 @@ const rules = {
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD,
+  repeatTitleBonus: REPEAT_TITLE_BONUS, repeatTitleMax: REPEAT_TITLE_MAX,
   tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS
 };
 
+// The bonus a list of titles earns: Shooter of the Year and State Champion each
+// give their bonus for the first title of that kind that earns one, and
+// REPEAT_TITLE_BONUS more for each further one, up to REPEAT_TITLE_MAX of them.
+function titleBonusOf(titles) {
+  const factor = (kind, first) => {
+    const n = titles.filter(t => t.kind === kind && t.bonus).length;
+    return n === 0 ? 1 : first + REPEAT_TITLE_BONUS * Math.min(n - 1, REPEAT_TITLE_MAX);
+  };
+  return factor('soy', SOY_TITLE_BONUS) * factor('state', STATE_TITLE_BONUS);
+}
+
 // Gives every archer in one age group a `typeRanks` entry for each tournament
-// type they shot: { score, rounds, rank, of }, ranked within their equipment
+// type they shot: { score, rounds, titleBonus, rank, of }, ranked within their equipment
 // class. `rank` is null with fewer than TYPE_RANK_MIN_ROUNDS rounds; `of` is how
 // many archers of the class have a rank of that type. Equal scores share a rank.
 function addTypeRanks(list) {
@@ -211,8 +227,10 @@ function rankTypesWithin(list) {
       const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a);
       if (nps.length === 0) continue;
       const best = nps.slice(0, TYPE_RANK_BEST);
-      const score = Math.round(best.reduce((sum, n) => sum + n, 0) / best.length);
-      const entry = { score, rounds: nps.length, rank: null, of: 0 };
+      // Titles won in this kind of tournament add their bonus, as on the TAGR score.
+      const titleBonus = Math.round(titleBonusOf((r.titles || []).filter(t => t.org === type.org)) * 10000) / 10000;
+      const score = Math.round(best.reduce((sum, n) => sum + n, 0) / best.length * titleBonus);
+      const entry = { score, rounds: nps.length, titleBonus, rank: null, of: 0 };
       r.typeRanks[type.key] = entry;
       if (nps.length >= TYPE_RANK_MIN_ROUNDS) entries.push(entry);
     }
@@ -1232,8 +1250,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
 
     // Title bonus: one for Shooter of the Year, one for State Champion.
     const myTitles = (titlesByKey[nameKey(m.name) + '||' + m.equipmentClass] || []).sort(titleOrder);
-    const earns = kind => myTitles.some(t => t.kind === kind && t.bonus);
-    const titleBonus = (earns('soy') ? SOY_TITLE_BONUS : 1) * (earns('state') ? STATE_TITLE_BONUS : 1);
+    const titleBonus = titleBonusOf(myTitles);
 
     avgNPS = Math.round(avgNPS * eventBonus * orgBonus * titleBonus);
 

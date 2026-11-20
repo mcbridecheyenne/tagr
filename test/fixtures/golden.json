@@ -26,7 +26,7 @@
     1055,
     1052
    ],
-   "avgNPS": 1273,
+   "avgNPS": 1336,
    "bestNPS": 1115,
    "rounds": [
     {
@@ -391,24 +391,27 @@
      "past": false
     }
    ],
-   "titleBonus": 1.0506,
+   "titleBonus": 1.1025,
    "typeRanks": {
     "field": {
-     "score": 1093,
+     "score": 1160,
      "rounds": 10,
+     "titleBonus": 1.0609,
      "rank": 1,
      "of": 12
     },
     "indoor": {
-     "score": 1070,
+     "score": 1146,
      "rounds": 8,
+     "titleBonus": 1.0712,
      "rank": 1,
      "of": 8
     },
     "3d": {
      "score": 1018,
      "rounds": 7,
-     "rank": 1,
+     "titleBonus": 1,
+     "rank": 2,
      "of": 13
     }
    }
@@ -577,13 +580,15 @@
     "field": {
      "score": 994,
      "rounds": 2,
+     "titleBonus": 1,
      "rank": 6,
      "of": 12
     },
     "3d": {
-     "score": 1000,
+     "score": 1051,
      "rounds": 8,
-     "rank": 2,
+     "titleBonus": 1.0506,
+     "rank": 1,
      "of": 13
     }
    }
@@ -792,18 +797,21 @@
     "field": {
      "score": 1003,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 4,
      "of": 12
     },
     "indoor": {
      "score": 1040,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 3,
      "of": 8
     },
     "3d": {
      "score": 919,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 8,
      "of": 13
     }
@@ -1119,18 +1127,21 @@
     "field": {
      "score": 1014,
      "rounds": 10,
+     "titleBonus": 1,
      "rank": 3,
      "of": 12
     },
     "indoor": {
      "score": 1009,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 5,
      "of": 8
     },
     "3d": {
      "score": 942,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 3,
      "of": 13
     }
@@ -1292,18 +1303,21 @@
     "field": {
      "score": 1036,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 2,
      "of": 12
     },
     "indoor": {
      "score": 996,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 7,
      "of": 8
     },
     "3d": {
      "score": 932,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 5,
      "of": 13
     }
@@ -1420,12 +1434,14 @@
     "indoor": {
      "score": 1018,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 4,
      "of": 8
     },
     "3d": {
      "score": 920,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 7,
      "of": 13
     }
@@ -1635,18 +1651,21 @@
     "field": {
      "score": 938,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 8,
      "of": 12
     },
     "indoor": {
      "score": 951,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 8,
      "of": 8
     },
     "3d": {
      "score": 930,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 6,
      "of": 13
     }
@@ -1759,6 +1778,7 @@
     "field": {
      "score": 1001,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 5,
      "of": 12
     }
@@ -1894,12 +1914,14 @@
     "field": {
      "score": 937,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     },
     "3d": {
      "score": 940,
      "rounds": 2,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     }
@@ -2118,18 +2140,21 @@
     "field": {
      "score": 891,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 1,
      "of": 2
     },
     "indoor": {
      "score": 860,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     },
     "3d": {
      "score": 909,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     }
@@ -2225,12 +2250,14 @@
     "indoor": {
      "score": 1006,
      "rounds": 2,
+     "titleBonus": 1,
      "rank": 6,
      "of": 8
     },
     "3d": {
      "score": 884,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 9,
      "of": 13
     }
@@ -2335,6 +2362,7 @@
     "field": {
      "score": 947,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 7,
      "of": 12
     }
@@ -2439,6 +2467,7 @@
     "3d": {
      "score": 940,
      "rounds": 6,
+     "titleBonus": 1,
      "rank": 4,
      "of": 13
     }
@@ -2551,6 +2580,7 @@
     "field": {
      "score": 936,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 9,
      "of": 12
     }
@@ -2722,12 +2752,14 @@
     "field": {
      "score": 936,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 9,
      "of": 12
     },
     "3d": {
      "score": 869,
      "rounds": 6,
+     "titleBonus": 1,
      "rank": 11,
      "of": 13
     }
@@ -2840,6 +2872,7 @@
     "field": {
      "score": 907,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 11,
      "of": 12
     }
@@ -2952,6 +2985,7 @@
     "field": {
      "score": 886,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 12,
      "of": 12
     }
@@ -3045,6 +3079,7 @@
     "3d": {
      "score": 882,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 10,
      "of": 13
     }
@@ -3212,12 +3247,14 @@
     "field": {
      "score": 765,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     },
     "3d": {
      "score": 842,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     }
@@ -3330,6 +3367,7 @@
     "field": {
      "score": 759,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 2,
      "of": 2
     }
@@ -3460,6 +3498,7 @@
     "field": {
      "score": 737,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     }
@@ -3531,6 +3570,7 @@
     "indoor": {
      "score": 1046,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 2,
      "of": 8
     }
@@ -3602,6 +3642,7 @@
     "3d": {
      "score": 861,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 12,
      "of": 13
     }
@@ -3662,6 +3703,7 @@
     "3d": {
      "score": 858,
      "rounds": 2,
+     "titleBonus": 1,
      "rank": 13,
      "of": 13
     }
@@ -3711,6 +3753,7 @@
     "3d": {
      "score": 858,
      "rounds": 1,
+     "titleBonus": 1,
      "rank": null,
      "of": 0
     }
@@ -3934,18 +3977,21 @@
     "field": {
      "score": 963,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 1,
      "of": 3
     },
     "indoor": {
      "score": 1053,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 1,
      "of": 2
     },
     "3d": {
      "score": 915,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 1,
      "of": 2
     }
@@ -4144,18 +4190,21 @@
     "field": {
      "score": 650,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 2,
      "of": 3
     },
     "indoor": {
      "score": 482,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 2,
      "of": 2
     },
     "3d": {
      "score": 850,
      "rounds": 2,
+     "titleBonus": 1,
      "rank": 2,
      "of": 2
     }
@@ -4268,6 +4317,7 @@
     "field": {
      "score": 564,
      "rounds": 5,
+     "titleBonus": 1,
      "rank": 3,
      "of": 3
     }
@@ -4351,6 +4401,7 @@
     "3d": {
      "score": 650,
      "rounds": 4,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     }
@@ -4422,6 +4473,7 @@
     "3d": {
      "score": 791,
      "rounds": 3,
+     "titleBonus": 1,
      "rank": 1,
      "of": 1
     }

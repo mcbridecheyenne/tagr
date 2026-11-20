@@ -194,7 +194,8 @@
     <ul>
       <li>The score for each type is the average of an archer's best <strong><%= rules.typeRankBest %></strong> rounds of it, using the same NPS as the TAGR score.</li>
       <li>An archer needs at least <strong><%= rules.typeRankMinRounds %></strong> rounds of a type for a rank in it. With fewer, the line shows how many rounds they have; with none, a dash.</li>
-      <li>These ranks are for information. They do not change the TAGR score or the main ranking.</li>
+      <li>Titles won in that kind of tournament add their bonus, worked out as for the TAGR score below: an Indoor Shooter of the Year raises the Indoor rank, a Texas ASA title the 3D rank.</li>
+      <li>These ranks do not change the TAGR score or the main ranking.</li>
     </ul>
 
     <h2>👑 TFAA State Record Holders</h2>
@@ -209,12 +210,13 @@
       <tbody>
         <tr><td>🏆 Shooter of the Year</td><td><strong><%= times(rules.soyTitleBonus) %></strong> (<%= pct(rules.soyTitleBonus) %>)</td></tr>
         <tr><td>⭐ State Champion</td><td><strong><%= times(rules.stateTitleBonus) %></strong> (<%= pct(rules.stateTitleBonus) %>)</td></tr>
-        <tr><td>Both</td><td><strong><%= (rules.soyTitleBonus * rules.stateTitleBonus).toFixed(4) %>×</strong></td></tr>
+        <tr><td>Each further title of the same kind</td><td><strong>+<%= Math.round(rules.repeatTitleBonus * 100) %>%</strong>, for up to <%= rules.repeatTitleMax %> more</td></tr>
+        <tr><td>Both, one of each</td><td><strong><%= (rules.soyTitleBonus * rules.stateTitleBonus).toFixed(4) %>×</strong></td></tr>
       </tbody>
     </table>
     <ul>
       <li>Only a title from the three seasons TAGR ranks earns the bonus. Earlier titles are shown and counted beside your name, without a bonus.</li>
-      <li>Each bonus counts once, however many titles of that kind you hold.</li>
+      <li>A repeat title is worth more: two Shooter of the Year titles give <%= pct(rules.soyTitleBonus + rules.repeatTitleBonus) %>, three give <%= pct(rules.soyTitleBonus + 2 * rules.repeatTitleBonus) %>, and the most is <%= pct(rules.soyTitleBonus + rules.repeatTitleMax * rules.repeatTitleBonus) %> (State Champion likewise, from <%= pct(rules.stateTitleBonus) %>).</li>
       <li>A title earns the bonus only when it was won against somebody: at least <%= rules.titleBonusMinField %> archers were in the running for it. A title in a class of one still shows its icon.</li>
       <li>The bonus goes to your ranking in the equipment class the title was won in.</li>
     </ul>

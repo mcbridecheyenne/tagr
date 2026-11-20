@@ -1164,7 +1164,7 @@ test('every archer is ranked on Field, Indoor and 3D rounds on their own, within
 
 // ---- The 900 Round ----
 
-test('the 900 rank is each archer\'s best State 900 of the newest three, against the state record for their style', async () => {
+test('the 900 rank is each archer\'s best State 900 of the newest three, against the national record, within their bow class', async () => {
   const { result, pages, problems } = await build();
   assert.deepStrictEqual(problems, []);
   // 2027 has held no 900 yet and the 2024 one has no scores, so 2026, 2025 and
@@ -1172,17 +1172,16 @@ test('the 900 rank is each archer\'s best State 900 of the newest three, against
   assert.deepStrictEqual(pages.filter(p => / State 900$/.test(p.what)).map(p => p.what + ': ' + p.results), ['TFAA 2026 State 900: 6', 'TFAA 2025 State 900: 2']);
   assert.strictEqual(result.sources.tfaa900, 8);
   const rank = (age, name) => result[age].find(r => r.name === name).typeRanks['900'];
-  // The adult Freestyle bar is the 880 state record, which a Senior Female
-  // holds: adults of every age shoot the same distances. Avery's best is the
-  // 885 of 2025. Barebow Recurve has no record here, so Casey meets the perfect 900.
-  assert.deepStrictEqual(rank('adult', 'Avery Quillfeather'), { score: Math.round(885 / 880 * 1000), rounds: 2, rank: 1, of: 5, best: 885, year: 2025 });
-  assert.deepStrictEqual(rank('adult', 'Riley Stabilizer'), { score: Math.round(878 / 880 * 1000), rounds: 1, rank: 2, of: 5, best: 878, year: 2026 });
-  // Only Ninehundred is not on TAGR: he is ranked third, so Lee is fourth.
-  assert.strictEqual(rank('adult', 'Lee Greybeard').rank, 4);
-  assert.deepStrictEqual(rank('adult', 'Casey Stringwalker'), { score: Math.round(760 / 900 * 1000), rounds: 2, rank: 5, of: 5, best: 760, year: 2026 });
+  // Freestyle meets the national record of 900. Avery's best is the 885 of 2025.
+  // Among the four adult compound archers, Only Ninehundred (not on TAGR) is third.
+  assert.deepStrictEqual(rank('adult', 'Avery Quillfeather'), { score: Math.round(885 / 900 * 1000), rounds: 2, rank: 1, of: 4, best: 885, year: 2025 });
+  assert.deepStrictEqual(rank('adult', 'Riley Stabilizer'), { score: Math.round(878 / 900 * 1000), rounds: 1, rank: 2, of: 4, best: 878, year: 2026 });
+  assert.deepStrictEqual([rank('adult', 'Lee Greybeard').rank, rank('adult', 'Lee Greybeard').of], [4, 4]);
   assert.ok(!result.adult.some(r => r.name === 'Only Ninehundred'));
-  assert.strictEqual(rank('youth', 'Cub Little').rank, 1);
-  assert.strictEqual(rank('youth', 'Cub Little').of, 1);
+  // Casey is the only barebow archer: first of one, against the 818 Barebow Recurve record.
+  assert.deepStrictEqual(rank('adult', 'Casey Stringwalker'), { score: Math.round(760 / 818 * 1000), rounds: 2, rank: 1, of: 1, best: 760, year: 2026 });
+  // Cubs meet the record at Cub distances.
+  assert.deepStrictEqual([rank('youth', 'Cub Little').score, rank('youth', 'Cub Little').rank], [Math.round(870 / 900 * 1000), 1]);
   assert.strictEqual(result.adult.find(r => r.name === 'Jordan Fletcher').typeRanks['900'], undefined);
   // 900 scores count for this rank only: no TAGR round comes from them.
   assert.ok(!result.adult.some(r => r.rounds.some(x => x.org === 'TFAA 900' || /900/.test(x.event))));

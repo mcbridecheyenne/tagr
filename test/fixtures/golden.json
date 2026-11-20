@@ -394,10 +394,10 @@
    "titleBonus": 1.0506,
    "typeRanks": {
     "900": {
-     "score": 1006,
+     "score": 983,
      "rounds": 2,
      "rank": 1,
-     "of": 5,
+     "of": 4,
      "best": 885,
      "year": 2025
     },
@@ -583,10 +583,10 @@
    "titleBonus": 1.0506,
    "typeRanks": {
     "900": {
-     "score": 998,
+     "score": 976,
      "rounds": 1,
      "rank": 2,
-     "of": 5,
+     "of": 4,
      "best": 878,
      "year": 2026
     },
@@ -1133,10 +1133,10 @@
    "titleBonus": 1,
    "typeRanks": {
     "900": {
-     "score": 977,
+     "score": 956,
      "rounds": 1,
      "rank": 4,
-     "of": 5,
+     "of": 4,
      "best": 860,
      "year": 2026
     },
@@ -2140,10 +2140,10 @@
    "titleBonus": 1,
    "typeRanks": {
     "900": {
-     "score": 844,
+     "score": 929,
      "rounds": 2,
-     "rank": 5,
-     "of": 5,
+     "rank": 1,
+     "of": 1,
      "best": 760,
      "year": 2026
     },

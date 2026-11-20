@@ -183,6 +183,21 @@ const TOURNAMENT_TYPES = [
 ];
 const NINE_HUNDRED_YEARS = 3;
 const NINE_HUNDRED_MAX = 900;
+// A 900 is scored against the NFAA national 900 record for the archer's style,
+// the best of men and women, at the distances the archer shoots: Cubs 30-20-10
+// yards, Youth 50-40-30, and everybody older (Young Adult included) 60-50-40.
+// Tying the national record is worth 1000. From NFAA's outdoor target national
+// records, updated September 2026 (the "900" column):
+// https://nfaausa.com/files/outdoor-national-target-records-020926175052.pdf
+// A style with no record at Cub or Youth distances meets the adult record, and a
+// style with none at all the perfect 900. Genesis meets Barebow Compound's, as
+// for the indoor and field records.
+const NINE_HUNDRED_RECORDS = {
+  adult: { FS: 900, BHFS: 892, MBH: 878, FSL: 861, FSLR: 875, BBR: 818, BBC: 813, TRAD: 803, LB: 700 },
+  youth: { FS: 899, BHFS: 887, MBH: 850, FSL: 789, FSLR: 837, BBR: 581, BBC: 796 },
+  cub: { FS: 900, BHFS: 894, MBH: 888, FSL: 791, FSLR: 882, BBR: 851, BBC: 865 }
+};
+const NINE_HUNDRED_STYLE_FOR = { GEN: 'BBC' };
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
@@ -192,7 +207,7 @@ const rules = {
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD,
   tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS,
-  nineHundredYears: NINE_HUNDRED_YEARS, nineHundredMax: NINE_HUNDRED_MAX
+  nineHundredYears: NINE_HUNDRED_YEARS, nineHundredMax: NINE_HUNDRED_MAX, nineHundredRecords: NINE_HUNDRED_RECORDS
 };
 
 // Gives every archer in one age group a `typeRanks` entry for each tournament
@@ -200,8 +215,9 @@ const rules = {
 // the type's `min` rounds; `of` is how many archers have a rank of that type.
 // Equal scores share a rank.
 // `nineHundred` is every 900 Round archer of the age group, ranked or not on
-// TAGR: [{ key, score, rounds, best, year }]. The 900 rank is among all of them,
-// and an archer on the list gets theirs (with `best`, the 900 score, and its `year`).
+// TAGR: [{ key, equipmentClass, score, rounds, best, year }]. The 900 rank is
+// among all of them in the same bow class, and an archer on the list gets theirs
+// (with `best`, the 900 score, and its `year`).
 function addTypeRanks(list, nineHundred = []) {
   const rankEntries = entries => {
     entries.sort((a, b) => b.score - a.score);
@@ -225,11 +241,18 @@ function addTypeRanks(list, nineHundred = []) {
     }
     rankEntries(entries);
   }
+  // The 900 rank is within the bow class (Compound, Barebow, Olympic,
+  // Traditional, Longbow), as Cheyenne asked.
   const pool = nineHundred.map(e => ({ ...e, rank: null, of: 0 }));
-  rankEntries(pool);
-  const byKey = new Map(pool.map(e => [e.key, e]));
+  const classes = new Map();
+  for (const e of pool) {
+    if (!classes.has(e.equipmentClass)) classes.set(e.equipmentClass, []);
+    classes.get(e.equipmentClass).push(e);
+  }
+  for (const entries of classes.values()) rankEntries(entries);
+  const byKey = new Map(pool.map(e => [e.key + '||' + e.equipmentClass, e]));
   for (const r of list) {
-    const e = byKey.get(nameKey(r.name));
+    const e = byKey.get(nameKey(r.name) + '||' + r.equipmentClass);
     if (e) r.typeRanks['900'] = { score: e.score, rounds: e.rounds, rank: e.rank, of: e.of, best: e.best, year: e.year };
   }
   return list;
@@ -849,8 +872,16 @@ function nineHundredDistance(ageGroup) {
   return 'adult';
 }
 
+// The style code of a 900 entry ("Freestyle (FS)" → FS), as its record is kept.
 function nineHundredStyle(style) {
-  return (style || '').replace(/\s*\([A-Z]+\)\s*$/, '').replace(/\s+/g, ' ').trim().toLowerCase();
+  const code = ((style || '').match(/\(([A-Z]+)\)\s*$/) || [])[1] || (/\bgenesis\b/i.test(style || '') ? 'GEN' : '');
+  return NINE_HUNDRED_STYLE_FOR[code] || code;
+}
+
+// The national record a 900 is scored against.
+function nineHundredBar(distance, style) {
+  const code = nineHundredStyle(style);
+  return (NINE_HUNDRED_RECORDS[distance] || {})[code] || NINE_HUNDRED_RECORDS.adult[code] || NINE_HUNDRED_MAX;
 }
 
 // A State 900 results page → [{ name, adult, distance, style, score, x, year }].
@@ -865,19 +896,6 @@ function parseTfaa900Page(html, year) {
     scores.push({ name: entry.name, adult: entry.adult, distance: nineHundredDistance(entry.age), style: entry.style, score: round.score, x: round.x, year });
   }
   return { scores, unreadRows };
-}
-
-// The bar a 900 is scored against: the TFAA state 900 record for the archer's
-// style at their distances, the best of men and women and of every age group
-// that shoots those distances. A style with no record meets the perfect 900.
-function nineHundredBars(stateRecordDetails) {
-  const bars = {};
-  for (const rec of stateRecordDetails) {
-    if (rec.recordType !== '900' || !(rec.score > 0) || rec.score > NINE_HUNDRED_MAX) continue;
-    const key = nineHundredDistance(rec.ageGroup) + '|' + nineHundredStyle(rec.style);
-    bars[key] = Math.max(bars[key] || 0, rec.score);
-  }
-  return bars;
 }
 
 // The season list on a TFAA results page → [{ id, label, kind, year }], newest first.
@@ -1406,23 +1424,21 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     });
   }
 
-  // The 900 Round: each archer's best 900 against the state record for their
+  // The 900 Round: each archer's best 900 against the national record for their
   // style, 1000 for tying it. The age group is the one of their newest 900.
-  const bars = nineHundredBars(stateRecordDetails);
   const nineHundred = { adult: new Map(), youth: new Map() };
   const newest900 = new Map();
+  const classOf = sc => mapEquipmentClass(sc.style, 'TFAA 900');
+  const who = sc => keyOf(sc.name) + '||' + classOf(sc);
   for (const sc of nineHundredScores) {
-    const key = keyOf(sc.name);
-    const known = newest900.get(key);
-    if (!known || sc.year > known.year) newest900.set(key, sc);
+    const known = newest900.get(who(sc));
+    if (!known || sc.year > known.year) newest900.set(who(sc), sc);
   }
   for (const sc of nineHundredScores) {
-    const key = keyOf(sc.name);
-    const pool = nineHundred[newest900.get(key).adult ? 'adult' : 'youth'];
-    const bar = bars[sc.distance + '|' + nineHundredStyle(sc.style)] || NINE_HUNDRED_MAX;
-    const score = Math.round(sc.score / bar * 1000);
-    const known = pool.get(key);
-    if (!known) pool.set(key, { key, score, rounds: 1, best: sc.score, year: sc.year });
+    const pool = nineHundred[newest900.get(who(sc)).adult ? 'adult' : 'youth'];
+    const score = Math.round(sc.score / nineHundredBar(sc.distance, sc.style) * 1000);
+    const known = pool.get(who(sc));
+    if (!known) pool.set(who(sc), { key: keyOf(sc.name), equipmentClass: classOf(sc), score, rounds: 1, best: sc.score, year: sc.year });
     else {
       known.rounds++;
       if (score > known.score || (score === known.score && sc.year > known.year)) Object.assign(known, { score, best: sc.score, year: sc.year });

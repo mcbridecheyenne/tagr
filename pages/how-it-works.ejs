@@ -194,6 +194,7 @@
     <ul>
       <li>For Field, Indoor and 3D, the score is the average of an archer's best <strong><%= rules.typeRankBest %></strong> rounds of that kind, using the same NPS as the TAGR score. An archer needs at least <strong><%= rules.typeRankMinRounds %></strong> rounds of a kind for a rank in it. With fewer, the line shows how many rounds they have; with none, a dash.</li>
       <li>The <strong>900 Round</strong> is shot once a year, at the TFAA State 900, so it is ranked on an archer's single best 900 from the last <strong><%= rules.nineHundredYears %></strong> State 900s, against the other archers of their age group and <strong>bow class</strong>. The score is measured against the NFAA national 900 record for the archer's style at the distances they shoot (men and women together; Cubs, Youth and everybody older apart), so tying the national record is worth 1000. Every archer who shot a State 900 counts toward the 900 rank, even one with no other TAGR rounds.</li>
+      <li>Titles won in that kind of tournament add their bonus to its rank, worked out as for the TAGR score below: an Indoor Shooter of the Year raises the Indoor rank, a Texas ASA title the 3D rank. The 900 has no titles in TAGR, so it has no bonus.</li>
       <li>These ranks are for information. They do not change the TAGR score or the main ranking, and 900 scores are not TAGR rounds.</li>
     </ul>
 
@@ -209,12 +210,13 @@
       <tbody>
         <tr><td>🏆 Shooter of the Year</td><td><strong><%= times(rules.soyTitleBonus) %></strong> (<%= pct(rules.soyTitleBonus) %>)</td></tr>
         <tr><td>⭐ State Champion</td><td><strong><%= times(rules.stateTitleBonus) %></strong> (<%= pct(rules.stateTitleBonus) %>)</td></tr>
-        <tr><td>Both</td><td><strong><%= (rules.soyTitleBonus * rules.stateTitleBonus).toFixed(4) %>×</strong></td></tr>
+        <tr><td>Each further title of the same kind</td><td><strong>+<%= Math.round(rules.repeatTitleBonus * 100) %>%</strong>, for up to <%= rules.repeatTitleMax %> more</td></tr>
+        <tr><td>Both, one of each</td><td><strong><%= (rules.soyTitleBonus * rules.stateTitleBonus).toFixed(4) %>×</strong></td></tr>
       </tbody>
     </table>
     <ul>
       <li>Only a title from the three seasons TAGR ranks earns the bonus. Earlier titles are shown and counted beside your name, without a bonus.</li>
-      <li>Each bonus counts once, however many titles of that kind you hold.</li>
+      <li>A repeat title is worth more: two Shooter of the Year titles give <%= pct(rules.soyTitleBonus + rules.repeatTitleBonus) %>, three give <%= pct(rules.soyTitleBonus + 2 * rules.repeatTitleBonus) %>, and the most is <%= pct(rules.soyTitleBonus + rules.repeatTitleMax * rules.repeatTitleBonus) %> (State Champion likewise, from <%= pct(rules.stateTitleBonus) %>).</li>
       <li>A title earns the bonus only when it was won against somebody: at least <%= rules.titleBonusMinField %> archers were in the running for it. A title in a class of one still shows its icon.</li>
       <li>The bonus goes to your ranking in the equipment class the title was won in.</li>
     </ul>

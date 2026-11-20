@@ -433,6 +433,49 @@ const tfaaStateIndoor2023 = tfaaResultsPage(33, 'Results - TFAA State Championsh
   ] }
 ]);
 
+// ---------- The State 900 ----------
+//
+// One a year, listed among an outdoor season's shoots. The 2027 season has
+// not held one yet, and the 2024 one is listed with no scores on it, so the
+// 900s ranked are 2026, 2025 and (none in) 2023: the newest three with scores.
+const NINE_HUNDRED_HEADS = ['Score', 'Xs'];
+const tfaa900of2026 = tfaaResultsPage(50, 'Results - TFAA State 900 Championship 2026', NINE_HUNDRED_HEADS, [
+  { age: 'Adult Male', styles: [
+    { style: 'Freestyle (FS)', rows: [
+      [1, "Stabilizer, Riley <span class='divstyle'>AMFS</span>", 878, 40],
+      [2, "Ninehundred, Only <span class='divstyle'>AMFS</span>", 875, 38],
+      [3, "Quillfeather, Avery <span class='divstyle'>AMFS</span>", 870, 35]
+    ] },
+    { style: 'Barebow Recurve (BBR)', rows: [
+      [1, "Stringwalker, Casey <span class='divstyle'>AMBBR</span>", 760, 9]
+    ] },
+    { style: 'Guest (GUEST)', rows: [
+      [1, 'Visitor, Out Of State [GUEST]', 899, 70]
+    ] }
+  ] },
+  { age: 'Senior Female', styles: [
+    { style: 'Freestyle (FS)', rows: [
+      [1, "Greybeard, Lee <span class='divstyle'>SFFS</span>", 860, 20]
+    ] }
+  ] },
+  { age: 'Cub Male', styles: [
+    { style: 'Freestyle (FS)', rows: [
+      [1, "Little, Cub <span class='divstyle'>CMFS</span>", 870, 30]
+    ] }
+  ] }
+]);
+const tfaa900of2025 = tfaaResultsPage(48, 'Results - TFAA State 900 Championship', NINE_HUNDRED_HEADS, [
+  { age: 'Adult Male', styles: [
+    { style: 'Freestyle (FS)', rows: [
+      [1, 'Quillfeather, Avery', 885, 44]
+    ] },
+    { style: 'Barebow Recurve (BBR)', rows: [
+      [1, 'Stringwalker, Casey', 750, 7]
+    ] }
+  ] }
+]);
+const tfaa900of2024 = tfaaResultsPage(38, 'Results - TFAA State 900 - 2024', NINE_HUNDRED_HEADS, []);
+
 const tfaaPages = {
   '/results/sywat/33': tfaaIndoor2023,
   '/results/season/33': tfaaShootList(33, [
@@ -441,6 +484,18 @@ const tfaaPages = {
     [9013, '01/14/2023 - 01/15/2023', 'Arena Archery - 1']
   ]),
   '/results/9011': tfaaStateIndoor2023,
+  '/results/season/55': tfaaShootList(55, [[9050, '03/14/2027 - 03/15/2027', 'Arena Archery - 1']]),
+  '/results/season/50': tfaaShootList(50, [
+    [9020, '06/27/2026 - 06/28/2026', 'TFAA State Field Championship - 2026'],
+    [9021, '09/19/2026 - 09/20/2026', 'TFAA State 900 Championship 2026'],
+    [9022, '09/19/2026 - 09/20/2026', 'TFAA State 3D Tournament 2026']
+  ]),
+  '/results/9021': tfaa900of2026,
+  '/results/season/48': tfaaShootList(48, [[9031, '08/23/2025 - 08/24/2025', 'TFAA State 900 Championship']]),
+  '/results/9031': tfaa900of2025,
+  '/results/season/38': tfaaShootList(38, [[9041, '09/21/2024 - 09/22/2024', 'TFAA State 900 - 2024']]),
+  '/results/9041': tfaa900of2024,
+  '/results/season/35': tfaaShootList(35, [[9051, '06/24/2023 - 06/25/2023', 'TFAA State Field Championship 2023']]),
   // With no season id the site shows whichever season is current. Here that is
   // the newest indoor one, so nothing may treat this page as a fixed season.
   '/results/sywat': tfaaIndoor2026,

@@ -268,20 +268,22 @@ function holdsTitle(r, kind) {
   return (r.titles || []).some(function(t) { return !kind || t.kind === kind; });
 }
 
-// Rank by tournament type: Field, Indoor and 3D, each within the archer's class (age group and equipment class).
-var TOURNAMENT_TYPES = <%- JSON.stringify(rules.tournamentTypes.map(function (t) { return { key: t.key, label: t.label }; })) %>;
+// Rank by tournament type: Field, Indoor, 3D and 900, each within the archer's class (age group and equipment class).
+var TOURNAMENT_TYPES = <%- JSON.stringify(rules.tournamentTypes.map(function (t) { return { key: t.key, label: t.label, min: t.min }; })) %>;
 
-function typeRankText(t) {
+function typeRankText(t, type) {
   if (!t) return null;
-  if (t.rank === null) return { short: t.rounds + ' round', long: t.rounds + ' round, ' + <%- JSON.stringify(rules.typeRankMinRounds) %> + ' needed for a rank' };
-  return { short: '#' + t.rank, long: '#' + t.rank + ' of ' + t.of + ' in class' };
+  if (t.rank === null) return { short: t.rounds + ' round', long: t.rounds + ' round, ' + type.min + ' needed for a rank' };
+  var long = '#' + t.rank + ' of ' + t.of + ' in class';
+  if (type.key === '900') long += ' (best 900: ' + t.best + ' in ' + t.year + ')';
+  return { short: '#' + t.rank, long: long };
 }
 
 function typeRanksLine(r) {
   var ranks = r.typeRanks || {};
   return '<span class="tgr-type-ranks">Ranking: ' + TOURNAMENT_TYPES.map(function(type) {
-    var text = typeRankText(ranks[type.key]);
-    return '<span class="t">' + type.label + ' ' + (text ? '<b title="' + esc(type.label + ': ' + text.long) + '">' + esc(text.short) + '</b>' : '<span title="' + esc('No ' + type.label + ' rounds') + '">—</span>') + '</span>';
+    var text = typeRankText(ranks[type.key], type);
+    return '<span class="t">' + type.label + ' ' + (text ? '<b title="' + esc(type.label + ': ' + text.long) + '">' + esc(text.short) + '</b>' : '<span title="' + esc(type.key === '900' ? 'No State 900 in the last ' + <%- JSON.stringify(rules.nineHundredYears) %> + ' years' : 'No ' + type.label + ' rounds') + '">—</span>') + '</span>';
   }).join('<span class="sep">·</span>') + '</span>';
 }
 
@@ -424,7 +426,7 @@ function showArcher(idx) {
     '<div class="box"><div class="n">' + (r.totalX > 0 ? esc(r.totalX) + 'X' : '\u2014') + '</div><div class="l">X Count</div></div>' +
     (r.titleBonus > 1 ? '<div class="box"><div class="n">+' + esc(Math.round((r.titleBonus - 1) * 1000) / 10) + '%</div><div class="l">Title Bonus</div></div>' : '') +
     '<div style="width:100%;font-size:0.8rem;color:#8b949e;">Ranking: ' + TOURNAMENT_TYPES.map(function(type) {
-      var text = typeRankText((r.typeRanks || {})[type.key]);
+      var text = typeRankText((r.typeRanks || {})[type.key], type);
       return type.label + ' <strong style="color:var(--text-light);">' + esc(text ? text.long : '\u2014') + '</strong>';
     }).join(' &nbsp;·&nbsp; ') + '</div>';
 

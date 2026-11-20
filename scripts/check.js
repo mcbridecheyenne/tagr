@@ -125,6 +125,7 @@ async function main() {
   console.log('  TX ASA        ' + s.txAsa + ' results');
   console.log('  TFAA Outdoor  ' + s.tfaa + ' results');
   console.log('  TFAA Indoor   ' + s.tfaaIndoor + ' results');
+  console.log('  TFAA 900      ' + s.tfaa900 + ' results (for the 900 rank only)');
   console.log('  Ranked        ' + s.total + ' archers (' + result.adult.length + ' adult, ' + result.youth.length + ' youth), ' +
     everyone.filter(r => r.provisional).length + ' provisional, ' + everyone.filter(r => r.multiOrg).length + ' in more than one organization');
   console.log('  Records       ' + s.stateRecords + ' TFAA state records, ' + everyone.filter(r => r.stateRecord).length + ' ranked archers hold one');
@@ -149,6 +150,16 @@ async function main() {
     console.log('\nTop 10 ' + label);
     list.filter(r => !r.provisional).slice(0, 10).forEach((r, i) => {
       console.log('  ' + String(i + 1).padStart(2) + '. ' + String(r.avgNPS).padStart(5) + '  ' + r.name + '  (' + r.equipmentClass + ', ' + r.events + ' events, ' + r.org + ')');
+    });
+  }
+
+  for (const [label, list] of [['adult', result.adult], ['youth', result.youth]]) {
+    const ranked = list.filter(r => r.typeRanks && r.typeRanks['900'])
+      .sort((a, b) => a.equipmentClass.localeCompare(b.equipmentClass) || a.typeRanks['900'].rank - b.typeRanks['900'].rank);
+    console.log('\n900 rank, ' + label + ': ' + ranked.length + ' on TAGR have one; the top 3 of each class');
+    ranked.filter(r => r.typeRanks['900'].rank <= 3).forEach(r => {
+      const t = r.typeRanks['900'];
+      console.log('  ' + r.equipmentClass.padEnd(12) + '#' + t.rank + ' of ' + String(t.of).padEnd(4) + String(t.score).padStart(5) + '  ' + r.name + '  (' + t.best + ' in ' + t.year + ')');
     });
   }
 

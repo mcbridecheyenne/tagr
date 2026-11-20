@@ -193,10 +193,10 @@
     <h2 id="tournament-types">📍 Ranking by Tournament Type</h2>
     <p>Under each name is the archer's rank in each kind of tournament on its own: <%= rules.tournamentTypes.map(function (t) { return '<strong>' + t.label + '</strong> (' + t.org + ')'; }).join(', ') %>. It is worked out from that kind of round only, against the archers of the same <strong>class</strong>: the same age group (adult or youth) and the same equipment class (Compound, Barebow, Traditional, Olympic or Longbow), as on the class tabs. So #1 Field on a Barebow archer means the best adult or youth Barebow archer in field.</p>
     <ul>
-      <li>The score for each type is the average of an archer's best <strong><%= rules.typeRankBest %></strong> rounds of it, using the same NPS as the TAGR score.</li>
-      <li>An archer needs at least <strong><%= rules.typeRankMinRounds %></strong> rounds of a type for a rank in it. With fewer, the line shows how many rounds they have; with none, a dash.</li>
-      <li>Titles won in that kind of tournament add their bonus, worked out as for the TAGR score below: an Indoor Shooter of the Year raises the Indoor rank, a Texas ASA title the 3D rank.</li>
-      <li>These ranks do not change the TAGR score or the main ranking.</li>
+      <li>For Field, Indoor and 3D, the score is the average of an archer's best <strong><%= rules.typeRankBest %></strong> rounds of that kind, using the same NPS as the TAGR score. An archer needs at least <strong><%= rules.typeRankMinRounds %></strong> rounds of a kind for a rank in it. With fewer, the line shows how many rounds they have; with none, a dash.</li>
+      <li>The <strong>900 Round</strong> is shot once a year, at the TFAA State 900, so it is ranked on an archer's single best 900 from the last <strong><%= rules.nineHundredYears %></strong> State 900s, against the other archers of their age group and <strong>bow class</strong>. The score is measured against the NFAA national 900 record for the archer's style at the distances they shoot (men and women together; Cubs, Youth and everybody older apart), so tying the national record is worth 1000. Every archer who shot a State 900 counts toward the 900 rank, even one with no other TAGR rounds.</li>
+      <li>Titles won in that kind of tournament add their bonus to its rank, worked out as for the TAGR score below: an Indoor Shooter of the Year raises the Indoor rank, a Texas ASA title the 3D rank. The 900 has no titles in TAGR, so it has no bonus.</li>
+      <li>These ranks are for information. They do not change the TAGR score or the main ranking, and 900 scores are not TAGR rounds.</li>
     </ul>
 
     <h2>👑 TFAA State Record Holders</h2>

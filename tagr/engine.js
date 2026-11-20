@@ -172,14 +172,13 @@ const REPEAT_TITLE_BONUS = 0.01;
 const REPEAT_TITLE_MAX = 3;
 // A title is worth as much as the field it was won against. The field's strength
 // is the average standing of the other archers in the champion's division (1 for
-// the best-ranked archer in Texas, 0 for an archer without a full ranking): at
+// the best-ranked archer of their class tab, 0 for an archer without a full ranking): at
 // State for a State Champion, over the whole season for a Shooter of the Year.
-// A State title is weighed against the average State division of that
-// organization and season, every class and age together. A Shooter of the Year
-// is judged within its own class tab (age group and equipment class): standings
-// within that tab, against that tab's other Shooter of the Year fields in the
-// organization, every ranked season together. A title from an
-// average field earns the full bonus, a weaker field less and a stronger field
+// Each title is judged within its own class tab (age group and equipment
+// class): the field's standings are within that tab, and it is weighed against
+// the same tab's other fields for that kind of title in the organization,
+// every ranked season together, so Barebow is compared only with Barebow.
+// A title from an average field earns the full bonus, a weaker field less and a stronger field
 // more, up to TITLE_WEIGHT_MAX times the bonus.
 const TITLE_WEIGHT_MAX = 1.5;
 // Rank by tournament type: each archer is also ranked against the archers of
@@ -1462,9 +1461,10 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   // How strong the field of each title was: the average standing of the other
   // archers in the champion's division. For a State title that is everybody who
   // shot the division at State; for a Shooter of the Year, everybody with a score
-  // in the division that season. Each is weighed against the average field of the
-  // same kind of title, organization and season.
-  const averageStanding = (keys, of = standing) => keys.length === 0 ? 0 : keys.reduce((sum, k) => sum + (of[k] || 0), 0) / keys.length;
+  // in the division that season. Standings are within the class tab, and each is
+  // weighed against the average field of the same kind of title, organization
+  // and class tab.
+  const averageStanding = (keys, of = classStanding) => keys.length === 0 ? 0 : keys.reduce((sum, k) => sum + (of[k] || 0), 0) / keys.length;
   const seasonFieldOf = {};
   for (const e of npsEntries) {
     const group = [e.org, e.orgClass, Math.floor(e.when)].join('|');
@@ -1482,16 +1482,13 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
           && Math.max(...fieldOf[r.eventKey].values()) === fieldOf[r.eventKey].get(key));
         if (!won || fieldOf[won.eventKey].size < TITLE_BONUS_MIN_FIELD) continue;
         const others = [...fieldOf[won.eventKey].keys()].filter(k => k !== key);
-        weighed.push({ t, group: 'state|' + t.org + '|' + year, strength: averageStanding(others) });
+        const group = groupOf[key] || mergedMap[key].equipmentClass;
+        weighed.push({ t, group: 'state|' + t.org + '|' + group, strength: averageStanding(others) });
       } else {
         const field = seasonFieldOf[[t.org, t.orgClass, year].join('|')];
         if (!field || !field.has(key) || field.size < TITLE_BONUS_MIN_FIELD) continue;
-        // A Shooter of the Year is judged within its own class tab: the field's
-        // standings are within the champion's age group and equipment class, and
-        // it is weighed against that group's other Shooter of the Year fields in
-        // this organization, every ranked season together.
         const group = groupOf[key] || mergedMap[key].equipmentClass;
-        weighed.push({ t, group: 'soy|' + t.org + '|' + group, strength: averageStanding([...field].filter(k => k !== key), classStanding) });
+        weighed.push({ t, group: 'soy|' + t.org + '|' + group, strength: averageStanding([...field].filter(k => k !== key)) });
       }
     }
   }

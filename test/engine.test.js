@@ -56,8 +56,10 @@ test('the ranking worked out from the made-up pages is exactly the recorded one'
   // list, 4 outdoor seasons (one not started), 3 indoor seasons, 3 records pages,
   // and for their titles the two seasons before the ranked ones: one the site
   // has no page for, the other with its standings, its list of shoots and its
-  // State Championship.
-  assert.strictEqual(requests, 46 + 45 + 45 + 1 + 4 + 3 + 3 + 1 + 3);
+  // State Championship. Then the State 900s: the list of shoots of each
+  // outdoor season back to the third with a 900 (five lists) and the three 900
+  // pages they name, one of them empty.
+  assert.strictEqual(requests, 46 + 45 + 45 + 1 + 4 + 3 + 3 + 1 + 3 + 5 + 3);
   if (process.env.UPDATE_GOLDEN) {
     fs.writeFileSync(goldenFile, JSON.stringify(withoutTimestamp(result), null, 1) + '\n');
     return;
@@ -175,7 +177,7 @@ test('the class table is consistent', () => {
 test('the three newest outdoor and indoor seasons with scores are read, from the season list', async () => {
   const { pages, asked, problems } = await build();
   assert.deepStrictEqual(problems, []);
-  const seasons = pages.filter(p => /^TFAA \d{4}/.test(p.what) && !/ titles$/.test(p.what)).map(p => p.what + (p.note ? ' (' + p.note + ')' : ''));
+  const seasons = pages.filter(p => /^TFAA \d{4}/.test(p.what) && !/ titles$| State 900$/.test(p.what)).map(p => p.what + (p.note ? ' (' + p.note + ')' : ''));
   assert.deepStrictEqual(seasons, [
     'TFAA 2027 Outdoor (no scores yet)',
     'TFAA 2026 Outdoor (1 State score listed twice, counted once; 1 score above the round maximum left out)',
@@ -1136,19 +1138,19 @@ test('every archer who shot State gets the State round, on the sheet or not', as
 test('every archer is ranked on Field, Indoor and 3D rounds on their own, within their age group', async () => {
   const { result } = await engine.buildRankings({ fetchText: fakeFetch() });
   const types = engine.rules.tournamentTypes;
-  assert.deepStrictEqual(types.map(t => t.label), ['Field', 'Indoor', '3D']);
+  assert.deepStrictEqual(types.map(t => t.label), ['Field', 'Indoor', '3D', '900']);
   for (const age of ['adult', 'youth']) {
     const list = result[age];
-    for (const type of types) {
+    for (const type of types.filter(t => t.key !== '900')) {
       const shot = list.filter(r => r.rounds.some(x => x.org === type.org));
       // Exactly the archers who shot that kind of tournament have an entry.
       assert.deepStrictEqual(list.filter(r => r.typeRanks[type.key]).map(r => r.name), shot.map(r => r.name));
       const ranked = shot.filter(r => r.typeRanks[type.key].rank !== null);
       for (const r of shot) {
         const t = r.typeRanks[type.key];
-        const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a).slice(0, engine.rules.typeRankBest);
+        const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a).slice(0, type.best);
         assert.strictEqual(t.score, Math.round(nps.reduce((s, n) => s + n, 0) / nps.length), r.name);
-        assert.strictEqual(t.rank === null, t.rounds < engine.rules.typeRankMinRounds, r.name);
+        assert.strictEqual(t.rank === null, t.rounds < type.min, r.name);
         if (t.rank === null) continue;
         // The rank is one more than the number of archers with a better score, so equal scores share it.
         assert.strictEqual(t.rank, 1 + ranked.filter(o => o.typeRanks[type.key].score > t.score).length, r.name);
@@ -1158,4 +1160,36 @@ test('every archer is ranked on Field, Indoor and 3D rounds on their own, within
   }
   // The TAGR score itself does not change.
   assert.strictEqual(result.adult[0].avgNPS, golden.adult[0].avgNPS);
+});
+
+// ---- The 900 Round ----
+
+test('the 900 rank is each archer\'s best State 900 of the newest three, against the state record for their style', async () => {
+  const { result, pages, problems } = await build();
+  assert.deepStrictEqual(problems, []);
+  // 2027 has held no 900 yet and the 2024 one has no scores, so 2026, 2025 and
+  // (none in) 2023 are looked at. The guest is left out.
+  assert.deepStrictEqual(pages.filter(p => / State 900$/.test(p.what)).map(p => p.what + ': ' + p.results), ['TFAA 2026 State 900: 6', 'TFAA 2025 State 900: 2']);
+  assert.strictEqual(result.sources.tfaa900, 8);
+  const rank = (age, name) => result[age].find(r => r.name === name).typeRanks['900'];
+  // The adult Freestyle bar is the 880 state record, which a Senior Female
+  // holds: adults of every age shoot the same distances. Avery's best is the
+  // 885 of 2025. Barebow Recurve has no record here, so Casey meets the perfect 900.
+  assert.deepStrictEqual(rank('adult', 'Avery Quillfeather'), { score: Math.round(885 / 880 * 1000), rounds: 2, rank: 1, of: 5, best: 885, year: 2025 });
+  assert.deepStrictEqual(rank('adult', 'Riley Stabilizer'), { score: Math.round(878 / 880 * 1000), rounds: 1, rank: 2, of: 5, best: 878, year: 2026 });
+  // Only Ninehundred is not on TAGR: he is ranked third, so Lee is fourth.
+  assert.strictEqual(rank('adult', 'Lee Greybeard').rank, 4);
+  assert.deepStrictEqual(rank('adult', 'Casey Stringwalker'), { score: Math.round(760 / 900 * 1000), rounds: 2, rank: 5, of: 5, best: 760, year: 2026 });
+  assert.ok(!result.adult.some(r => r.name === 'Only Ninehundred'));
+  assert.strictEqual(rank('youth', 'Cub Little').rank, 1);
+  assert.strictEqual(rank('youth', 'Cub Little').of, 1);
+  assert.strictEqual(result.adult.find(r => r.name === 'Jordan Fletcher').typeRanks['900'], undefined);
+  // 900 scores count for this rank only: no TAGR round comes from them.
+  assert.ok(!result.adult.some(r => r.rounds.some(x => x.org === 'TFAA 900' || /900/.test(x.event))));
+});
+
+test('a State 900 page that cannot be read is reported', async () => {
+  const { problems, result } = await build({ '/results/9021': new Error('HTTP 503') });
+  assert.deepStrictEqual(problemLines(problems), ['TFAA 2026 State 900: HTTP 503']);
+  assert.strictEqual(result.sources.tfaa900, 2);
 });

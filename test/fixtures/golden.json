@@ -393,6 +393,14 @@
    ],
    "titleBonus": 1.0506,
    "typeRanks": {
+    "900": {
+     "score": 1006,
+     "rounds": 2,
+     "rank": 1,
+     "of": 5,
+     "best": 885,
+     "year": 2025
+    },
     "field": {
      "score": 1093,
      "rounds": 10,
@@ -574,6 +582,14 @@
    ],
    "titleBonus": 1.0506,
    "typeRanks": {
+    "900": {
+     "score": 998,
+     "rounds": 1,
+     "rank": 2,
+     "of": 5,
+     "best": 878,
+     "year": 2026
+    },
     "field": {
      "score": 994,
      "rounds": 2,
@@ -1116,6 +1132,14 @@
    ],
    "titleBonus": 1,
    "typeRanks": {
+    "900": {
+     "score": 977,
+     "rounds": 1,
+     "rank": 4,
+     "of": 5,
+     "best": 860,
+     "year": 2026
+    },
     "field": {
      "score": 1014,
      "rounds": 10,
@@ -2115,6 +2139,14 @@
    ],
    "titleBonus": 1,
    "typeRanks": {
+    "900": {
+     "score": 844,
+     "rounds": 2,
+     "rank": 5,
+     "of": 5,
+     "best": 760,
+     "year": 2026
+    },
     "field": {
      "score": 891,
      "rounds": 5,
@@ -4265,6 +4297,14 @@
    ],
    "titleBonus": 1,
    "typeRanks": {
+    "900": {
+     "score": 967,
+     "rounds": 1,
+     "rank": 1,
+     "of": 1,
+     "best": 870,
+     "year": 2026
+    },
     "field": {
      "score": 564,
      "rounds": 5,
@@ -4432,6 +4472,7 @@
   "txAsa": 30,
   "tfaa": 23,
   "tfaaIndoor": 12,
+  "tfaa900": 8,
   "totalEntries": 65,
   "total": 30,
   "merged": 35,

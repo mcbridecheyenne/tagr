@@ -167,16 +167,22 @@ const SOY_TITLE_BONUS = 1.03;
 const STATE_TITLE_BONUS = 1.02;
 const TITLE_BONUS_MIN_FIELD = 2;
 // Rank by tournament type: each archer is also ranked against everybody in their
-// age group on one kind of tournament only, by the average of their best
-// TYPE_RANK_BEST rounds of it. TYPE_RANK_MIN_ROUNDS rounds are needed for a rank.
-// These ranks are shown beside the TAGR rank and do not change the TAGR score.
-const TOURNAMENT_TYPES = [
-  { key: 'field', label: 'Field', org: 'TFAA Outdoor' },
-  { key: 'indoor', label: 'Indoor', org: 'TFAA Indoor' },
-  { key: '3d', label: '3D', org: 'TX ASA' }
-];
+// age group on one kind of tournament only. For Field, Indoor and 3D the score is
+// the average of their best `best` rounds of it, and `min` rounds are needed for a
+// rank. These ranks are shown beside the TAGR rank and do not change the TAGR score.
 const TYPE_RANK_BEST = 3;
 const TYPE_RANK_MIN_ROUNDS = 2;
+const TOURNAMENT_TYPES = [
+  { key: 'field', label: 'Field', org: 'TFAA Outdoor', best: TYPE_RANK_BEST, min: TYPE_RANK_MIN_ROUNDS },
+  { key: 'indoor', label: 'Indoor', org: 'TFAA Indoor', best: TYPE_RANK_BEST, min: TYPE_RANK_MIN_ROUNDS },
+  { key: '3d', label: '3D', org: 'TX ASA', best: TYPE_RANK_BEST, min: TYPE_RANK_MIN_ROUNDS },
+  // The 900 Round is shot once a year, at the TFAA State 900, so it is ranked on
+  // an archer's single best 900 of the last NINE_HUNDRED_YEARS State 900s. Its
+  // scores are not TAGR rounds: they count for this rank only.
+  { key: '900', label: '900', org: 'TFAA 900', best: 1, min: 1 }
+];
+const NINE_HUNDRED_YEARS = 3;
+const NINE_HUNDRED_MAX = 900;
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
@@ -185,31 +191,46 @@ const rules = {
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
   soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD,
-  tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS
+  tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS,
+  nineHundredYears: NINE_HUNDRED_YEARS, nineHundredMax: NINE_HUNDRED_MAX
 };
 
 // Gives every archer in one age group a `typeRanks` entry for each tournament
 // type they shot: { score, rounds, rank, of }. `rank` is null with fewer than
-// TYPE_RANK_MIN_ROUNDS rounds; `of` is how many archers have a rank of that type.
+// the type's `min` rounds; `of` is how many archers have a rank of that type.
 // Equal scores share a rank.
-function addTypeRanks(list) {
-  for (const r of list) r.typeRanks = {};
-  for (const type of TOURNAMENT_TYPES) {
-    const entries = [];
-    for (const r of list) {
-      const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a);
-      if (nps.length === 0) continue;
-      const best = nps.slice(0, TYPE_RANK_BEST);
-      const score = Math.round(best.reduce((sum, n) => sum + n, 0) / best.length);
-      const entry = { score, rounds: nps.length, rank: null, of: 0 };
-      r.typeRanks[type.key] = entry;
-      if (nps.length >= TYPE_RANK_MIN_ROUNDS) entries.push(entry);
-    }
+// `nineHundred` is every 900 Round archer of the age group, ranked or not on
+// TAGR: [{ key, score, rounds, best, year }]. The 900 rank is among all of them,
+// and an archer on the list gets theirs (with `best`, the 900 score, and its `year`).
+function addTypeRanks(list, nineHundred = []) {
+  const rankEntries = entries => {
     entries.sort((a, b) => b.score - a.score);
     entries.forEach((e, i) => {
       e.rank = i > 0 && e.score === entries[i - 1].score ? entries[i - 1].rank : i + 1;
       e.of = entries.length;
     });
+  };
+  for (const r of list) r.typeRanks = {};
+  for (const type of TOURNAMENT_TYPES) {
+    if (type.key === '900') continue;
+    const entries = [];
+    for (const r of list) {
+      const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a);
+      if (nps.length === 0) continue;
+      const best = nps.slice(0, type.best);
+      const score = Math.round(best.reduce((sum, n) => sum + n, 0) / best.length);
+      const entry = { score, rounds: nps.length, rank: null, of: 0 };
+      r.typeRanks[type.key] = entry;
+      if (nps.length >= type.min) entries.push(entry);
+    }
+    rankEntries(entries);
+  }
+  const pool = nineHundred.map(e => ({ ...e, rank: null, of: 0 }));
+  rankEntries(pool);
+  const byKey = new Map(pool.map(e => [e.key, e]));
+  for (const r of list) {
+    const e = byKey.get(nameKey(r.name));
+    if (e) r.typeRanks['900'] = { score: e.score, rounds: e.rounds, rank: e.rank, of: e.of, best: e.best, year: e.year };
   }
   return list;
 }
@@ -801,6 +822,64 @@ function parseTfaaStateChampions(html, org, season) {
   return titles;
 }
 
+// ---- The 900 Round ----
+//
+// TFAA holds one 900 Round a year, the State 900, listed among an outdoor
+// season's shoots. Its results page is laid out like the others, with one
+// Score and one Xs column: 90 arrows at three distances, out of 900.
+
+// A season's list of shoots → the ids of its State 900 (not the Known 3D shot the same weekend).
+function parseTfaa900Shoots(html) {
+  const ids = [];
+  const link = /<a\s+href\s*=\s*["']\/results\/(\d+)["'][^>]*>([^<]*)/gi;
+  let m;
+  while ((m = link.exec(html)) !== null) {
+    const name = tfaaText(m[2]);
+    if (/\b900\b/.test(name) && !/3d/i.test(name) && !ids.includes(m[1])) ids.push(m[1]);
+  }
+  return ids;
+}
+
+// The distances a 900 is shot at depend on the age group: Cubs 30-20-10 yards,
+// Youth 50-40-30, everybody older 60-50-40. Records and scores are compared
+// only within one of these.
+function nineHundredDistance(ageGroup) {
+  if (/^\s*Cub\b/i.test(ageGroup)) return 'cub';
+  if (/^\s*Youth\b/i.test(ageGroup)) return 'youth';
+  return 'adult';
+}
+
+function nineHundredStyle(style) {
+  return (style || '').replace(/\s*\([A-Z]+\)\s*$/, '').replace(/\s+/g, ' ').trim().toLowerCase();
+}
+
+// A State 900 results page → [{ name, adult, distance, style, score, x, year }].
+// Guests and scores above 900 are left out.
+function parseTfaa900Page(html, year) {
+  const { entries, unreadRows } = readTfaaEntries(html.replace(/<span class=['"]divstyle['"]>[^<]*<\/span>/gi, ''));
+  const scores = [];
+  for (const entry of entries) {
+    const round = entry.scores.find(sc => sc.kind === 'round');
+    if (!entry.name || !round || round.score <= 0 || round.score > NINE_HUNDRED_MAX) continue;
+    if (/guest/i.test(entry.style) || /\[guest\]/i.test(entry.name)) continue;
+    scores.push({ name: entry.name, adult: entry.adult, distance: nineHundredDistance(entry.age), style: entry.style, score: round.score, x: round.x, year });
+  }
+  return { scores, unreadRows };
+}
+
+// The bar a 900 is scored against: the TFAA state 900 record for the archer's
+// style at their distances, the best of men and women and of every age group
+// that shoots those distances. A style with no record meets the perfect 900.
+function nineHundredBars(stateRecordDetails) {
+  const bars = {};
+  for (const rec of stateRecordDetails) {
+    if (rec.recordType !== '900' || !(rec.score > 0) || rec.score > NINE_HUNDRED_MAX) continue;
+    const key = nineHundredDistance(rec.ageGroup) + '|' + nineHundredStyle(rec.style);
+    bars[key] = Math.max(bars[key] || 0, rec.score);
+  }
+  return bars;
+}
+
 // The season list on a TFAA results page → [{ id, label, kind, year }], newest first.
 // Only names like "2026 Outdoor" and "2026-2027 Indoor" are seasons: the list
 // also holds test entries and other programs.
@@ -987,7 +1066,7 @@ function asaNameAliases(asaShooters) {
 
 // Takes the parsed results and returns the ranking the site and the app show.
 // `updatedAt` is left for the caller to stamp.
-function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles = [] }) {
+function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles = [], nineHundredScores = [] }) {
   // Deduplicate records: for each (ageGroup + style + recordType + round), keep only the current holder
   // "Current" = the entry with the highest score; if tied, the most recent year
   // For outdoor, multiple rounds exist (Aggregate, Field, Hunter) — each is a separate record
@@ -1327,13 +1406,37 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     });
   }
 
+  // The 900 Round: each archer's best 900 against the state record for their
+  // style, 1000 for tying it. The age group is the one of their newest 900.
+  const bars = nineHundredBars(stateRecordDetails);
+  const nineHundred = { adult: new Map(), youth: new Map() };
+  const newest900 = new Map();
+  for (const sc of nineHundredScores) {
+    const key = keyOf(sc.name);
+    const known = newest900.get(key);
+    if (!known || sc.year > known.year) newest900.set(key, sc);
+  }
+  for (const sc of nineHundredScores) {
+    const key = keyOf(sc.name);
+    const pool = nineHundred[newest900.get(key).adult ? 'adult' : 'youth'];
+    const bar = bars[sc.distance + '|' + nineHundredStyle(sc.style)] || NINE_HUNDRED_MAX;
+    const score = Math.round(sc.score / bar * 1000);
+    const known = pool.get(key);
+    if (!known) pool.set(key, { key, score, rounds: 1, best: sc.score, year: sc.year });
+    else {
+      known.rounds++;
+      if (score > known.score || (score === known.score && sc.year > known.year)) Object.assign(known, { score, best: sc.score, year: sc.year });
+    }
+  }
+
   return {
-    adult: addTypeRanks(rankings.filter(r => r.age === 'adult')),
-    youth: addTypeRanks(rankings.filter(r => r.age === 'youth')),
+    adult: addTypeRanks(rankings.filter(r => r.age === 'adult'), [...nineHundred.adult.values()]),
+    youth: addTypeRanks(rankings.filter(r => r.age === 'youth'), [...nineHundred.youth.values()]),
     sources: {
       txAsa: asaShooters.length,
       tfaa: tfaaShooters.length,
       tfaaIndoor: tfaaIndoorShooters.length,
+      tfaa900: nineHundredScores.length,
       totalEntries: allShooters.length,
       total: rankings.length,
       merged: allShooters.length - rankings.length,
@@ -1607,7 +1710,39 @@ async function readSources(fetchText, { asaSnapshots = [], asaStateResults = [] 
   }));
   const stateRecordDetails = recordPages.flat();
 
-  return { asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles, requests, problems, pages, asaLive: { year: liveYear, tabs: liveTables } };
+  // The State 900s of the newest outdoor seasons that have held one, as many
+  // as NINE_HUNDRED_YEARS. A season whose 900 has not been shot yet is passed over.
+  const nineHundredScores = [];
+  let nineHundredsRead = 0;
+  for (const season of seasons) {
+    if (season.kind !== 'outdoor') continue;
+    if (nineHundredsRead === NINE_HUNDRED_YEARS) break;
+    const listUrl = TFAA_BASE + '/results/season/' + season.id;
+    const list = await read(listUrl, 'TFAA ' + season.label + ' shoots');
+    if (list === null) {
+      nineHundredsRead++;
+      continue;
+    }
+    let found = false;
+    for (const id of parseTfaa900Shoots(list)) {
+      const what = 'TFAA ' + season.year + ' State 900';
+      const url = TFAA_BASE + '/results/' + id;
+      const html = await read(url, what);
+      if (html === null) {
+        found = true;
+        continue;
+      }
+      const page = parseTfaa900Page(html, season.year);
+      if (page.unreadRows > 0) problems.push({ what, url, error: page.unreadRows + ' of its rows did not fit the column headings' });
+      if (page.scores.length === 0) continue;
+      found = true;
+      nineHundredScores.push(...page.scores);
+      pages.push({ what, url, results: page.scores.length });
+    }
+    if (found) nineHundredsRead++;
+  }
+
+  return { asaShooters, tfaaShooters, tfaaIndoorShooters, stateRecordDetails, titles, nineHundredScores, requests, problems, pages, asaLive: { year: liveYear, tabs: liveTables } };
 }
 
 // Reads the sources and works out the ranking.
@@ -1632,6 +1767,8 @@ module.exports = {
   parseTfaaPage,
   parseTfaaStateShoots,
   parseTfaaStateChampions,
+  parseTfaa900Shoots,
+  parseTfaa900Page,
   asaTitlesOf,
   asaClassTab,
   addAsaStateResults,

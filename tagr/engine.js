@@ -174,8 +174,11 @@ const REPEAT_TITLE_MAX = 3;
 // is the average standing of the other archers in the champion's division (1 for
 // the best-ranked archer in Texas, 0 for an archer without a full ranking): at
 // State for a State Champion, over the whole season for a Shooter of the Year.
-// It is weighed against the average field of the same kind of title in that
-// organization and season, every class and age together. A title from an
+// A State title is weighed against the average State division of that
+// organization and season, every class and age together. A Shooter of the Year
+// is judged within its own class tab (age group and equipment class): standings
+// within that tab, against that tab's other Shooter of the Year fields in the
+// organization, every ranked season together. A title from an
 // average field earns the full bonus, a weaker field less and a stronger field
 // more, up to TITLE_WEIGHT_MAX times the bonus.
 const TITLE_WEIGHT_MAX = 1.5;
@@ -1418,6 +1421,18 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
     if (i === 0 || r.avgNPS !== full[i - 1].avgNPS) place = i;
     standing[nameKey(r.name) + '||' + r.equipmentClass] = 1 - place / full.length;
   });
+  // The same within each class tab (age group and equipment class) on its own.
+  const classStanding = {};
+  const groupOf = {};
+  for (const r of full) groupOf[nameKey(r.name) + '||' + r.equipmentClass] = r.age + '|' + r.equipmentClass;
+  for (const group of new Set(Object.values(groupOf))) {
+    const members = full.filter(r => groupOf[nameKey(r.name) + '||' + r.equipmentClass] === group);
+    let at = 0;
+    members.forEach((r, i) => {
+      if (i === 0 || r.avgNPS !== members[i - 1].avgNPS) at = i;
+      classStanding[nameKey(r.name) + '||' + r.equipmentClass] = 1 - at / members.length;
+    });
+  }
 
   // Who shot each State Championship, in each class: archer → the score that placed them.
   const fieldOf = {};
@@ -1449,7 +1464,7 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   // shot the division at State; for a Shooter of the Year, everybody with a score
   // in the division that season. Each is weighed against the average field of the
   // same kind of title, organization and season.
-  const averageStanding = keys => keys.length === 0 ? 0 : keys.reduce((sum, k) => sum + (standing[k] || 0), 0) / keys.length;
+  const averageStanding = (keys, of = standing) => keys.length === 0 ? 0 : keys.reduce((sum, k) => sum + (of[k] || 0), 0) / keys.length;
   const seasonFieldOf = {};
   for (const e of npsEntries) {
     const group = [e.org, e.orgClass, Math.floor(e.when)].join('|');
@@ -1471,7 +1486,12 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
       } else {
         const field = seasonFieldOf[[t.org, t.orgClass, year].join('|')];
         if (!field || !field.has(key) || field.size < TITLE_BONUS_MIN_FIELD) continue;
-        weighed.push({ t, group: 'soy|' + t.org + '|' + year, strength: averageStanding([...field].filter(k => k !== key)) });
+        // A Shooter of the Year is judged within its own class tab: the field's
+        // standings are within the champion's age group and equipment class, and
+        // it is weighed against that group's other Shooter of the Year fields in
+        // this organization, every ranked season together.
+        const group = groupOf[key] || mergedMap[key].equipmentClass;
+        weighed.push({ t, group: 'soy|' + t.org + '|' + group, strength: averageStanding([...field].filter(k => k !== key), classStanding) });
       }
     }
   }

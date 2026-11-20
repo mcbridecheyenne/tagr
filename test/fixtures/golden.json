@@ -26,7 +26,7 @@
     1055,
     1052
    ],
-   "avgNPS": 1343,
+   "avgNPS": 1347,
    "bestNPS": 1115,
    "rounds": [
     {
@@ -337,8 +337,8 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.786,
-     "weight": 1
+     "fieldStrength": 0.722,
+     "weight": 0.96
     },
     {
      "kind": "state",
@@ -348,8 +348,8 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.821,
-     "weight": 1
+     "fieldStrength": 0.778,
+     "weight": 1.33
     },
     {
      "kind": "state",
@@ -390,8 +390,8 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.821,
-     "weight": 1
+     "fieldStrength": 0.778,
+     "weight": 1.04
     },
     {
      "kind": "state",
@@ -401,23 +401,23 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.5,
-     "weight": 1
+     "fieldStrength": 0.389,
+     "weight": 0.67
     }
    ],
-   "titleBonus": 1.1078,
+   "titleBonus": 1.1112,
    "typeRanks": {
     "field": {
-     "score": 1160,
+     "score": 1163,
      "rounds": 10,
-     "titleBonus": 1.0609,
+     "titleBonus": 1.0643,
      "rank": 1,
      "of": 12
     },
     "indoor": {
      "score": 1152,
      "rounds": 8,
-     "titleBonus": 1.0764,
+     "titleBonus": 1.0768,
      "rank": 1,
      "of": 8
     },
@@ -589,7 +589,7 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.536,
+     "fieldStrength": 0.444,
      "weight": 1
     }
    ],

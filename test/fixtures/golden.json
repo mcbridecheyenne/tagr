@@ -26,7 +26,7 @@
     1055,
     1052
    ],
-   "avgNPS": 1336,
+   "avgNPS": 1343,
    "bestNPS": 1115,
    "rounds": [
     {
@@ -317,8 +317,8 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.524,
-     "weight": 1
+     "fieldStrength": 0.463,
+     "weight": 0.75
     },
     {
      "kind": "soy",
@@ -368,8 +368,8 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.821,
-     "weight": 1
+     "fieldStrength": 0.778,
+     "weight": 1.25
     },
     {
      "kind": "soy",
@@ -379,7 +379,7 @@
      "field": 2,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.5,
+     "fieldStrength": 0.389,
      "weight": 1
     },
     {
@@ -405,7 +405,7 @@
      "weight": 1
     }
    ],
-   "titleBonus": 1.1025,
+   "titleBonus": 1.1078,
    "typeRanks": {
     "field": {
      "score": 1160,
@@ -415,9 +415,9 @@
      "of": 12
     },
     "indoor": {
-     "score": 1146,
+     "score": 1152,
      "rounds": 8,
-     "titleBonus": 1.0712,
+     "titleBonus": 1.0764,
      "rank": 1,
      "of": 8
     },
@@ -578,7 +578,7 @@
      "field": 3,
      "bonus": true,
      "past": false,
-     "fieldStrength": 0.446,
+     "fieldStrength": 0.306,
      "weight": 1
     },
     {

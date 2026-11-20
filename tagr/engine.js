@@ -166,6 +166,17 @@ const FIELD_STANDING_POWER = 3;
 const SOY_TITLE_BONUS = 1.03;
 const STATE_TITLE_BONUS = 1.02;
 const TITLE_BONUS_MIN_FIELD = 2;
+// Rank by tournament type: each archer is also ranked against everybody in their
+// age group on one kind of tournament only, by the average of their best
+// TYPE_RANK_BEST rounds of it. TYPE_RANK_MIN_ROUNDS rounds are needed for a rank.
+// These ranks are shown beside the TAGR rank and do not change the TAGR score.
+const TOURNAMENT_TYPES = [
+  { key: 'field', label: 'Field', org: 'TFAA Outdoor' },
+  { key: 'indoor', label: 'Indoor', org: 'TFAA Indoor' },
+  { key: '3d', label: '3D', org: 'TX ASA' }
+];
+const TYPE_RANK_BEST = 3;
+const TYPE_RANK_MIN_ROUNDS = 2;
 // The "How TAGR Works" page prints these, so it cannot drift from the math.
 const rules = {
   weights: difficultyWeights, knownDistanceFactor: KNOWN_DISTANCE_FACTOR, stateRoundBonus: STATE_ROUND_BONUS,
@@ -173,8 +184,35 @@ const rules = {
   fieldBonusMax: FIELD_BONUS_MAX, fieldBeatTop: FIELD_BEAT_TOP, fieldStandingPower: FIELD_STANDING_POWER,
   nationalRecords: NATIONAL_RECORDS, nationalRecordStyles: NATIONAL_RECORDS_STYLES,
   asaSoyMinArchers: ASA_SOY_MIN_ARCHERS,
-  soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD
+  soyTitleBonus: SOY_TITLE_BONUS, stateTitleBonus: STATE_TITLE_BONUS, titleBonusMinField: TITLE_BONUS_MIN_FIELD,
+  tournamentTypes: TOURNAMENT_TYPES, typeRankBest: TYPE_RANK_BEST, typeRankMinRounds: TYPE_RANK_MIN_ROUNDS
 };
+
+// Gives every archer in one age group a `typeRanks` entry for each tournament
+// type they shot: { score, rounds, rank, of }. `rank` is null with fewer than
+// TYPE_RANK_MIN_ROUNDS rounds; `of` is how many archers have a rank of that type.
+// Equal scores share a rank.
+function addTypeRanks(list) {
+  for (const r of list) r.typeRanks = {};
+  for (const type of TOURNAMENT_TYPES) {
+    const entries = [];
+    for (const r of list) {
+      const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a);
+      if (nps.length === 0) continue;
+      const best = nps.slice(0, TYPE_RANK_BEST);
+      const score = Math.round(best.reduce((sum, n) => sum + n, 0) / best.length);
+      const entry = { score, rounds: nps.length, rank: null, of: 0 };
+      r.typeRanks[type.key] = entry;
+      if (nps.length >= TYPE_RANK_MIN_ROUNDS) entries.push(entry);
+    }
+    entries.sort((a, b) => b.score - a.score);
+    entries.forEach((e, i) => {
+      e.rank = i > 0 && e.score === entries[i - 1].score ? entries[i - 1].rank : i + 1;
+      e.of = entries.length;
+    });
+  }
+  return list;
+}
 
 // ---------------------------------------------------------------------------
 // Parsing
@@ -1290,8 +1328,8 @@ function computeRankings({ asaShooters, tfaaShooters, tfaaIndoorShooters, stateR
   }
 
   return {
-    adult: rankings.filter(r => r.age === 'adult'),
-    youth: rankings.filter(r => r.age === 'youth'),
+    adult: addTypeRanks(rankings.filter(r => r.age === 'adult')),
+    youth: addTypeRanks(rankings.filter(r => r.age === 'youth')),
     sources: {
       txAsa: asaShooters.length,
       tfaa: tfaaShooters.length,

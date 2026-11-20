@@ -72,6 +72,10 @@
 .tgr-prov-badge { font-size: 0.6rem; padding: 0.1rem 0.4rem; border-radius: 3px; background: rgba(231,76,60,0.15); color: #e74c3c; font-weight: bold; margin-left: 0.3rem; }
 .tgr-record-badge { font-size: 0.85rem; margin-left: 0.25rem; cursor: help; }
 .tgr-title-badge { font-size: 0.85rem; margin-left: 0.25rem; cursor: help; white-space: nowrap; }
+.tgr-type-ranks { display: block; margin-top: 0.2rem; font-size: 0.72rem; font-weight: normal; color: #8b949e; white-space: nowrap; }
+.tgr-type-ranks b { color: var(--text-light); }
+.tgr-type-ranks .t { white-space: nowrap; }
+.tgr-type-ranks .sep { margin: 0 0.35rem; opacity: 0.5; }
 .tgr-title-badge .x { font-size: 0.65rem; font-weight: bold; color: var(--accent-gold); }
 .tgr-legend { text-align: center; color: #8b949e; font-size: 0.72rem; margin: -0.4rem 0 0.9rem; }
 .tgr-legend span { white-space: nowrap; margin: 0 0.4rem; }
@@ -264,6 +268,23 @@ function holdsTitle(r, kind) {
   return (r.titles || []).some(function(t) { return !kind || t.kind === kind; });
 }
 
+// Rank by tournament type: Field, Indoor and 3D, each against everybody in the age group.
+var TOURNAMENT_TYPES = <%- JSON.stringify(rules.tournamentTypes.map(function (t) { return { key: t.key, label: t.label }; })) %>;
+
+function typeRankText(t) {
+  if (!t) return null;
+  if (t.rank === null) return { short: t.rounds + ' round', long: t.rounds + ' round, ' + <%- JSON.stringify(rules.typeRankMinRounds) %> + ' needed for a rank' };
+  return { short: '#' + t.rank, long: '#' + t.rank + ' of ' + t.of };
+}
+
+function typeRanksLine(r) {
+  var ranks = r.typeRanks || {};
+  return '<span class="tgr-type-ranks">Ranking: ' + TOURNAMENT_TYPES.map(function(type) {
+    var text = typeRankText(ranks[type.key]);
+    return '<span class="t">' + type.label + ' ' + (text ? '<b title="' + esc(type.label + ': ' + text.long) + '">' + esc(text.short) + '</b>' : '<span title="' + esc('No ' + type.label + ' rounds') + '">—</span>') + '</span>';
+  }).join('<span class="sep">·</span>') + '</span>';
+}
+
 function renderTable() {
   if (!tagrData) return;
   var fullList = currentAge === 'adult' ? tagrData.adult : tagrData.youth;
@@ -355,7 +376,7 @@ function renderTable() {
 
     html += '<tr class="' + rowClass + '">';
     html += '<td class="tgr-rank' + rankClass + '">' + medal + rank + '</td>';
-    html += '<td class="tgr-name"><span class="tgr-name-link" onclick="showArcher(' + idx + ')">' + esc(r.name) + '</span>' + titleBadges(r) + recordBadge + (isProvisional ? '<span class="tgr-prov-badge">PROVISIONAL</span>' : '') + '</td>';
+    html += '<td class="tgr-name"><span class="tgr-name-link" onclick="showArcher(' + idx + ')">' + esc(r.name) + '</span>' + titleBadges(r) + recordBadge + (isProvisional ? '<span class="tgr-prov-badge">PROVISIONAL</span>' : '') + typeRanksLine(r) + '</td>';
     html += '<td><span class="tgr-nps ' + npsClass + '">' + esc(r.avgNPS) + '</span><div class="tgr-bar" style="width:' + barWidth + '%;background:' + barColor + ';"></div></td>';
     html += '<td>' + esc(r.bestNPS) + '</td>';
     html += '<td>' + esc(r.events) + '</td>';
@@ -401,7 +422,11 @@ function showArcher(idx) {
     '<div class="box"><div class="n">' + esc(r.events) + '</div><div class="l">Events</div></div>' +
     '<div class="box"><div class="n">' + esc(r.bestNPS) + '</div><div class="l">Best NPS</div></div>' +
     '<div class="box"><div class="n">' + (r.totalX > 0 ? esc(r.totalX) + 'X' : '\u2014') + '</div><div class="l">X Count</div></div>' +
-    (r.titleBonus > 1 ? '<div class="box"><div class="n">+' + esc(Math.round((r.titleBonus - 1) * 1000) / 10) + '%</div><div class="l">Title Bonus</div></div>' : '');
+    (r.titleBonus > 1 ? '<div class="box"><div class="n">+' + esc(Math.round((r.titleBonus - 1) * 1000) / 10) + '%</div><div class="l">Title Bonus</div></div>' : '') +
+    '<div style="width:100%;font-size:0.8rem;color:#8b949e;">Ranking: ' + TOURNAMENT_TYPES.map(function(type) {
+      var text = typeRankText((r.typeRanks || {})[type.key]);
+      return type.label + ' <strong style="color:var(--text-light);">' + esc(text ? text.long : '\u2014') + '</strong>';
+    }).join(' &nbsp;·&nbsp; ') + '</div>';
 
   document.getElementById('amTitles').innerHTML = TITLE_KINDS.map(function(k) {
     return (r.titles || []).filter(function(t) { return t.kind === k.kind; }).map(function(t) {

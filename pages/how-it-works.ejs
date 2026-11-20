@@ -189,6 +189,14 @@
     </table>
     <p>This counts the unique organizations among your actual top 5 NPS rounds — not just orgs you've shot with overall.</p>
 
+    <h2 id="tournament-types">📍 Ranking by Tournament Type</h2>
+    <p>Under each name is the archer's rank in each kind of tournament on its own: <%= rules.tournamentTypes.map(function (t) { return '<strong>' + t.label + '</strong> (' + t.org + ')'; }).join(', ') %>. It is worked out from that kind of round only, against every archer of the same age group (adult or youth) whatever their bow, so #1 Field is the best field archer in Texas.</p>
+    <ul>
+      <li>The score for each type is the average of an archer's best <strong><%= rules.typeRankBest %></strong> rounds of it, using the same NPS as the TAGR score.</li>
+      <li>An archer needs at least <strong><%= rules.typeRankMinRounds %></strong> rounds of a type for a rank in it. With fewer, the line shows how many rounds they have; with none, a dash.</li>
+      <li>These ranks are for information. They do not change the TAGR score or the main ranking.</li>
+    </ul>
+
     <h2>👑 TFAA State Record Holders</h2>
     <p>Archers who hold a current TFAA state record (Indoor, Outdoor, or 900 Round) are identified with a 👑 crown badge next to their name. Hover the crown to see which record(s) they hold.</p>
     <p>Records are scraped from <a href="https://texasfieldarchery.org/records/indoor" style="color:var(--accent-gold);">texasfieldarchery.org</a> and matched by name. Only the <strong>current</strong> record holder matters — if scores are tied, the most recent year wins.</p>

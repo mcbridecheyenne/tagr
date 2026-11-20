@@ -1130,3 +1130,32 @@ test('every archer who shot State gets the State round, on the sheet or not', as
   // A class TAGR has no distances for earns the title but no round.
   assert.ok(!result.adult.some(r => r.name === 'Jewel Open'));
 });
+
+// ---- Rank by tournament type ----
+
+test('every archer is ranked on Field, Indoor and 3D rounds on their own, within their age group', async () => {
+  const { result } = await engine.buildRankings({ fetchText: fakeFetch() });
+  const types = engine.rules.tournamentTypes;
+  assert.deepStrictEqual(types.map(t => t.label), ['Field', 'Indoor', '3D']);
+  for (const age of ['adult', 'youth']) {
+    const list = result[age];
+    for (const type of types) {
+      const shot = list.filter(r => r.rounds.some(x => x.org === type.org));
+      // Exactly the archers who shot that kind of tournament have an entry.
+      assert.deepStrictEqual(list.filter(r => r.typeRanks[type.key]).map(r => r.name), shot.map(r => r.name));
+      const ranked = shot.filter(r => r.typeRanks[type.key].rank !== null);
+      for (const r of shot) {
+        const t = r.typeRanks[type.key];
+        const nps = r.rounds.filter(x => x.org === type.org).map(x => x.nps).sort((a, b) => b - a).slice(0, engine.rules.typeRankBest);
+        assert.strictEqual(t.score, Math.round(nps.reduce((s, n) => s + n, 0) / nps.length), r.name);
+        assert.strictEqual(t.rank === null, t.rounds < engine.rules.typeRankMinRounds, r.name);
+        if (t.rank === null) continue;
+        // The rank is one more than the number of archers with a better score, so equal scores share it.
+        assert.strictEqual(t.rank, 1 + ranked.filter(o => o.typeRanks[type.key].score > t.score).length, r.name);
+        assert.strictEqual(t.of, ranked.length);
+      }
+    }
+  }
+  // The TAGR score itself does not change.
+  assert.strictEqual(result.adult[0].avgNPS, golden.adult[0].avgNPS);
+});

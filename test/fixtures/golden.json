@@ -391,7 +391,27 @@
      "past": false
     }
    ],
-   "titleBonus": 1.0506
+   "titleBonus": 1.0506,
+   "typeRanks": {
+    "field": {
+     "score": 1093,
+     "rounds": 10,
+     "rank": 1,
+     "of": 17
+    },
+    "indoor": {
+     "score": 1070,
+     "rounds": 8,
+     "rank": 1,
+     "of": 9
+    },
+    "3d": {
+     "score": 1018,
+     "rounds": 7,
+     "rank": 1,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Riley Stabilizer",
@@ -552,7 +572,21 @@
      "past": false
     }
    ],
-   "titleBonus": 1.0506
+   "titleBonus": 1.0506,
+   "typeRanks": {
+    "field": {
+     "score": 994,
+     "rounds": 2,
+     "rank": 6,
+     "of": 17
+    },
+    "3d": {
+     "score": 1000,
+     "rounds": 8,
+     "rank": 2,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Sam Broadhead",
@@ -753,7 +787,27 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 1003,
+     "rounds": 5,
+     "rank": 4,
+     "of": 17
+    },
+    "indoor": {
+     "score": 1040,
+     "rounds": 4,
+     "rank": 3,
+     "of": 9
+    },
+    "3d": {
+     "score": 919,
+     "rounds": 3,
+     "rank": 9,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Lee Greybeard",
@@ -1060,7 +1114,27 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 1014,
+     "rounds": 10,
+     "rank": 3,
+     "of": 17
+    },
+    "indoor": {
+     "score": 1009,
+     "rounds": 4,
+     "rank": 5,
+     "of": 9
+    },
+    "3d": {
+     "score": 942,
+     "rounds": 5,
+     "rank": 3,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Jordan Fletcher",
@@ -1213,7 +1287,27 @@
    "provisional": false,
    "stateRecord": true,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 1036,
+     "rounds": 4,
+     "rank": 2,
+     "of": 17
+    },
+    "indoor": {
+     "score": 996,
+     "rounds": 4,
+     "rank": 7,
+     "of": 9
+    },
+    "3d": {
+     "score": 932,
+     "rounds": 3,
+     "rank": 6,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Taylor Bolt",
@@ -1321,7 +1415,21 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "indoor": {
+     "score": 1018,
+     "rounds": 4,
+     "rank": 4,
+     "of": 9
+    },
+    "3d": {
+     "score": 920,
+     "rounds": 3,
+     "rank": 8,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Maria De La Fletch",
@@ -1522,7 +1630,27 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 938,
+     "rounds": 5,
+     "rank": 8,
+     "of": 17
+    },
+    "indoor": {
+     "score": 951,
+     "rounds": 4,
+     "rank": 8,
+     "of": 9
+    },
+    "3d": {
+     "score": 930,
+     "rounds": 3,
+     "rank": 7,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Fox Silver",
@@ -1626,7 +1754,15 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 1001,
+     "rounds": 5,
+     "rank": 5,
+     "of": 17
+    }
+   }
   },
   {
    "name": "Morgan Clicker",
@@ -1753,7 +1889,21 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 937,
+     "rounds": 5,
+     "rank": 9,
+     "of": 17
+    },
+    "3d": {
+     "score": 940,
+     "rounds": 2,
+     "rank": 4,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Casey Stringwalker",
@@ -1963,7 +2113,27 @@
      "past": true
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 891,
+     "rounds": 5,
+     "rank": 13,
+     "of": 17
+    },
+    "indoor": {
+     "score": 860,
+     "rounds": 4,
+     "rank": 9,
+     "of": 9
+    },
+    "3d": {
+     "score": 909,
+     "rounds": 3,
+     "rank": 10,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Dana McArrow",
@@ -2050,7 +2220,21 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "indoor": {
+     "score": 1006,
+     "rounds": 2,
+     "rank": 6,
+     "of": 9
+    },
+    "3d": {
+     "score": 884,
+     "rounds": 3,
+     "rank": 11,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Fixed Pins",
@@ -2146,7 +2330,15 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 947,
+     "rounds": 5,
+     "rank": 7,
+     "of": 17
+    }
+   }
   },
   {
    "name": "Chris Kisser",
@@ -2242,7 +2434,15 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "3d": {
+     "score": 940,
+     "rounds": 6,
+     "rank": 4,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Sight Limited",
@@ -2346,7 +2546,15 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 936,
+     "rounds": 5,
+     "rank": 10,
+     "of": 17
+    }
+   }
   },
   {
    "name": "Pat O'Nock",
@@ -2509,7 +2717,21 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 936,
+     "rounds": 5,
+     "rank": 10,
+     "of": 17
+    },
+    "3d": {
+     "score": 869,
+     "rounds": 6,
+     "rank": 13,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Finger Tab",
@@ -2613,7 +2835,15 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 907,
+     "rounds": 5,
+     "rank": 12,
+     "of": 17
+    }
+   }
   },
   {
    "name": "Compound Bare",
@@ -2717,7 +2947,15 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 886,
+     "rounds": 5,
+     "rank": 14,
+     "of": 17
+    }
+   }
   },
   {
    "name": "Alex Vane",
@@ -2802,7 +3040,15 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "3d": {
+     "score": 882,
+     "rounds": 5,
+     "rank": 12,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Robin Shelfshooter",
@@ -2961,7 +3207,21 @@
      "past": true
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 765,
+     "rounds": 5,
+     "rank": 15,
+     "of": 17
+    },
+    "3d": {
+     "score": 842,
+     "rounds": 4,
+     "rank": 16,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Barebow Plain",
@@ -3065,7 +3325,15 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 759,
+     "rounds": 5,
+     "rank": 16,
+     "of": 17
+    }
+   }
   },
   {
    "name": "Stick Yew",
@@ -3187,7 +3455,15 @@
      "past": true
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 737,
+     "rounds": 5,
+     "rank": 17,
+     "of": 17
+    }
+   }
   },
   {
    "name": "Blake Backtension",
@@ -3250,7 +3526,15 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "indoor": {
+     "score": 1046,
+     "rounds": 3,
+     "rank": 2,
+     "of": 9
+    }
+   }
   },
   {
    "name": "Three Events",
@@ -3313,7 +3597,15 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "3d": {
+     "score": 861,
+     "rounds": 3,
+     "rank": 14,
+     "of": 16
+    }
+   }
   },
   {
    "name": "Two Timer",
@@ -3365,7 +3657,15 @@
    "provisional": true,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "3d": {
+     "score": 858,
+     "rounds": 2,
+     "rank": 15,
+     "of": 16
+    }
+   }
   },
   {
    "name": "One Timer",
@@ -3406,7 +3706,15 @@
    "provisional": true,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "3d": {
+     "score": 858,
+     "rounds": 1,
+     "rank": null,
+     "of": 0
+    }
+   }
   }
  ],
  "youth": [
@@ -3621,7 +3929,27 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 963,
+     "rounds": 5,
+     "rank": 1,
+     "of": 3
+    },
+    "indoor": {
+     "score": 1053,
+     "rounds": 4,
+     "rank": 1,
+     "of": 2
+    },
+    "3d": {
+     "score": 915,
+     "rounds": 4,
+     "rank": 1,
+     "of": 4
+    }
+   }
   },
   {
    "name": "Piper Peepsight",
@@ -3811,7 +4139,27 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 650,
+     "rounds": 5,
+     "rank": 2,
+     "of": 3
+    },
+    "indoor": {
+     "score": 482,
+     "rounds": 4,
+     "rank": 2,
+     "of": 2
+    },
+    "3d": {
+     "score": 850,
+     "rounds": 2,
+     "rank": 2,
+     "of": 4
+    }
+   }
   },
   {
    "name": "Cub Little",
@@ -3915,7 +4263,15 @@
      "past": false
     }
    ],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "field": {
+     "score": 564,
+     "rounds": 5,
+     "rank": 3,
+     "of": 3
+    }
+   }
   },
   {
    "name": "Skyler Stringwalker",
@@ -3990,7 +4346,15 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "3d": {
+     "score": 650,
+     "rounds": 4,
+     "rank": 4,
+     "of": 4
+    }
+   }
   },
   {
    "name": "Drew Fingertab",
@@ -4053,7 +4417,15 @@
    "provisional": false,
    "stateRecord": false,
    "titles": [],
-   "titleBonus": 1
+   "titleBonus": 1,
+   "typeRanks": {
+    "3d": {
+     "score": 791,
+     "rounds": 3,
+     "rank": 3,
+     "of": 4
+    }
+   }
   }
  ],
  "sources": {

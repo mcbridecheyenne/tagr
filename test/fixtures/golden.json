@@ -316,7 +316,9 @@
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
      "bonus": true,
-     "past": false
+     "past": false,
+     "fieldStrength": 0.524,
+     "weight": 1
     },
     {
      "kind": "soy",
@@ -365,7 +367,9 @@
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
      "bonus": true,
-     "past": false
+     "past": false,
+     "fieldStrength": 0.821,
+     "weight": 1
     },
     {
      "kind": "soy",
@@ -374,7 +378,9 @@
      "orgClass": "Adult Male - Freestyle (FS)",
      "field": 2,
      "bonus": true,
-     "past": false
+     "past": false,
+     "fieldStrength": 0.5,
+     "weight": 1
     },
     {
      "kind": "state",
@@ -579,7 +585,9 @@
      "orgClass": "Men's Open 45",
      "field": 3,
      "bonus": true,
-     "past": false
+     "past": false,
+     "fieldStrength": 0.446,
+     "weight": 1
     },
     {
      "kind": "state",
